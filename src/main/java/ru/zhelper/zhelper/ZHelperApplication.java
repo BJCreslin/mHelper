@@ -4,10 +4,10 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class ZhelperApplication {
+public class ZHelperApplication {
 
 	public static void main(String[] args) {
-		SpringApplication.run(ZhelperApplication.class, args);
+		SpringApplication.run(ZHelperApplication.class, args);
 	}
 
 }
