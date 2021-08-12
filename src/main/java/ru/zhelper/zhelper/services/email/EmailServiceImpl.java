@@ -16,9 +16,9 @@ public class EmailServiceImpl implements EmailService {
     private final Logger logger = LoggerFactory.getLogger(EmailServiceImpl.class);
 
     private static final String FROM = "info@zhelper.ru";
-    private static final String SENDING = "Sending email";
+    private static final String SENDING = "Sending email to {1} with subject {2} content: {3}";
     private static final String SUCCESS = "Почта успешно отправлена";
-    private static final String ERROR_SENDING = "Возникла исключительная ситуация при отправке почты";
+    private static final String ERROR_SENDING = "Возникла исключительная ситуация при отправке почты. {1}";
 
     private final JavaMailSender emailSender;
 
@@ -34,7 +34,7 @@ public class EmailServiceImpl implements EmailService {
         message.setSubject(subject);
         message.setText(content);
         emailSender.send(message);
-        logger.info(SUCCESS);
+        logger.debug(SUCCESS);
     }
 
     public void sendHtmlMail(String to, String subject, String content) {
@@ -47,7 +47,7 @@ public class EmailServiceImpl implements EmailService {
             helper.setSubject(subject);
             helper.setText(content, true);
             emailSender.send(message);
-            logger.info(SUCCESS);
+            logger.debug(SUCCESS);
         } catch (MessagingException e) {
             logger.error(ERROR_SENDING, e);
         }
