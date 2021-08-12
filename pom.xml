@@ -96,13 +96,27 @@
     </dependencies>
     <build>
         <plugins>
+            <!--            <plugin>-->
+            <!--                <groupId>org.apache.maven.plugins</groupId>-->
+            <!--                <artifactId>maven-compiler-plugin</artifactId>-->
+            <!--                <version>${MavenCompilerVersion}</version>-->
+            <!--                <configuration>-->
+            <!--                    <failOnMissingWebXml>false</failOnMissingWebXml>-->
+            <!--                    <source>11</source>-->
+            <!--                    <target>11</target>-->
+            <!--                </configuration>-->
+            <!--            </plugin>-->
             <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-compiler-plugin</artifactId>
-                <version>${MavenCompilerVersion}</version>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
                 <configuration>
-                    <source>11</source>
-                    <target>11</target>
+                    <failOnMissingWebXml>false</failOnMissingWebXml>
+                    <resources>
+                        <resource>
+                            <filtering>true</filtering>
+                            <directory>src/main/resources/</directory>
+                        </resource>
+                    </resources>
                 </configuration>
             </plugin>
             <plugin>
