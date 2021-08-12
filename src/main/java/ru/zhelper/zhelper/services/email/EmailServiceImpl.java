@@ -16,40 +16,40 @@ public class EmailServiceImpl implements EmailService {
     private final Logger logger = LoggerFactory.getLogger(EmailServiceImpl.class);
 
     private static final String FROM = "info@zhelper.ru";
+    private static final String SENDING = "Sending email";
+    private static final String SUCCESS = "Почта успешно отправлена";
+    private static final String ERROR_SENDING = "Возникла исключительная ситуация при отправке почты";
 
-    private JavaMailSender emailSender;
+    private final JavaMailSender emailSender;
 
     public EmailServiceImpl(JavaMailSender emailSender) {
         this.emailSender = emailSender;
     }
 
-    public void sendSimpleMessage(String to, String subject, String text) {
-
+    public void sendSimpleMessage(String to, String subject, String content) {
+        logger.info(SENDING, to, subject, content);
         SimpleMailMessage message = new SimpleMailMessage();
         message.setFrom(FROM);
         message.setTo(to);
         message.setSubject(subject);
-        message.setText(text);
+        message.setText(content);
         emailSender.send(message);
+        logger.info(SUCCESS);
     }
 
-
     public void sendHtmlMail(String to, String subject, String content) {
+        logger.info(SENDING, to, subject, content);
         MimeMessage message = emailSender.createMimeMessage();
-
         try {
-            // true указывает, что нужно создать составное сообщение
             MimeMessageHelper helper = new MimeMessageHelper(message, true);
             helper.setFrom(FROM);
             helper.setTo(to);
             helper.setSubject(subject);
             helper.setText(content, true);
-
-            mailSender.send(message);
-            logger.info(«HTML - почта успешно отправлена»);
-        } catch (MessagingException | MessagingException e) {
-            logger.error(«Возникла исключительная ситуация при отправке html - почты !»,e);
+            emailSender.send(message);
+            logger.info(SUCCESS);
+        } catch (MessagingException e) {
+            logger.error(ERROR_SENDING, e);
         }
-
     }
 }
