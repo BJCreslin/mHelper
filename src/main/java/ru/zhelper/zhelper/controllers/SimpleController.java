@@ -7,10 +7,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @Controller
 @RequestMapping("/")
 public class SimpleController {
-    private static final String indexPageName="index";
+    private static final String INDEX_PAGE_NAME ="index";
 
     @GetMapping
     public String get() {
-        return indexPageName;
+        return INDEX_PAGE_NAME;
     }
 }
