@@ -1,5 +1,5 @@
 html {
-	background: url("zhelp1.jpg") no-repeat grey;
+	background: url("../pictures/zhelp1.jpg") no-repeat grey;
 	background-repeat: no-repeat;
 	background-position: center center;
 	background-attachment: fixed;
@@ -43,7 +43,7 @@ body {
 
 .button {
 	width: 15%;
-	background: url("sym.png") no-repeat center rgb(132, 79, 167);
+	background: url("../pictures/sym.png") no-repeat center rgb(132, 79, 167);
 	border-radius: 50%;
 	border: 2px solid rgb(86, 39, 117);
 	cursor: pointer;
