@@ -1,5 +1,5 @@
 html {
-	background: url("../pictures/zhelp1.jpg") no-repeat grey;
+	background: url("zhelp1.jpg") no-repeat grey;
 	background-repeat: no-repeat;
 	background-position: center center;
 	background-attachment: fixed;
@@ -29,7 +29,7 @@ body {
 }
 
 .text {
-	width: 350px;
+	width: 75%;
 	padding-left: 20px;
 	background-color: silver;
 	color: rgb(46, 46, 46);
@@ -42,11 +42,15 @@ body {
 }
 
 .button {
-	width: 80px;
-	background: url("../pictures/sym.png") no-repeat center rgb(132, 79, 167);
+	width: 15%;
+	background: url("sym.png") no-repeat center rgb(132, 79, 167);
 	border-radius: 50%;
 	border: 2px solid rgb(86, 39, 117);
 	cursor: pointer;
+}
+
+.button:active {
+	box-shadow: inset 0px 0px 8px 8px rgb(76, 22, 138);
 }
 
 nav {
@@ -89,8 +93,7 @@ table {
 	font-family: "segoe print";
 	font-size: 12px;
 	border-collapse: collapse;
-	border: 3px double rgb(46, 46, 46);
-	border-radius: 10px;
+	border: 3px solid rgb(46, 46, 46);
 	background-color: white;
 	opacity: 0.5;
 }
