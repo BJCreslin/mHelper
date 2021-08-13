@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @Controller
 @RequestMapping("")
 public class SimpleController {
-    private static final String INDEX_PAGE_NAME ="index";
+    private static final String INDEX_PAGE_NAME ="zHelper";
 
     @GetMapping("/")
     public String get() {
