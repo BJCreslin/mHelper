@@ -1,96 +1,109 @@
+html {
+	background: url("pictures/zhelp1.jpg") no-repeat grey;
+	background-repeat: no-repeat;
+	background-position: center center;
+	background-attachment: fixed;
+	-webkit-background-size: cover;
+	-moz-background-size: cover;
+	-o-background-size: cover;
+	background-size: cover;
+}
+
 body {
-    /*width: 100%;*/
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: space-around;
-    background-size: 100%;
-    margin: 0;
-    padding: 0;
-    background: url("/pictures/zhelp.jpg") no-repeat center center fixed grey;
+	width: 100%;
+	height: 600px;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: space-around;
+	margin: 0;
+	padding: 0;
 }
 
 #zHelper {
-    display: flex;
-    flex-direction: row;
-    justify-content: space-around;
-    width: 50%;
-    height: 50px;
+	display: flex;
+	flex-direction: row;
+	justify-content: space-around;
+	width: 50%;
+	height: 50px;
 }
 
 .text {
-    width: 350px;
-    padding-left: 20px;
-    background-color: silver;
-    color: rgb(46, 46, 46);
-    font-family: "segoe print";
-    font-size: 15px;
-    border: 2px solid black;
-    border-radius: 10px;
-    box-shadow: 0px 0px 3px 3px rgb(85, 85, 85);
+	width: 350px;
+	padding-left: 20px;
+	background-color: silver;
+	color: rgb(46, 46, 46);
+	font-family: "segoe print";
+	font-size: 15px;
+	border: 2px solid black;
+	border-radius: 10px;
+	box-shadow: 0px 0px 3px 3px rgb(85, 85, 85);
+	cursor: pointer;
 }
 
 .button {
-    width: 80px;
-    background: url("/pictures/sym.png") no-repeat center rgb(132, 79, 167);
-    border-radius: 50%;
-    border: 2px solid rgb(86, 39, 117);
+	width: 80px;
+	background: url("pictures/sym.png") no-repeat center rgb(132, 79, 167);
+	border-radius: 50%;
+	border: 2px solid rgb(86, 39, 117);
+	cursor: pointer;
 }
 
 nav {
-    display: flex;
-    flex-direction: row;
-    justify-content: space-evenly;
-    min-width: 200px;
-    align-self: flex-start;
-    margin-left: 50px;
-    height: 50px;
-    text-align: center;
-    align-items: flex-end;
+	display: flex;
+	flex-direction: row;
+	justify-content: space-evenly;
+	min-width: 200px;
+	align-self: flex-start;
+	margin-left: 50px;
+	height: 50px;
+	text-align: center;
+	align-items: flex-end;
 }
 
 a {
-    width: 30px;
-    text-decoration: none;
-    height: 30px;
-    line-height: 30px;
-    border: 1px solid rgb(126, 80, 156);
-    border-radius: 50%;
-    background-color: white;
-    color: rgb(46, 46, 46);
+	width: 30px;
+	text-decoration: none;
+	height: 30px;
+	line-height: 30px;
+	border: 1px solid rgb(126, 80, 156);
+	border-radius: 50%;
+	background-color: white;
+	color: rgb(46, 46, 46);
+	cursor: pointer;
 }
 
 a:hover {
-    background-color: rgb(126, 80, 156);
-    color: white;
+	background-color: rgb(126, 80, 156);
+	color: white;
 }
 
 a:active {
-    background-color: rgb(68, 59, 196);
-    color: white;
+	background-color: rgb(68, 59, 196);
+	color: white;
 }
 
 table {
-    width: 90%;
-    min-height: 350px;
-    font-family: "segoe print";
-    font-size: 12px;
-    border-collapse: collapse;
-    border: 3px double rgb(46, 46, 46);
-    border-radius: 10px;
-    background-color: white;
-    opacity: 0.5;
+	width: 90%;
+	min-height: 350px;
+	font-family: "segoe print";
+	font-size: 12px;
+	border-collapse: collapse;
+	border: 3px double rgb(46, 46, 46);
+	border-radius: 10px;
+	background-color: white;
+	opacity: 0.5;
 }
 
 th {
-    height: 50px;
-    border-bottom: 2px solid rgb(46, 46, 46);
-    border-right: 1px dashed rgb(46, 46, 46);
+	height: 50px;
+	border-bottom: 2px solid rgb(46, 46, 46);
+	border-right: 1px dashed rgb(46, 46, 46);
 }
 
 td {
-    min-height: 30px;
-    border-bottom: 1px dashed rgb(46, 46, 46);
-    border-right: 1px dashed rgb(46, 46, 46);
+	min-height: 30px;
+	border-bottom: 1px dashed rgb(46, 46, 46);
+	border-right: 1px dashed rgb(46, 46, 46);
 }
 
