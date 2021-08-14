@@ -1,7 +1,7 @@
-<!DOCTYPE html>
-<html lang="ru">
+<!DOCTYPE html >
+<html lang="ru" xmlns:th="http://www.thymeleaf.org">
 	<head>
-		<title>zHelper</title>
+		<title>zHelper. Твой маленький помощник в больших делах.</title>
 		<meta charset="utf-8">
 		<meta name="viewport" content="width=device-width, initial-scale=1.0">
 		<link rel="stylesheet" href="css/zHelper.css">
@@ -11,8 +11,8 @@
 	</head>
 
 	<body>
-		<form id="zHelper">
-			<input class="text" type="text" placeholder="Введите номер закупки">
+		<form method="post" id="zHelper" th:action="@{/add}">
+			<input class="text" type="text" placeholder="Введите адрес или номер закупки">
 			<input class="button" type="submit" value="">
 		</form>
 		<nav>
