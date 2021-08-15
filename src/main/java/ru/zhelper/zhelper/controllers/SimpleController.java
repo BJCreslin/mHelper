@@ -5,11 +5,15 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import ru.zhelper.zhelper.models.Procurement;
+import ru.zhelper.zhelper.models.dto.ProcurementAddress;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.Collections;
+import java.util.List;
 
 @Controller
 @RequestMapping("")
@@ -17,7 +21,7 @@ public class SimpleController {
     private static final Logger logger = LoggerFactory.getLogger(SimpleController.class);
 
     private static final String INDEX_PAGE_NAME = "zHelper";
-    private static final String COMMA = ",";
+    private static final String COMMA_SEPARATOR = ",";
     private static final String HEADER_X_FORWARD = "X-Forwarded-For";
     private static final String GET_FROM_IP = "Get from ip {}";
     private static final String POST_FROM_IP = "Post from ip {}, procurement {}";
@@ -29,18 +33,22 @@ public class SimpleController {
             logger.debug(GET_FROM_IP, getIpFromRequest(request));
         }
         // todo: <---------------Insert getAll from Base ----------------->
+        List<Procurement> procurements = Collections.emptyList();
+        model.addAttribute("procurements", procurements);
         return INDEX_PAGE_NAME;
     }
 
     @PostMapping("/")
-    public String post(HttpServletRequest request, Model model, @RequestParam("procurement") String procurement) {
+    public String post(HttpServletRequest request, Model model, @ModelAttribute("procurementAddress") ProcurementAddress address) {
         if (logger.isDebugEnabled()) {
-            logger.debug(POST_FROM_IP, getIpFromRequest(request), procurement);
+            logger.debug(POST_FROM_IP, getIpFromRequest(request), address);
         }
         // todo: <---------------Insert Save to base ----------------->
         // todo: <---------------Insert getAll from Base ----------------->
+        List<Procurement> procurements = Collections.emptyList();
+        model.addAttribute("procurements", procurements);
         if (logger.isDebugEnabled()) {
-            logger.debug(POSTED_PROCUREMENT, procurement);
+            logger.debug(POSTED_PROCUREMENT, address);
         }
         return INDEX_PAGE_NAME;
     }
@@ -49,8 +57,8 @@ public class SimpleController {
         String ip;
         if (request.getHeader(HEADER_X_FORWARD) != null) {
             String xForwardedFor = request.getHeader(HEADER_X_FORWARD);
-            if (xForwardedFor.contains(COMMA)) {
-                ip = xForwardedFor.substring(xForwardedFor.lastIndexOf(COMMA) + 2);
+            if (xForwardedFor.contains(COMMA_SEPARATOR)) {
+                ip = xForwardedFor.substring(xForwardedFor.lastIndexOf(COMMA_SEPARATOR) + 2);
             } else {
                 ip = xForwardedFor;
             }
