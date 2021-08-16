@@ -104,4 +104,10 @@ class ZakupkiParser615FzTest {
         ProcedureType result = parser.getProcedureType(fineHtml);
         Assertions.assertEquals(ProcedureType.ELECTRONIC_AUCTION_615FZ, result);
     }
+
+    @Test
+    void givenBadHtml_whenGetProcedureType_getException() {
+        Assertions.assertThrows(BadDataParsingException.class,
+                () -> parser.getProcedureType(badHtml));
+    }
 }
