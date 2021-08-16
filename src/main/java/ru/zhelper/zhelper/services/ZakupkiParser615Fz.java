@@ -14,9 +14,12 @@ public class ZakupkiParser615Fz implements ZakupkiParser {
     Logger logger = LoggerFactory.getLogger(ZakupkiParser615Fz.class);
     private static final String UIN_SELECTOR = "span[class=navBreadcrumb__text]";
     private static final String STAGE_SELECTOR = "span[class=cardMainInfo__state]";
+    private static final String DEADLINE_SELECTOR = "span[class=section__title]:contains(Дата и время окончания срока подачи заявок на участие в электронном аукционе)";
     private static final String NUMBER_TO_REPLACE = "№ ";
     private static final String REPLACEMENT = "";
     private static final String START_LAW_TO_REPLACE = "ПП РФ ";
+    private static final String SPAN_SEPARATOR = " <span";
+
     private static final String FINISH_LAW_TO_REPLACE = " Электронный аукцион на оказание услуг или выполнение работ по капитальному ремонту общего имущества в многоквартирном доме";
 
     private static final String BAD_DATA_EXCEPTION = "Bad data in {}.";
@@ -51,8 +54,8 @@ public class ZakupkiParser615Fz implements ZakupkiParser {
     protected LocalDateTime getApplicationDeadline(String html) {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern(DATE_TIME_FORMATTER);
         try {
-            String text = Jsoup.parse(html).body().select("span[class=section__title]:contains(Дата и время окончания срока подачи заявок на участие в электронном аукционе)").
-                    first().siblingElements().first().html().split(" <span")[0];
+            String text = Jsoup.parse(html).body().select(DEADLINE_SELECTOR).
+                    first().siblingElements().first().html().split(SPAN_SEPARATOR)[0];
             return LocalDateTime.parse(text, formatter);
         } catch (NullPointerException exception) {
             logger.error(BAD_DATA_EXCEPTION, APPLICATION_DEADLINE, exception);
