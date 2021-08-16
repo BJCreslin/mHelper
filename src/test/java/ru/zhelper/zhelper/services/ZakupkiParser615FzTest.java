@@ -11,7 +11,9 @@ import ru.zhelper.zhelper.services.exceptions.BadDataParsingException;
 
 import java.io.IOException;
 import java.math.BigDecimal;
+import java.net.MalformedURLException;
 import java.net.URISyntaxException;
+import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.time.LocalDateTime;
@@ -27,6 +29,16 @@ class ZakupkiParser615FzTest {
     private static final String PUBLISHER = "ФОНД \"РЕГИОНАЛЬНЫЙ ФОНД КАПИТАЛЬНОГО РЕМОНТА МНОГОКВАРТИРНЫХ ДОМОВ ТОМСКОЙ ОБЛАСТИ\"";
     private static final String RESTRICTION = "Оплата выполненных работ, включая форму, сроки и порядок оплаты работ, осуществляется в порядке, указанном в разделе XVII «Проект договора о выполнении капитального ремонта».";
     private static final String DEADLINE = "01.09.2021 23:59";
+    private static URL LINK = null;
+
+    static {
+        try {
+            LINK = new URL("http://www.rts-tender.ru");
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+        }
+    }
+
     private static final BigDecimal CONTRACT_PRICE = new BigDecimal("1305523.99");
     private static final Integer FZ = 615;
     private ZakupkiParser615Fz parser;
@@ -135,5 +147,17 @@ class ZakupkiParser615FzTest {
     void givenBadHtml_whenGetRestrictions_getException() {
         Assertions.assertThrows(BadDataParsingException.class,
                 () -> parser.getRestrictions(badHtml));
+    }
+
+    @Test
+    void givenHtml_whenGetLinkOnPlacement_getLinkOnPlacement() {
+        URL result = parser.getLinkOnPlacement(fineHtml);
+        Assertions.assertEquals(LINK, result);
+    }
+
+    @Test
+    void givenBadHtml_whenGetLinkOnPlacement_getException() {
+        Assertions.assertThrows(BadDataParsingException.class,
+                () -> parser.getLinkOnPlacement(badHtml));
     }
 }

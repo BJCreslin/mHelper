@@ -9,6 +9,8 @@ import ru.zhelper.zhelper.models.Stage;
 import ru.zhelper.zhelper.services.exceptions.BadDataParsingException;
 
 import java.math.BigDecimal;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
@@ -21,6 +23,7 @@ public class ZakupkiParser615Fz implements ZakupkiParser {
     private static final String METHOD_SELECTOR = "span[class=section__title]:contains(Способ определения поставщика (подрядчика, исполнителя, подрядной организации))";
     private static final String PUBLISHER_SELECTOR = "span[class=section__title]:contains(Наименование организации)";
     private static final String RESTRICTIONS_SELECTOR = "span[class=section__title]:contains(Условия оплаты выполненных работ и (или) оказанных услуг)";
+    private static final String LINK_SELECTOR = "span[class=section__title]:contains(Сайт оператора электронной площадки в сети «Интернет»)";
     private static final String NUMBER_TO_REPLACE = "№ ";
     private static final String REPLACEMENT = "";
     private static final String START_LAW_TO_REPLACE = "ПП РФ ";
@@ -33,11 +36,13 @@ public class ZakupkiParser615Fz implements ZakupkiParser {
     private static final String METHOD = "Способ определения поставщика";
     private static final String BAD_DATA_EXCEPTION = "Bad data in {}.";
     private static final String PUBLISHER_NAME = "Организатор.";
+    private static final String RESTRICTION = "Restrictions";
     private static final String UIN = "uin";
     private static final String STAGE = "stage";
     private static final String FZ_NUMBER = "Fz number";
     private static final String APPLICATION_DEADLINE = "APPLICATION_DEADLINE";
     private static final String CONTRACT_PRICE = "CONTRACT PRICE";
+    private static final String LINK_ON_PLACEMENT = "Link on placement";
     private static final String PARSING = "Starting parse from html. Size {}";
     private static final String PARSED = "Procurement {} was parsed.";
     private static final String DATA_FORMAT = "dd.MM.yyy";
@@ -58,6 +63,7 @@ public class ZakupkiParser615Fz implements ZakupkiParser {
         procurement.setProcedureType(getProcedureType(html));
         procurement.setPublisherName(getPublisherName(html));
         procurement.setRestrictions(getRestrictions(html));
+        procurement.setLinkOnPlacement(getLinkOnPlacement(html));
 //todo ---------------->Insert other parse information <------------------------
         if (logger.isDebugEnabled()) {
             logger.debug(PARSED, procurement);
@@ -65,12 +71,21 @@ public class ZakupkiParser615Fz implements ZakupkiParser {
         return procurement;
     }
 
+    protected URL getLinkOnPlacement(String html) {
+        try {
+            return new URL(Jsoup.parse(html).body().select(LINK_SELECTOR).first().siblingElements().first().text());
+        } catch (NullPointerException | MalformedURLException exception) {
+            logger.error(BAD_DATA_EXCEPTION, LINK_ON_PLACEMENT, exception);
+            throw new BadDataParsingException(LINK_ON_PLACEMENT, exception);
+        }
+    }
+
     protected String getRestrictions(String html) {
         try {
             return Jsoup.parse(html).body().select(RESTRICTIONS_SELECTOR).first().siblingElements().first().text();
         } catch (NullPointerException exception) {
-            logger.error(BAD_DATA_EXCEPTION, PUBLISHER_NAME, exception);
-            throw new BadDataParsingException(PUBLISHER_NAME, exception);
+            logger.error(BAD_DATA_EXCEPTION, RESTRICTION, exception);
+            throw new BadDataParsingException(RESTRICTION, exception);
         }
     }
 
