@@ -18,6 +18,7 @@ class ZakupkiParser615FzTest {
     private static final String fileName = "206520000012100111.html";
     private static final String fileBadName = "206520000012100111bad.html";
     private static final String UIN = "206520000012100111";
+    private static final Integer FZ = 615;
     private ZakupkiParser615Fz parser;
     private String fineHtml;
     private String badHtml;
@@ -51,5 +52,17 @@ class ZakupkiParser615FzTest {
     void givenBadHtml_whenGetStage_getException() {
         Assertions.assertThrows(BadDataParsingException.class,
                 () -> parser.getStage(badHtml));
+    }
+
+    @Test
+    void givenHtml_whenGetUin_getFzNumber() {
+        Integer result = parser.getFzNumber(fineHtml);
+        Assertions.assertEquals(result, FZ);
+    }
+
+    @Test
+    void givenBadHtml_whenGetUin_getFzNumber() {
+        Assertions.assertThrows(BadDataParsingException.class,
+                () -> parser.getFzNumber(badHtml));
     }
 }

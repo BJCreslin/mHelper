@@ -13,10 +13,13 @@ public class ZakupkiParser615Fz implements ZakupkiParser {
     private static final String STAGE_SELECTOR = "span[class=cardMainInfo__state]";
     private static final String NUMBER_TO_REPLACE = "№ ";
     private static final String REPLACEMENT = "";
+    private static final String START_LAW_TO_REPLACE = "ПП РФ ";
+    private static final String FINISH_LAW_TO_REPLACE = " Электронный аукцион на оказание услуг или выполнение работ по капитальному ремонту общего имущества в многоквартирном доме";
 
     private static final String BAD_DATA_EXCEPTION = "Bad data in {}.";
     private static final String UIN = "uin";
     private static final String STAGE = "stage";
+    private static final String FZ_NUMBER = "Fz number";
     private static final String PARSING = "Starting parse from html. Size {}";
     private static final String PARSED = "Procurement {} was parsed.";
 
@@ -28,11 +31,24 @@ public class ZakupkiParser615Fz implements ZakupkiParser {
         Procurement procurement = new Procurement();
         procurement.setUin(getUin(html));
         procurement.setStage(getStage(html));
+        procurement.setFzNumber(getFzNumber(html));
+
 //todo ---------------->Insert other parse information <------------------------
         if (logger.isDebugEnabled()) {
             logger.debug(PARSED, procurement);
         }
         return procurement;
+    }
+
+    protected int getFzNumber(String html) {
+
+        try {
+            return Integer.parseInt(Jsoup.parse(html).body().select("div[class=cardMainInfo__title d-flex text-truncate]").first().text().
+                    replace(START_LAW_TO_REPLACE, REPLACEMENT).replace(FINISH_LAW_TO_REPLACE, REPLACEMENT));
+        } catch (NullPointerException | BadDataParsingException exception) {
+            logger.error(BAD_DATA_EXCEPTION, FZ_NUMBER, exception);
+            throw new BadDataParsingException(BAD_DATA_EXCEPTION, exception);
+        }
     }
 
     protected String getUin(String html) {
@@ -46,7 +62,7 @@ public class ZakupkiParser615Fz implements ZakupkiParser {
 
     protected Stage getStage(String html) {
         try {
-            return Stage.valueOf(Jsoup.parse(html).body().select(STAGE_SELECTOR).first().html());
+            return Stage.get(Jsoup.parse(html).body().select(STAGE_SELECTOR).first().html());
         } catch (NullPointerException exception) {
             logger.error(BAD_DATA_EXCEPTION, STAGE, exception);
             throw new BadDataParsingException(BAD_DATA_EXCEPTION, exception);
