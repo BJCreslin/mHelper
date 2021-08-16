@@ -12,14 +12,17 @@ import java.io.IOException;
 import java.net.URISyntaxException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 class ZakupkiParser615FzTest {
     private static final Logger logger = LoggerFactory.getLogger(ZakupkiParser615FzTest.class);
     private static final String DATA_FORMAT = "dd.MM.yyy";
+    private static final String DATE_TIME_FORMATTER = "dd.MM.yyyy HH:mm";
     private static final String fileName = "206520000012100111.html";
     private static final String fileBadName = "206520000012100111bad.html";
     private static final String UIN = "206520000012100111";
-    private static final String DEADLINE = "02.09.2021";
+    private static final String DEADLINE = "01.09.2021 23:59";
     private static final Integer FZ = 615;
     private ZakupkiParser615Fz parser;
     private String fineHtml;
@@ -69,11 +72,15 @@ class ZakupkiParser615FzTest {
     }
 
     @Test
-    void givenHtml_whenGetUin_getDeadLine() {
-        //  LocalDateTime result = parser.getApplicationDeadline(fineHtml);
-        //   DateTimeFormatter formatter = DateTimeFormatter.ofPattern(DATA_FORMAT);
-        String result = parser.getApplicationDeadline(fineHtml);
-        Assertions.assertEquals(result, "ddd");
+    void givenHtml_whenApplicationDeadline_getDeadLine() {
+        LocalDateTime result = parser.getApplicationDeadline(fineHtml);
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern(DATE_TIME_FORMATTER);
+        Assertions.assertEquals(result, LocalDateTime.parse(DEADLINE, formatter));
     }
 
+    @Test
+    void givenBadHtml_whenApplicationDeadline_getException() {
+        Assertions.assertThrows(BadDataParsingException.class,
+                () -> parser.getApplicationDeadline(badHtml));
+    }
 }
