@@ -3,8 +3,6 @@ package ru.zhelper.zhelper.services;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import ru.zhelper.zhelper.models.ProcedureType;
 import ru.zhelper.zhelper.models.Stage;
 import ru.zhelper.zhelper.services.exceptions.BadDataParsingException;
@@ -20,15 +18,16 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
 class ZakupkiParser615FzTest {
-    private static final Logger logger = LoggerFactory.getLogger(ZakupkiParser615FzTest.class);
-    private static final String DATA_FORMAT = "dd.MM.yyy";
     private static final String DATE_TIME_FORMATTER = "dd.MM.yyyy HH:mm";
     private static final String fileName = "206520000012100111.html";
     private static final String fileBadName = "206520000012100111bad.html";
     private static final String UIN = "206520000012100111";
     private static final String PUBLISHER = "ФОНД \"РЕГИОНАЛЬНЫЙ ФОНД КАПИТАЛЬНОГО РЕМОНТА МНОГОКВАРТИРНЫХ ДОМОВ ТОМСКОЙ ОБЛАСТИ\"";
     private static final String RESTRICTION = "Оплата выполненных работ, включая форму, сроки и порядок оплаты работ, осуществляется в порядке, указанном в разделе XVII «Проект договора о выполнении капитального ремонта».";
+    private static final String OBJECT_OF = "Выполнение работ по разработке проектно-сметной документации (включая проведение проверки достоверности определения сметной стоимости) на выполнение работ по капитальному ремонту общего имущества в многоквартирных домах, расположенных на территории Томской области по адресам: г. Стрежевой, 3-й микрорайон, д. 317; Томский район, п. Молодежный, д. 7; Томский район, п. Молодежный, д. 8 (переустройство невентилируемой крыши на вентилируемую крышу).";
     private static final String DEADLINE = "01.09.2021 23:59";
+    private static final String APPLICATION_SECURE = "13055.24";
+    private static final String CONTRACT_SECURE = "39165.72";
     private static URL LINK = null;
 
     static {
@@ -159,5 +158,41 @@ class ZakupkiParser615FzTest {
     void givenBadHtml_whenGetLinkOnPlacement_getException() {
         Assertions.assertThrows(BadDataParsingException.class,
                 () -> parser.getLinkOnPlacement(badHtml));
+    }
+
+    @Test
+    void givenHtml_whenGetApplicationSecure_getApplicationSecure() {
+        String result = parser.getApplicationSecure(fineHtml);
+        Assertions.assertEquals(APPLICATION_SECURE, result);
+    }
+
+    @Test
+    void givenBadHtml_whenGetApplicationSecure_getException() {
+        Assertions.assertThrows(BadDataParsingException.class,
+                () -> parser.getApplicationSecure(badHtml));
+    }
+
+    @Test
+    void givenHtml_whenGetContractSecure_getApplicationSecure() {
+        String result = parser.getContractSecure(fineHtml);
+        Assertions.assertEquals(CONTRACT_SECURE, result);
+    }
+
+    @Test
+    void givenBadHtml_whenGetContractSecure_getException() {
+        Assertions.assertThrows(BadDataParsingException.class,
+                () -> parser.getContractSecure(badHtml));
+    }
+
+    @Test
+    void givenHtml_whenGetObjectOf_getObjectOf() {
+        String result = parser.getObjectOf(fineHtml);
+        Assertions.assertEquals(OBJECT_OF, result);
+    }
+
+    @Test
+    void givenBadHtml_whenGetObjectOf_getException() {
+        Assertions.assertThrows(BadDataParsingException.class,
+                () -> parser.getObjectOf(badHtml));
     }
 }
