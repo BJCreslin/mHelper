@@ -9,6 +9,7 @@ import ru.zhelper.zhelper.models.Stage;
 import ru.zhelper.zhelper.services.exceptions.BadDataParsingException;
 
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.net.URISyntaxException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -23,6 +24,7 @@ class ZakupkiParser615FzTest {
     private static final String fileBadName = "206520000012100111bad.html";
     private static final String UIN = "206520000012100111";
     private static final String DEADLINE = "01.09.2021 23:59";
+    private static final BigDecimal CONTRACT_PRICE = new BigDecimal("1305523.99");
     private static final Integer FZ = 615;
     private ZakupkiParser615Fz parser;
     private String fineHtml;
@@ -38,7 +40,7 @@ class ZakupkiParser615FzTest {
     @Test
     void givenHtml_whenGetUin_getUin() {
         String result = parser.getUin(fineHtml);
-        Assertions.assertEquals(result, UIN);
+        Assertions.assertEquals(UIN, result);
     }
 
     @Test
@@ -50,7 +52,7 @@ class ZakupkiParser615FzTest {
     @Test
     void givenHtml_whenGetStage_getStage() {
         Stage result = parser.getStage(fineHtml);
-        Assertions.assertEquals(result, Stage.SUBMISSION_OF_APPLICATION);
+        Assertions.assertEquals(Stage.SUBMISSION_OF_APPLICATION, result);
     }
 
     @Test
@@ -62,7 +64,7 @@ class ZakupkiParser615FzTest {
     @Test
     void givenHtml_whenGetUin_getFzNumber() {
         Integer result = parser.getFzNumber(fineHtml);
-        Assertions.assertEquals(result, FZ);
+        Assertions.assertEquals(FZ, result);
     }
 
     @Test
@@ -82,5 +84,17 @@ class ZakupkiParser615FzTest {
     void givenBadHtml_whenApplicationDeadline_getException() {
         Assertions.assertThrows(BadDataParsingException.class,
                 () -> parser.getApplicationDeadline(badHtml));
+    }
+
+    @Test
+    void givenHtml_whenContractPrice_getContractPrice() {
+        BigDecimal result = parser.getContractPrice(fineHtml);
+        Assertions.assertEquals(CONTRACT_PRICE, result);
+    }
+
+    @Test
+    void givenBadHtml_whenContractPrice_getException() {
+        Assertions.assertThrows(BadDataParsingException.class,
+                () -> parser.getContractPrice(badHtml));
     }
 }

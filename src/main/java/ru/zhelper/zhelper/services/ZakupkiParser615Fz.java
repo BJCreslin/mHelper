@@ -7,6 +7,7 @@ import ru.zhelper.zhelper.models.Procurement;
 import ru.zhelper.zhelper.models.Stage;
 import ru.zhelper.zhelper.services.exceptions.BadDataParsingException;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
@@ -15,10 +16,15 @@ public class ZakupkiParser615Fz implements ZakupkiParser {
     private static final String UIN_SELECTOR = "span[class=navBreadcrumb__text]";
     private static final String STAGE_SELECTOR = "span[class=cardMainInfo__state]";
     private static final String DEADLINE_SELECTOR = "span[class=section__title]:contains(Дата и время окончания срока подачи заявок на участие в электронном аукционе)";
+    private static final String CONTRACT_PRICE_SELECTOR = "span[class=section__title]:contains(Начальная (максимальная) цена договора, рублей)";
     private static final String NUMBER_TO_REPLACE = "№ ";
     private static final String REPLACEMENT = "";
     private static final String START_LAW_TO_REPLACE = "ПП РФ ";
     private static final String SPAN_SEPARATOR = " <span";
+    private static final String NBSP = "nbsp";
+    private static final String IN_RUSSIAN_ROUBLE = " в российских рублях";
+    private static final String DOT = ".";
+    private static final String COMMA = ",";
 
     private static final String FINISH_LAW_TO_REPLACE = " Электронный аукцион на оказание услуг или выполнение работ по капитальному ремонту общего имущества в многоквартирном доме";
 
@@ -43,7 +49,7 @@ public class ZakupkiParser615Fz implements ZakupkiParser {
         procurement.setStage(getStage(html));
         procurement.setFzNumber(getFzNumber(html));
         procurement.setApplicationDeadline(getApplicationDeadline(html));
-
+        procurement.setContractPrice(getContractPrice(html));
 //todo ---------------->Insert other parse information <------------------------
         if (logger.isDebugEnabled()) {
             logger.debug(PARSED, procurement);
@@ -51,12 +57,23 @@ public class ZakupkiParser615Fz implements ZakupkiParser {
         return procurement;
     }
 
+    protected BigDecimal getContractPrice(String html) {
+        try {
+            String textContractPrice = Jsoup.parse(html).body().select(CONTRACT_PRICE_SELECTOR).first().siblingElements().first().text().
+                    replace(NBSP, REPLACEMENT).replace(IN_RUSSIAN_ROUBLE, REPLACEMENT).replace(" ", "").replace(COMMA, DOT);
+            return new BigDecimal(textContractPrice);
+        } catch (NullPointerException exception) {
+            logger.error(BAD_DATA_EXCEPTION, APPLICATION_DEADLINE, exception);
+            throw new BadDataParsingException(APPLICATION_DEADLINE, exception);
+        }
+    }
+
     protected LocalDateTime getApplicationDeadline(String html) {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern(DATE_TIME_FORMATTER);
         try {
-            String text = Jsoup.parse(html).body().select(DEADLINE_SELECTOR).
+            String textDate = Jsoup.parse(html).body().select(DEADLINE_SELECTOR).
                     first().siblingElements().first().html().split(SPAN_SEPARATOR)[0];
-            return LocalDateTime.parse(text, formatter);
+            return LocalDateTime.parse(textDate, formatter);
         } catch (NullPointerException exception) {
             logger.error(BAD_DATA_EXCEPTION, APPLICATION_DEADLINE, exception);
             throw new BadDataParsingException(APPLICATION_DEADLINE, exception);
