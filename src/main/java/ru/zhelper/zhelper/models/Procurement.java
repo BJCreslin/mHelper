@@ -109,4 +109,14 @@ public class Procurement implements Serializable {
     //Поле нужно чтобы отслеживать необходимость обновить данные
     @Column
     private LocalDateTime dateTimeLastUpdated;
+
+	@Override
+	public String toString() {
+		return "Procurement [id=" + id + ", stage=" + stage + ", uin=" + uin + ", fzNumber=" + fzNumber
+				+ ", applicationDeadline=" + applicationDeadline + ", contractPrice=" + contractPrice
+				+ ", procedureType=" + procedureType + ", publisherName=" + publisherName + ", restrictions="
+				+ restrictions + ", linkOnPlacement=" + linkOnPlacement + ", applicationSecure=" + applicationSecure
+				+ ", contractSecure=" + contractSecure + ", objectOf=" + objectOf + ", dateTimeLastUpdated="
+				+ dateTimeLastUpdated + "]";
+	}
 }
