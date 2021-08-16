@@ -25,7 +25,6 @@ public class ZakupkiParser615Fz implements ZakupkiParser {
     private static final String IN_RUSSIAN_ROUBLE = " в российских рублях";
     private static final String DOT = ".";
     private static final String COMMA = ",";
-
     private static final String FINISH_LAW_TO_REPLACE = " Электронный аукцион на оказание услуг или выполнение работ по капитальному ремонту общего имущества в многоквартирном доме";
 
     private static final String BAD_DATA_EXCEPTION = "Bad data in {}.";
@@ -33,6 +32,7 @@ public class ZakupkiParser615Fz implements ZakupkiParser {
     private static final String STAGE = "stage";
     private static final String FZ_NUMBER = "Fz number";
     private static final String APPLICATION_DEADLINE = "APPLICATION_DEADLINE";
+    private static final String CONTRACT_PRICE = "CONTRACT PRICE";
     private static final String PARSING = "Starting parse from html. Size {}";
     private static final String PARSED = "Procurement {} was parsed.";
     private static final String DATA_FORMAT = "dd.MM.yyy";
@@ -63,8 +63,8 @@ public class ZakupkiParser615Fz implements ZakupkiParser {
                     replace(NBSP, REPLACEMENT).replace(IN_RUSSIAN_ROUBLE, REPLACEMENT).replace(" ", "").replace(COMMA, DOT);
             return new BigDecimal(textContractPrice);
         } catch (NullPointerException exception) {
-            logger.error(BAD_DATA_EXCEPTION, APPLICATION_DEADLINE, exception);
-            throw new BadDataParsingException(APPLICATION_DEADLINE, exception);
+            logger.error(BAD_DATA_EXCEPTION, CONTRACT_PRICE, exception);
+            throw new BadDataParsingException(CONTRACT_PRICE, exception);
         }
     }
 
@@ -76,7 +76,7 @@ public class ZakupkiParser615Fz implements ZakupkiParser {
             return LocalDateTime.parse(textDate, formatter);
         } catch (NullPointerException exception) {
             logger.error(BAD_DATA_EXCEPTION, APPLICATION_DEADLINE, exception);
-            throw new BadDataParsingException(APPLICATION_DEADLINE, exception);
+            throw new BadDataParsingException(BAD_DATA_EXCEPTION, exception);
         }
     }
 
