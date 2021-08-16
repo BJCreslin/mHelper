@@ -3,6 +3,7 @@ package ru.zhelper.zhelper.services;
 import org.jsoup.Jsoup;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import ru.zhelper.zhelper.models.ProcedureType;
 import ru.zhelper.zhelper.models.Procurement;
 import ru.zhelper.zhelper.models.Stage;
 import ru.zhelper.zhelper.services.exceptions.BadDataParsingException;
@@ -17,6 +18,7 @@ public class ZakupkiParser615Fz implements ZakupkiParser {
     private static final String STAGE_SELECTOR = "span[class=cardMainInfo__state]";
     private static final String DEADLINE_SELECTOR = "span[class=section__title]:contains(Дата и время окончания срока подачи заявок на участие в электронном аукционе)";
     private static final String CONTRACT_PRICE_SELECTOR = "span[class=section__title]:contains(Начальная (максимальная) цена договора, рублей)";
+    private static final String METHOD_SELECTOR = "span[class=section__title]:contains(Способ определения поставщика (подрядчика, исполнителя, подрядной организации))";
     private static final String NUMBER_TO_REPLACE = "№ ";
     private static final String REPLACEMENT = "";
     private static final String START_LAW_TO_REPLACE = "ПП РФ ";
@@ -26,7 +28,7 @@ public class ZakupkiParser615Fz implements ZakupkiParser {
     private static final String DOT = ".";
     private static final String COMMA = ",";
     private static final String FINISH_LAW_TO_REPLACE = " Электронный аукцион на оказание услуг или выполнение работ по капитальному ремонту общего имущества в многоквартирном доме";
-
+    private static final String METHOD = "Способ определения поставщика";
     private static final String BAD_DATA_EXCEPTION = "Bad data in {}.";
     private static final String UIN = "uin";
     private static final String STAGE = "stage";
@@ -50,11 +52,22 @@ public class ZakupkiParser615Fz implements ZakupkiParser {
         procurement.setFzNumber(getFzNumber(html));
         procurement.setApplicationDeadline(getApplicationDeadline(html));
         procurement.setContractPrice(getContractPrice(html));
+        procurement.setProcedureType(getProcedureType(html));
 //todo ---------------->Insert other parse information <------------------------
         if (logger.isDebugEnabled()) {
             logger.debug(PARSED, procurement);
         }
         return procurement;
+    }
+
+    protected ProcedureType getProcedureType(String html) {
+        try {
+            String procedureType = Jsoup.parse(html).body().select(METHOD_SELECTOR).first().siblingElements().first().text();
+            return ProcedureType.get(procedureType);
+        } catch (NullPointerException exception) {
+            logger.error(BAD_DATA_EXCEPTION, METHOD, exception);
+            throw new BadDataParsingException(METHOD, exception);
+        }
     }
 
     protected BigDecimal getContractPrice(String html) {

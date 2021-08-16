@@ -5,6 +5,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import ru.zhelper.zhelper.models.ProcedureType;
 import ru.zhelper.zhelper.models.Stage;
 import ru.zhelper.zhelper.services.exceptions.BadDataParsingException;
 
@@ -74,27 +75,33 @@ class ZakupkiParser615FzTest {
     }
 
     @Test
-    void givenHtml_whenApplicationDeadline_getDeadLine() {
+    void givenHtml_whenGetApplicationDeadline_getDeadLine() {
         LocalDateTime result = parser.getApplicationDeadline(fineHtml);
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern(DATE_TIME_FORMATTER);
         Assertions.assertEquals(result, LocalDateTime.parse(DEADLINE, formatter));
     }
 
     @Test
-    void givenBadHtml_whenApplicationDeadline_getException() {
+    void givenBadHtml_whenGetApplicationDeadline_getException() {
         Assertions.assertThrows(BadDataParsingException.class,
                 () -> parser.getApplicationDeadline(badHtml));
     }
 
     @Test
-    void givenHtml_whenContractPrice_getContractPrice() {
+    void givenHtml_whenGetContractPrice_getContractPrice() {
         BigDecimal result = parser.getContractPrice(fineHtml);
         Assertions.assertEquals(CONTRACT_PRICE, result);
     }
 
     @Test
-    void givenBadHtml_whenContractPrice_getException() {
+    void givenBadHtml_whenGetContractPrice_getException() {
         Assertions.assertThrows(BadDataParsingException.class,
                 () -> parser.getContractPrice(badHtml));
+    }
+
+    @Test
+    void givenHtml_whenGetProcedureType_getProcedureType() {
+        ProcedureType result = parser.getProcedureType(fineHtml);
+        Assertions.assertEquals(ProcedureType.ELECTRONIC_AUCTION_615FZ, result);
     }
 }

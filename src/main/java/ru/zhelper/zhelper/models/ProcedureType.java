@@ -30,7 +30,7 @@ public enum ProcedureType {
     ELECTRONIC_AUCTION_615FZ("Электронный аукцион (ПП РФ 615)");
 
     private final String title;
-    private static final Map<String, Stage> ENUM_MAP;
+    private static final Map<String, ProcedureType> ENUM_MAP;
 
     public String getTitle() {
         return title;
@@ -46,14 +46,14 @@ public enum ProcedureType {
     }
 
     static {
-        Map<String, Stage> map = new ConcurrentHashMap<>();
-        for (Stage instance : Stage.values()) {
+        Map<String, ProcedureType> map = new ConcurrentHashMap<>();
+        for (ProcedureType instance : ProcedureType.values()) {
             map.put(instance.getTitle().toLowerCase(), instance);
         }
         ENUM_MAP = Collections.unmodifiableMap(map);
     }
 
-    public static Stage get(String name) {
+    public static ProcedureType get(String name) {
         return ENUM_MAP.get(name.toLowerCase());
     }
 }
