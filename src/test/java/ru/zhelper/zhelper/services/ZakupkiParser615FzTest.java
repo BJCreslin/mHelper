@@ -5,6 +5,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import ru.zhelper.zhelper.models.Stage;
 import ru.zhelper.zhelper.services.exceptions.BadDataParsingException;
 
 import java.io.IOException;
@@ -38,5 +39,17 @@ class ZakupkiParser615FzTest {
     void givenBadHtml_whenGetUin_getException() {
         Assertions.assertThrows(BadDataParsingException.class,
                 () -> parser.getUin(badHtml));
+    }
+
+    @Test
+    void givenHtml_whenGetStage_getStage() {
+        Stage result = parser.getStage(fineHtml);
+        Assertions.assertEquals(result, Stage.SUBMISSION_OF_APPLICATION);
+    }
+
+    @Test
+    void givenBadHtml_whenGetStage_getException() {
+        Assertions.assertThrows(BadDataParsingException.class,
+                () -> parser.getStage(badHtml));
     }
 }
