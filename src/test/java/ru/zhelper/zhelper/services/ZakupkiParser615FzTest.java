@@ -15,9 +15,11 @@ import java.nio.file.Paths;
 
 class ZakupkiParser615FzTest {
     private static final Logger logger = LoggerFactory.getLogger(ZakupkiParser615FzTest.class);
+    private static final String DATA_FORMAT = "dd.MM.yyy";
     private static final String fileName = "206520000012100111.html";
     private static final String fileBadName = "206520000012100111bad.html";
     private static final String UIN = "206520000012100111";
+    private static final String DEADLINE = "02.09.2021";
     private static final Integer FZ = 615;
     private ZakupkiParser615Fz parser;
     private String fineHtml;
@@ -65,4 +67,13 @@ class ZakupkiParser615FzTest {
         Assertions.assertThrows(BadDataParsingException.class,
                 () -> parser.getFzNumber(badHtml));
     }
+
+    @Test
+    void givenHtml_whenGetUin_getDeadLine() {
+        //  LocalDateTime result = parser.getApplicationDeadline(fineHtml);
+        //   DateTimeFormatter formatter = DateTimeFormatter.ofPattern(DATA_FORMAT);
+        String result = parser.getApplicationDeadline(fineHtml);
+        Assertions.assertEquals(result, "ddd");
+    }
+
 }
