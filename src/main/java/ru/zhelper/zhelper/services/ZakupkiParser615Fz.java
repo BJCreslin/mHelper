@@ -19,6 +19,7 @@ public class ZakupkiParser615Fz implements ZakupkiParser {
     private static final String DEADLINE_SELECTOR = "span[class=section__title]:contains(Дата и время окончания срока подачи заявок на участие в электронном аукционе)";
     private static final String CONTRACT_PRICE_SELECTOR = "span[class=section__title]:contains(Начальная (максимальная) цена договора, рублей)";
     private static final String METHOD_SELECTOR = "span[class=section__title]:contains(Способ определения поставщика (подрядчика, исполнителя, подрядной организации))";
+    private static final String PUBLISHER_SELECTOR = "span[class=section__title]:contains(Наименование организации)";
     private static final String NUMBER_TO_REPLACE = "№ ";
     private static final String REPLACEMENT = "";
     private static final String START_LAW_TO_REPLACE = "ПП РФ ";
@@ -30,6 +31,7 @@ public class ZakupkiParser615Fz implements ZakupkiParser {
     private static final String FINISH_LAW_TO_REPLACE = " Электронный аукцион на оказание услуг или выполнение работ по капитальному ремонту общего имущества в многоквартирном доме";
     private static final String METHOD = "Способ определения поставщика";
     private static final String BAD_DATA_EXCEPTION = "Bad data in {}.";
+    private static final String PUBLISHER_NAME = "Организатор.";
     private static final String UIN = "uin";
     private static final String STAGE = "stage";
     private static final String FZ_NUMBER = "Fz number";
@@ -53,11 +55,22 @@ public class ZakupkiParser615Fz implements ZakupkiParser {
         procurement.setApplicationDeadline(getApplicationDeadline(html));
         procurement.setContractPrice(getContractPrice(html));
         procurement.setProcedureType(getProcedureType(html));
+        procurement.setPublisherName(getPublisherName(html));
 //todo ---------------->Insert other parse information <------------------------
         if (logger.isDebugEnabled()) {
             logger.debug(PARSED, procurement);
         }
         return procurement;
+    }
+
+    protected String getPublisherName(String html) {
+        try {
+            return Jsoup.parse(html).body().select(PUBLISHER_SELECTOR).first().siblingElements().first().text();
+
+        } catch (NullPointerException exception) {
+            logger.error(BAD_DATA_EXCEPTION, PUBLISHER_NAME, exception);
+            throw new BadDataParsingException(PUBLISHER_NAME, exception);
+        }
     }
 
     protected ProcedureType getProcedureType(String html) {
