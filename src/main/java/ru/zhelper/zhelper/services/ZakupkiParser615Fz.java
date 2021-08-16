@@ -20,6 +20,7 @@ public class ZakupkiParser615Fz implements ZakupkiParser {
     private static final String CONTRACT_PRICE_SELECTOR = "span[class=section__title]:contains(Начальная (максимальная) цена договора, рублей)";
     private static final String METHOD_SELECTOR = "span[class=section__title]:contains(Способ определения поставщика (подрядчика, исполнителя, подрядной организации))";
     private static final String PUBLISHER_SELECTOR = "span[class=section__title]:contains(Наименование организации)";
+    private static final String RESTRICTIONS_SELECTOR = "span[class=section__title]:contains(Условия оплаты выполненных работ и (или) оказанных услуг)";
     private static final String NUMBER_TO_REPLACE = "№ ";
     private static final String REPLACEMENT = "";
     private static final String START_LAW_TO_REPLACE = "ПП РФ ";
@@ -56,11 +57,21 @@ public class ZakupkiParser615Fz implements ZakupkiParser {
         procurement.setContractPrice(getContractPrice(html));
         procurement.setProcedureType(getProcedureType(html));
         procurement.setPublisherName(getPublisherName(html));
+        procurement.setRestrictions(getRestrictions(html));
 //todo ---------------->Insert other parse information <------------------------
         if (logger.isDebugEnabled()) {
             logger.debug(PARSED, procurement);
         }
         return procurement;
+    }
+
+    protected String getRestrictions(String html) {
+        try {
+            return Jsoup.parse(html).body().select(RESTRICTIONS_SELECTOR).first().siblingElements().first().text();
+        } catch (NullPointerException exception) {
+            logger.error(BAD_DATA_EXCEPTION, PUBLISHER_NAME, exception);
+            throw new BadDataParsingException(PUBLISHER_NAME, exception);
+        }
     }
 
     protected String getPublisherName(String html) {
