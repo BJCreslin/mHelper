@@ -27,6 +27,7 @@ public class ZakupkiParser615Fz implements ZakupkiParser {
     private static final String APPLICATION_SECURE_SELECTOR = "span[class=section__title]:contains(Размер обеспечения заявки на участие в электронном аукционе)";
     private static final String CONTRACT_SECURE_SELECTOR = "span[class=section__title]:contains(Размер обеспечения исполнения обязательств по договору)";
     private static final String OBJECT_OF_SELECTOR = "span[class=section__title]:contains(Наименование закупки)";
+    private static final String LAW_SELECTOR = "div[class=cardMainInfo__title d-flex text-truncate]";
     private static final String NUMBER_TO_REPLACE = "№ ";
     private static final String REPLACEMENT = "";
     private static final String START_LAW_TO_REPLACE = "ПП РФ ";
@@ -168,7 +169,7 @@ public class ZakupkiParser615Fz implements ZakupkiParser {
 
     protected int getFzNumber(String html) {
         try {
-            return Integer.parseInt(Jsoup.parse(html).body().select("div[class=cardMainInfo__title d-flex text-truncate]").first().text().
+            return Integer.parseInt(Jsoup.parse(html).body().select(LAW_SELECTOR).first().text().
                     replace(START_LAW_TO_REPLACE, REPLACEMENT).replace(FINISH_LAW_TO_REPLACE, REPLACEMENT));
         } catch (NullPointerException exception) {
             logger.error(BAD_DATA_EXCEPTION, FZ_NUMBER, exception);
