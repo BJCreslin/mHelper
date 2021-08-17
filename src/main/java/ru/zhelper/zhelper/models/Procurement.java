@@ -1,42 +1,38 @@
 package ru.zhelper.zhelper.models;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+import javax.persistence.*;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.net.URL;
 import java.time.LocalDateTime;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-
 @Entity
-@Getter
-@Setter
+@Data
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 public class Procurement implements Serializable {
-    
-	//Что означает поле
+
+    //Что означает поле
     //Где можно найти по ФЗ №44
     //и по ФЗ №223
-	private static final long serialVersionUID = -3159634854548811691L;
+    private static final long serialVersionUID = -3159634854548811691L;
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(columnDefinition = "serial")
     private long id;
-    
-	//Этап закупки
+
+    //Этап закупки
     //ОБЩАЯ ИНФОРМАЦИЯ О ЗАКУПКЕ -> Этап закупки
     //ЖУРНАЛ СОБЫТИЙ -> СОБЫТИЕ -> Закупка переведена на этап "stage"
     @Column
+    @Enumerated(EnumType.STRING)
     private Stage stage;
 
     //Уникальный идентификатор закупки
@@ -67,6 +63,7 @@ public class Procurement implements Serializable {
     //ОБЩАЯ ИНФОРМАЦИЯ О ЗАКУПКЕ -> Способ определения поставщика (подрядчика, исполнителя)
     //ОБЩИЕ СВЕДЕНИЯ О ЗАКУПКЕ -> Способ размещения закупки
     @Column
+    @Enumerated(EnumType.STRING)
     private ProcedureType procedureType;
 
     //Кто опубликовал извещение о закупке
@@ -105,18 +102,8 @@ public class Procurement implements Serializable {
     //ОБЩИЕ СВЕДЕНИЯ О ЗАКУПКЕ -> Наименование закупки
     @Column
     private String objectOf;
-    
+
     //Поле нужно чтобы отслеживать необходимость обновить данные
     @Column
     private LocalDateTime dateTimeLastUpdated;
-
-	@Override
-	public String toString() {
-		return "Procurement [id=" + id + ", stage=" + stage + ", uin=" + uin + ", fzNumber=" + fzNumber
-				+ ", applicationDeadline=" + applicationDeadline + ", contractPrice=" + contractPrice
-				+ ", procedureType=" + procedureType + ", publisherName=" + publisherName + ", restrictions="
-				+ restrictions + ", linkOnPlacement=" + linkOnPlacement + ", applicationSecure=" + applicationSecure
-				+ ", contractSecure=" + contractSecure + ", objectOf=" + objectOf + ", dateTimeLastUpdated="
-				+ dateTimeLastUpdated + "]";
-	}
 }
