@@ -33,8 +33,8 @@ public class SimpleController {
             logger.debug(GET_FROM_IP, getIpFromRequest(request));
         }
         // todo: <---------------Insert getAll from Base ----------------->
-        List<Procurement> procurements = Collections.emptyList();
-        model.addAttribute("procurements", procurements);
+     //   List<Procurement> procurements = Collections.emptyList();
+      //  model.addAttribute("procurements", procurements);
         return INDEX_PAGE_NAME;
     }
 
@@ -45,8 +45,8 @@ public class SimpleController {
         }
         // todo: <---------------Insert Save to base ----------------->
         // todo: <---------------Insert getAll from Base ----------------->
-        List<Procurement> procurements = Collections.emptyList();
-        model.addAttribute("procurements", procurements);
+    //    List<Procurement> procurements = Collections.emptyList();
+     //   model.addAttribute("procurements", procurements);
         if (logger.isDebugEnabled()) {
             logger.debug(POSTED_PROCUREMENT, address);
         }
