@@ -1,5 +1,9 @@
 package ru.zhelper.zhelper.models;
 
+import java.util.Collections;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+
 public enum ProcedureType {
     ELECTRONIC_AUCTION("Электронный аукцион"),
     PURCHASE_FROM_A_SINGLE_SUPPLIER("Закупка у единственного поставщика (подрядчика, исполнителя)"),
@@ -22,9 +26,11 @@ public enum ProcedureType {
     REQUEST_FOR_QUOTATIONS_WITHOUT_PLACING_A_NOTICE("Запрос котировок без размещения извещения"),
     REQUEST_FOR_PROPOSALS("Запрос предложений"),
     PURCHASE_OF_GOODS_FROM_A_SINGLE_SUPPLIER("Закупка товара у единственного поставщика на сумму," +
-            " предусмотренную частью 12 статьи 93 Закона № 44-ФЗ");
+            " предусмотренную частью 12 статьи 93 Закона № 44-ФЗ"),
+    ELECTRONIC_AUCTION_615FZ("Электронный аукцион (ПП РФ 615)");
 
-    private String title;
+    private final String title;
+    private static final Map<String, ProcedureType> ENUM_MAP;
 
     public String getTitle() {
         return title;
@@ -37,5 +43,17 @@ public enum ProcedureType {
     @Override
     public String toString() {
         return title;
+    }
+
+    static {
+        Map<String, ProcedureType> map = new ConcurrentHashMap<>();
+        for (ProcedureType instance : ProcedureType.values()) {
+            map.put(instance.getTitle().toLowerCase(), instance);
+        }
+        ENUM_MAP = Collections.unmodifiableMap(map);
+    }
+
+    public static ProcedureType get(String name) {
+        return ENUM_MAP.get(name.toLowerCase());
     }
 }

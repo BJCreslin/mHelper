@@ -1,9 +1,12 @@
 package ru.zhelper.zhelper.models;
 
+import lombok.NoArgsConstructor;
+
 import java.math.BigDecimal;
 import java.net.URL;
 import java.time.LocalDateTime;
 
+@NoArgsConstructor
 public class Procurement {
     //Что означает поле
     //Где можно найти по ФЗ №44
