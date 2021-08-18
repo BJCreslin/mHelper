@@ -3,6 +3,7 @@ package ru.zhelper.zhelper.services;
 import org.jsoup.Jsoup;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Service;
 import ru.zhelper.zhelper.models.ProcedureType;
 import ru.zhelper.zhelper.models.Procurement;
 import ru.zhelper.zhelper.models.Stage;
@@ -14,6 +15,7 @@ import java.net.URL;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
+@Service("zakupkiParser615Fz")
 public class ZakupkiParser615Fz implements ZakupkiParser {
     Logger logger = LoggerFactory.getLogger(ZakupkiParser615Fz.class);
     private static final String UIN_SELECTOR = "span[class=navBreadcrumb__text]";
@@ -74,6 +76,9 @@ public class ZakupkiParser615Fz implements ZakupkiParser {
         procurement.setApplicationSecure(getApplicationSecure(html));
         procurement.setContractSecure(getContractSecure(html));
         procurement.setObjectOf(getObjectOf(html));
+        // Нет на странице даты последнего обновления, берем текущюю
+        procurement.setLastUpdatedFromEIS(LocalDateTime.now());
+        procurement.setDateTimeLastUpdated(LocalDateTime.now());
         if (logger.isDebugEnabled()) {
             logger.debug(PARSED, procurement);
         }
