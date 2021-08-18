@@ -105,6 +105,11 @@ public class Procurement implements Serializable {
     @Column
     private String objectOf;
 
+    //Поле нужно чтобы отслеживать на сайте закупок необходимость обновить данные
+    //Дата размещения текущей редакции извещения
+    @Column
+    private LocalDateTime lastUpdatedFromEIS;
+
     //Поле нужно чтобы отслеживать необходимость обновить данные
     @Column
     private LocalDateTime dateTimeLastUpdated;
