@@ -69,7 +69,7 @@
             <groupId>com.h2database</groupId>
             <artifactId>h2</artifactId>
             <version>${H2Version}</version>
-            <scope>test</scope>
+            <scope>test,runtime</scope>
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
