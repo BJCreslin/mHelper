@@ -27,6 +27,7 @@ public class Procurement implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(columnDefinition = "serial")
     private long id;
 
     //Этап закупки
