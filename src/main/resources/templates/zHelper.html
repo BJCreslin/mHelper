@@ -11,7 +11,7 @@
 </head>
 
 <body>
-<form method="post" id="zHelper" action="#" th:action="@{/add}" th:object="${address}">
+<form method="post" id="zHelper" action="#" th:action="@{/}" th:object="${address}">
     <input class="text" type="text" placeholder="Введите адрес или номер закупки" th:field="*{address}">
     <input class="button" type="submit" value="">
 </form>
