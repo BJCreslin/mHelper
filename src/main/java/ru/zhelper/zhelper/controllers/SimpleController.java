@@ -39,7 +39,7 @@ public class SimpleController {
         this.service = service;
     }
 
-    @GetMapping({"/","zhelper"})
+    @GetMapping({"/","/zhelper"})
     public String get(HttpServletRequest request, Model model) {
         if (logger.isDebugEnabled()) {
             logger.debug(GET_FROM_IP, getIpFromRequest(request));
