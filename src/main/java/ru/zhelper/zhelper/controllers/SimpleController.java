@@ -8,10 +8,12 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import ru.zhelper.zhelper.controllers.exeptions.BadRequestException;
 import ru.zhelper.zhelper.models.Procurement;
 import ru.zhelper.zhelper.models.dto.ProcurementAddress;
 import ru.zhelper.zhelper.repository.ProcurementRepo;
 import ru.zhelper.zhelper.services.ProcurementService;
+import ru.zhelper.zhelper.services.exceptions.BadDataParsingException;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
@@ -27,6 +29,7 @@ public class SimpleController {
     private static final String GET_FROM_IP = "Get from ip {}";
     private static final String POST_FROM_IP = "Post from ip {}, procurement {}";
     private static final String POSTED_PROCUREMENT = "Procurement {} posted.";
+    private static final String ERROR_FROM_PARSING = "Error parsing";
     private final ProcurementRepo repo;
     private final ProcurementService service;
 
@@ -52,7 +55,12 @@ public class SimpleController {
         if (logger.isDebugEnabled()) {
             logger.debug(POST_FROM_IP, getIpFromRequest(request), address);
         }
-        service.action(address);
+        try {
+            service.action(address);
+        } catch (BadDataParsingException exception) {
+            logger.error(ERROR_FROM_PARSING, exception);
+            throw new BadRequestException(ERROR_FROM_PARSING, exception);
+        }
         List<Procurement> procurements = repo.findAll();
         model.addAttribute("procurements", procurements);
         model.addAttribute("address", new ProcurementAddress());
