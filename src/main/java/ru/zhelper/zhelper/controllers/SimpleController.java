@@ -47,7 +47,7 @@ public class SimpleController {
     }
 
     @PostMapping("/")
-    public String post(HttpServletRequest request, Model model, @ModelAttribute("procurementAddress") ProcurementAddress address) {
+    public String post(HttpServletRequest request, Model model, @ModelAttribute("address") ProcurementAddress address) {
         if (logger.isDebugEnabled()) {
             logger.debug(POST_FROM_IP, getIpFromRequest(request), address);
         }
