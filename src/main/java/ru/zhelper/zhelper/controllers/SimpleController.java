@@ -19,7 +19,7 @@ import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 @Controller
-@RequestMapping("")
+@RequestMapping({"/","/zhelper"})
 public class SimpleController {
     private static final Logger logger = LoggerFactory.getLogger(SimpleController.class);
 
@@ -39,7 +39,7 @@ public class SimpleController {
         this.service = service;
     }
 
-    @GetMapping({"/","/zhelper"})
+    @GetMapping("/")
     public String get(HttpServletRequest request, Model model) {
         if (logger.isDebugEnabled()) {
             logger.debug(GET_FROM_IP, getIpFromRequest(request));
