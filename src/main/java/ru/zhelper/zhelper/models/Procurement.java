@@ -26,7 +26,7 @@ public class Procurement implements Serializable {
     private static final long serialVersionUID = -3159634854548811691L;
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(columnDefinition = "serial")
     private long id;
 
@@ -102,7 +102,8 @@ public class Procurement implements Serializable {
     //Объект закупки
     //ОБЩАЯ ИНФОРМАЦИЯ О ЗАКУПКЕ -> Наименование объекта закупки
     //ОБЩИЕ СВЕДЕНИЯ О ЗАКУПКЕ -> Наименование закупки
-    @Column
+    @Lob
+    @Column( length = 100000 )
     private String objectOf;
 
     //Поле нужно чтобы отслеживать на сайте закупок необходимость обновить данные

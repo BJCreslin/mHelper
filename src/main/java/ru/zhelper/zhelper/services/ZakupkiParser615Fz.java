@@ -1,19 +1,24 @@
 package ru.zhelper.zhelper.services;
 
 import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Service;
 import ru.zhelper.zhelper.models.ProcedureType;
 import ru.zhelper.zhelper.models.Procurement;
 import ru.zhelper.zhelper.models.Stage;
 import ru.zhelper.zhelper.services.exceptions.BadDataParsingException;
 
+import java.io.IOException;
 import java.math.BigDecimal;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
+@Service("zakupkiParser615Fz")
 public class ZakupkiParser615Fz implements ZakupkiParser {
     Logger logger = LoggerFactory.getLogger(ZakupkiParser615Fz.class);
     private static final String UIN_SELECTOR = "span[class=navBreadcrumb__text]";
@@ -55,79 +60,90 @@ public class ZakupkiParser615Fz implements ZakupkiParser {
     private static final String PARSING = "Starting parse from html. Size {}";
     private static final String PARSED = "Procurement {} was parsed.";
     private static final String DATE_TIME_FORMATTER = "dd.MM.yyyy HH:mm";
+    private static final String USER_AGENT = "Mozilla/5.0 (Linux; Android 6.0; Nexus 5 Build/MRA58N) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.88 Mobile Safari/537.36";
 
     @Override
-    public Procurement parse(String html) {
+    public Procurement parse(String url) {
         if (logger.isDebugEnabled()) {
-            logger.debug(PARSING, html.length());
+            logger.debug(PARSING, url);
+        }
+        Element body = null;
+        try {
+            Document document = Jsoup.connect(url).userAgent(USER_AGENT).get();
+            body = document.body();
+        } catch (IOException e) {
+            e.printStackTrace();
         }
         Procurement procurement = new Procurement();
-        procurement.setUin(getUin(html));
-        procurement.setStage(getStage(html));
-        procurement.setFzNumber(getFzNumber(html));
-        procurement.setApplicationDeadline(getApplicationDeadline(html));
-        procurement.setContractPrice(getContractPrice(html));
-        procurement.setProcedureType(getProcedureType(html));
-        procurement.setPublisherName(getPublisherName(html));
-        procurement.setRestrictions(getRestrictions(html));
-        procurement.setLinkOnPlacement(getLinkOnPlacement(html));
-        procurement.setApplicationSecure(getApplicationSecure(html));
-        procurement.setContractSecure(getContractSecure(html));
-        procurement.setObjectOf(getObjectOf(html));
+        procurement.setUin(getUin(body));
+        procurement.setStage(getStage(body));
+        procurement.setFzNumber(getFzNumber(body));
+        procurement.setApplicationDeadline(getApplicationDeadline(body));
+        procurement.setContractPrice(getContractPrice(body));
+        procurement.setProcedureType(getProcedureType(body));
+        procurement.setPublisherName(getPublisherName(body));
+        procurement.setRestrictions(getRestrictions(body));
+        procurement.setLinkOnPlacement(getLinkOnPlacement(body));
+        procurement.setApplicationSecure(getApplicationSecure(body));
+        procurement.setContractSecure(getContractSecure(body));
+        procurement.setObjectOf(getObjectOf(body));
+        // Нет на странице даты последнего обновления, берем текущюю
+        procurement.setLastUpdatedFromEIS(LocalDateTime.now());
+        procurement.setDateTimeLastUpdated(LocalDateTime.now());
         if (logger.isDebugEnabled()) {
             logger.debug(PARSED, procurement);
         }
         return procurement;
     }
 
-    protected String getObjectOf(String html) {
+    protected String getObjectOf(Element body) {
         try {
-            return Jsoup.parse(html).body().select(OBJECT_OF_SELECTOR).first().siblingElements().first().text();
+            return body.select(OBJECT_OF_SELECTOR).first().siblingElements().first().text();
         } catch (NullPointerException exception) {
             logger.error(BAD_DATA_EXCEPTION, OBJECT_OF, exception);
             throw new BadDataParsingException(OBJECT_OF, exception);
         }
     }
 
-    protected String getContractSecure(String html) {
+    protected String getContractSecure(Element body) {
         try {
-            return getPriceFromLine(Jsoup.parse(html).body().select(CONTRACT_SECURE_SELECTOR).first().siblingElements().first().text());
+            return getPriceFromLine(body.select(CONTRACT_SECURE_SELECTOR).first().siblingElements().first().text());
         } catch (NullPointerException exception) {
             logger.error(BAD_DATA_EXCEPTION, CONTRACT_SECURE, exception);
             throw new BadDataParsingException(CONTRACT_SECURE, exception);
         }
     }
 
-    protected String getApplicationSecure(String html) {
+    protected String getApplicationSecure(Element body) {
         try {
-            return getPriceFromLine(Jsoup.parse(html).body().select(APPLICATION_SECURE_SELECTOR).first().siblingElements().first().text());
+            return getPriceFromLine(body.select(APPLICATION_SECURE_SELECTOR).first().siblingElements().first().text());
         } catch (NullPointerException exception) {
             logger.error(BAD_DATA_EXCEPTION, APPLICATION_SECURE, exception);
             throw new BadDataParsingException(APPLICATION_SECURE, exception);
         }
     }
 
-    protected URL getLinkOnPlacement(String html) {
+    protected URL getLinkOnPlacement(Element body) {
         try {
-            return new URL(Jsoup.parse(html).body().select(LINK_SELECTOR).first().siblingElements().first().text());
+            return new URL(body.select(LINK_SELECTOR).first().siblingElements().first().text());
         } catch (NullPointerException | MalformedURLException exception) {
             logger.error(BAD_DATA_EXCEPTION, LINK_ON_PLACEMENT, exception);
             throw new BadDataParsingException(LINK_ON_PLACEMENT, exception);
         }
     }
 
-    protected String getRestrictions(String html) {
+    protected String getRestrictions(Element body) {
         try {
-            return Jsoup.parse(html).body().select(RESTRICTIONS_SELECTOR).first().siblingElements().first().text();
+            return body.select(RESTRICTIONS_SELECTOR).first().siblingElements().first().text();
         } catch (NullPointerException exception) {
             logger.error(BAD_DATA_EXCEPTION, RESTRICTION, exception);
             throw new BadDataParsingException(RESTRICTION, exception);
         }
     }
 
-    protected String getPublisherName(String html) {
+    protected String getPublisherName(Element body) {
         try {
-            return Jsoup.parse(html).body().select(PUBLISHER_SELECTOR).first().siblingElements().first().text();
+            return body.select(PUBLISHER_SELECTOR).first().siblingElements().first().text();
 
         } catch (NullPointerException exception) {
             logger.error(BAD_DATA_EXCEPTION, PUBLISHER_NAME, exception);
@@ -135,9 +151,9 @@ public class ZakupkiParser615Fz implements ZakupkiParser {
         }
     }
 
-    protected ProcedureType getProcedureType(String html) {
+    protected ProcedureType getProcedureType(Element body) {
         try {
-            String procedureType = Jsoup.parse(html).body().select(METHOD_SELECTOR).first().siblingElements().first().text();
+            String procedureType = body.select(METHOD_SELECTOR).first().siblingElements().first().text();
             return ProcedureType.get(procedureType);
         } catch (NullPointerException exception) {
             logger.error(BAD_DATA_EXCEPTION, METHOD, exception);
@@ -145,9 +161,9 @@ public class ZakupkiParser615Fz implements ZakupkiParser {
         }
     }
 
-    protected BigDecimal getContractPrice(String html) {
+    protected BigDecimal getContractPrice(Element body) {
         try {
-            String textContractPrice = getPriceFromLine(Jsoup.parse(html).body().select(CONTRACT_PRICE_SELECTOR).first().siblingElements().first().text());
+            String textContractPrice = getPriceFromLine(body.select(CONTRACT_PRICE_SELECTOR).first().siblingElements().first().text());
             return new BigDecimal(textContractPrice);
         } catch (NullPointerException exception) {
             logger.error(BAD_DATA_EXCEPTION, CONTRACT_PRICE, exception);
@@ -155,10 +171,10 @@ public class ZakupkiParser615Fz implements ZakupkiParser {
         }
     }
 
-    protected LocalDateTime getApplicationDeadline(String html) {
+    protected LocalDateTime getApplicationDeadline(Element body) {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern(DATE_TIME_FORMATTER);
         try {
-            String textDate = Jsoup.parse(html).body().select(DEADLINE_SELECTOR).
+            String textDate = body.select(DEADLINE_SELECTOR).
                     first().siblingElements().first().html().split(SPAN_SEPARATOR)[0];
             return LocalDateTime.parse(textDate, formatter);
         } catch (NullPointerException exception) {
@@ -167,9 +183,9 @@ public class ZakupkiParser615Fz implements ZakupkiParser {
         }
     }
 
-    protected int getFzNumber(String html) {
+    protected int getFzNumber(Element body) {
         try {
-            return Integer.parseInt(Jsoup.parse(html).body().select(LAW_SELECTOR).first().text().
+            return Integer.parseInt(body.select(LAW_SELECTOR).first().text().
                     replace(START_LAW_TO_REPLACE, REPLACEMENT).replace(FINISH_LAW_TO_REPLACE, REPLACEMENT));
         } catch (NullPointerException exception) {
             logger.error(BAD_DATA_EXCEPTION, FZ_NUMBER, exception);
@@ -177,18 +193,18 @@ public class ZakupkiParser615Fz implements ZakupkiParser {
         }
     }
 
-    protected String getUin(String html) {
+    protected String getUin(Element body) {
         try {
-            return Jsoup.parse(html).body().select(UIN_SELECTOR).first().html().replace(NUMBER_TO_REPLACE, REPLACEMENT);
+            return body.select(UIN_SELECTOR).first().html().replace(NUMBER_TO_REPLACE, REPLACEMENT);
         } catch (NullPointerException exception) {
             logger.error(BAD_DATA_EXCEPTION, UIN, exception);
             throw new BadDataParsingException(BAD_DATA_EXCEPTION, exception);
         }
     }
 
-    protected Stage getStage(String html) {
+    protected Stage getStage(Element body) {
         try {
-            return Stage.get(Jsoup.parse(html).body().select(STAGE_SELECTOR).first().html());
+            return Stage.get(body.select(STAGE_SELECTOR).first().html());
         } catch (NullPointerException exception) {
             logger.error(BAD_DATA_EXCEPTION, STAGE, exception);
             throw new BadDataParsingException(BAD_DATA_EXCEPTION, exception);

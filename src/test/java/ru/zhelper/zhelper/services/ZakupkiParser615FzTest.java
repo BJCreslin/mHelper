@@ -1,5 +1,7 @@
 package ru.zhelper.zhelper.services;
 
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Element;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -41,14 +43,14 @@ class ZakupkiParser615FzTest {
     private static final BigDecimal CONTRACT_PRICE = new BigDecimal("1305523.99");
     private static final Integer FZ = 615;
     private ZakupkiParser615Fz parser;
-    private String fineHtml;
-    private String badHtml;
+    private Element fineHtml;
+    private Element badHtml;
 
     @BeforeEach
     private void init() throws IOException, URISyntaxException {
         parser = new ZakupkiParser615Fz();
-        fineHtml = new String(Files.readAllBytes(Paths.get(this.getClass().getClassLoader().getResource(fileName).toURI())));
-        badHtml = new String(Files.readAllBytes(Paths.get(this.getClass().getClassLoader().getResource(fileBadName).toURI())));
+        fineHtml = Jsoup.parse(new String(Files.readAllBytes(Paths.get(this.getClass().getClassLoader().getResource(fileName).toURI())))).body();
+        badHtml = Jsoup.parse(new String(Files.readAllBytes(Paths.get(this.getClass().getClassLoader().getResource(fileBadName).toURI())))).body();
     }
 
     @Test
