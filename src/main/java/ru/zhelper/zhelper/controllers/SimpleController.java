@@ -43,6 +43,7 @@ public class SimpleController {
         }
         List<Procurement> procurements = repo.findAll();
         model.addAttribute("procurements", procurements);
+        model.addAttribute("address", new ProcurementAddress());
         return INDEX_PAGE_NAME;
     }
 
@@ -54,6 +55,7 @@ public class SimpleController {
         service.action(address);
         List<Procurement> procurements = repo.findAll();
         model.addAttribute("procurements", procurements);
+        model.addAttribute("address", new ProcurementAddress());
         if (logger.isDebugEnabled()) {
             logger.debug(POSTED_PROCUREMENT, address);
         }
