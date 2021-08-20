@@ -30,6 +30,7 @@ public class SimpleController {
     private static final String POST_FROM_IP = "Post from ip {}, procurement {}";
     private static final String POSTED_PROCUREMENT = "Procurement {} posted.";
     private static final String ERROR_FROM_PARSING = "Error parsing";
+    private static final String EMPTY_ADDRESS = "";
     private final ProcurementRepo repo;
     private final ProcurementService service;
 
@@ -46,7 +47,7 @@ public class SimpleController {
         }
         List<Procurement> procurements = repo.findAll();
         model.addAttribute("procurements", procurements);
-        model.addAttribute("address", new ProcurementAddress());
+        model.addAttribute("address", ProcurementAddress.builder().address(EMPTY_ADDRESS).build());
         return INDEX_PAGE_NAME;
     }
 
@@ -63,7 +64,7 @@ public class SimpleController {
         }
         List<Procurement> procurements = repo.findAll();
         model.addAttribute("procurements", procurements);
-        model.addAttribute("address", new ProcurementAddress());
+        model.addAttribute("address", ProcurementAddress.builder().address(EMPTY_ADDRESS).build());
         if (logger.isDebugEnabled()) {
             logger.debug(POSTED_PROCUREMENT, address);
         }
