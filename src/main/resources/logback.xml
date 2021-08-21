@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<configuration xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+<configuration xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://ch.qos.logback/xml/ns/logback"
                xsi:noNamespaceSchemaLocation="logback.xsd">
 
     <property resource="\application.properties"/>
