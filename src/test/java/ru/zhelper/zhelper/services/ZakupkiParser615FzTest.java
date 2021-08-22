@@ -5,6 +5,9 @@ import org.jsoup.nodes.Element;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.junit4.SpringRunner;
+
 import ru.zhelper.zhelper.models.ProcedureType;
 import ru.zhelper.zhelper.models.Stage;
 import ru.zhelper.zhelper.services.exceptions.BadDataParsingException;
@@ -19,6 +22,7 @@ import java.nio.file.Paths;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
+@SpringBootTest
 class ZakupkiParser615FzTest {
     private static final String DATE_TIME_FORMATTER = "dd.MM.yyyy HH:mm";
     private static final String fileName = "206520000012100111.html";
