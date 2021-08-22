@@ -3,6 +3,7 @@ package ru.zhelper.zhelper.services;
 import java.math.BigDecimal;
 
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.runner.RunWith;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -12,13 +13,15 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.jdbc.Sql;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.transaction.annotation.Transactional;
 
 import ru.zhelper.zhelper.models.Procurement;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(locations = { "classpath:spring-integrationTest-context-component-scan.xml"})
+@ExtendWith(SpringExtension.class)
+@ContextConfiguration("/spring-config.xml") 
 @Sql({"/test-schema.sql", "/test-data.sql"})
 public class ProcurementDataManagerImplTest implements ApplicationContextAware {
 
