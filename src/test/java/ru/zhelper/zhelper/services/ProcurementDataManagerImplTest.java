@@ -11,6 +11,7 @@ import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
@@ -21,12 +22,16 @@ import ru.zhelper.zhelper.models.Procurement;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ExtendWith(SpringExtension.class)
-@ContextConfiguration("/spring-config.xml") 
+//@ContextConfiguration("/spring-config.xml")
+//ApplicationContext will be loaded from "classpath:/app-config.xml"
+@ContextConfiguration({"/app-config.xml", "/test-data-access-config.xml"})
 @Sql({"/test-schema.sql", "/test-data.sql"})
+@ActiveProfiles("dev")
 public class ProcurementDataManagerImplTest implements ApplicationContextAware {
 
 	/**
 	 * https://docs.spring.io/spring-framework/docs/4.2.0.RC2/spring-framework-reference/html/integration-testing.html
+	 * https://stackoverflow.com/questions/7416024/spring-3-1-datasource-not-autowired-to-configuration-class
 	 */
 	private ApplicationContext applicationContext;
 	
