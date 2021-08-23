@@ -1,0 +1,6415 @@
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    
+        
+        
+        
+        
+        
+        
+        
+        
+        
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+    
+
+
+  
+
+
+
+  
+
+
+
+    
+
+
+<!DOCTYPE html>
+<html>
+
+
+
+<head>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+  <meta name="apple-itunes-app" content="app-id=1457694118">
+  <meta name="google-play-app" content="app-id=ru.gov.zakupki.mobile">
+  <link href='https://fonts.googleapis.com/css?family=Roboto+Slab:400,700&subset=latin,cyrillic' rel='stylesheet' type='text/css'>
+
+  <title>Сведения закупки</title>
+
+  <script type="text/javascript">
+      var contextPath = "/epz/order/notice";
+  </script>
+
+  <script type="text/javascript" src="/static/useractivityrecordplugin/js/recordSupportSystem.js"></script>
+
+  
+    
+    
+      <link type="text/css" rel="stylesheet" media="all" href="/epz/static/css/app.css"/>
+      <link type="text/css" rel="stylesheet" href="/epz/static/css/jquery_msgbox.css"/>
+    
+  
+
+  <script type="text/javascript" src="/epz/static/js/jquery-3.3.1.min.js"></script>
+  <script type="text/javascript" src="/epz/static/js/jquery.cookie.min.js"></script>
+  <script type="text/javascript" src="/epz/static/js/js.cookie.js"></script>
+  <script type="text/javascript" src="/epz/static/js/jquery_msgBox.js"></script>
+  <script type="text/javascript">
+    
+    $(window).ready(function() {
+      $('body').animate({opacity:'1'},300);
+    });
+      function sessionTimeOutMsg(){
+          $.msgBox({
+              type:"error",
+              content:"Время ожидания соединения истекло",
+              title: "Сообщение",
+              afterClose: function(result) {
+                  document.location.href = ""
+              }
+          });
+      }
+
+      var isRegisteredUserObozApp = Boolean("");
+      var sessionMaxInactiveInterval = "600";
+      $(document).ready(function(){
+          var notUsual = (($.cookie("usePoorVisionOption") == 'true') && $(".goodVisionLink").length == 0);
+          var notPoorVision = (($.cookie("usePoorVisionOption") != 'true') && $(".poorVisionLink").length == 0);
+          if (notUsual || notPoorVision){
+              location.reload();
+          }
+      });
+  </script>
+  <script>window.jQuery || document.write('<script src="/epz/static/js/jquery-3.3.1.min.js"><\/script>')</script>
+  <script type="text/javascript" src="/epz/static/js/ui_autocomplete.js"></script>
+  
+  
+  <script type="text/javascript" src="/epz/static/js/mustache.min.js"></script>
+  <script type="text/javascript" src="/epz/static/js/jquery.price_format.1.7.js"></script>
+  
+  <script type="text/javascript" src="/epz/static/js/moment.min.js"></script>
+  <script type="text/javascript" src="/epz/static/js/moment-timezone.min.js"></script>
+
+  <script type="text/javascript" src="/epz/static/js/action-switch.js"></script>
+  <script type="text/javascript" src="/epz/static/js/browser.js"></script>
+  
+    
+    
+      <script type="text/javascript" src="/epz/static/js/app.js"></script>
+    
+  
+  <script type="text/javascript" src="/epz/static/js/script.js"></script>
+  <script type="text/javascript" src="/epz/static/js/cards_keyboard_control_script.js"></script>
+  <script type="text/javascript" src="/epz/static/js/custom.js"></script>
+  <script type="text/javascript" src="/epz/static/js/URI.js"></script>
+  <script type="text/javascript" src="/epz/static/js/common/config.js"></script>
+  <script type="text/javascript" src="/epz/static/js/common/analytics.js"></script>
+  <script type="text/javascript" src="/epz/static/js/cardBaseLayout.js"></script>
+  <script type="text/javascript" src="/epz/static/js/customScrollbar.js"></script>
+  
+      
+      
+          <script type="text/javascript" src="/epz/static/js/keyboardNavigationRules.js"></script>
+      
+  
+  <script type="text/javascript" src="/epz/static/js/keyboardControl.js"></script>
+  <script type="text/javascript" src="/epz/static/js/jquery-migrate-3.0.1.min.js"></script>
+  <script type="text/javascript">
+      var contextPath = "/epz/order/notice";
+      var epzMainPublicUrl = "/epz/main/public/";
+  </script>
+  <script type="text/javascript" src="/epz/static/js/checkNotice.js"></script>
+  <script type="text/javascript" src="/epz/static/js/common/attachments-common-tab.js"></script>
+  <script type="text/javascript" src="/epz/static/js/generalPagination.js"></script>
+  <script type="text/javascript" src="/epz/static/js/generalChevron.js"></script>
+  
+
+
+
+<script type="text/javascript">
+    epzCommonConfig.initCommonConfig({
+        contextPath: '/epz/order/notice',
+        smartSearchEnable: true,
+
+        urls: {
+            epzMainPublicUrl: '/epz/main/public/',
+            epzNsiUrl: '/epz/nsi/',
+            epzOrderUrl: '/epz/order/',
+            epzOrderPlanUrl: '/epz/orderplan/',
+            epzOrderClauseUrl: '/epz/orderclause/',
+            epzContractUrl: '/epz/contract/',
+            epzContractFz223Url: '/epz/contractfz223/',
+            epzContractReportingUrl: '/epz/contractreporting/',
+            epzCustomerReportsUrl: '/epz/customerreports/',
+            epzOrganizationUrl: '/epz/organization/',
+            epzDishonestSupplierUrl: '/epz/dishonestsupplier/',
+            epzComplaintUrl: '/epz/complaint/',
+            epzBankGuaranteeUrl: '/epz/bankguarantee/',
+            epzInspectionPlanUrl: '/epz/inspectionplan/',
+            epzUnscheduledInspectionUrl: '/epz/unscheduledinspection/',
+            epzControlResultUrl: '/epz/controlresult/',
+            epzDizkUrl: '/epz/dizk/',
+            epzEsUrl: '/analytics/hit/',
+            epzFarmUrl: '/epz/farm/'
+        }
+    });
+</script>
+
+</head>
+<body class="cardLayout">
+
+<script type="text/javascript">
+  if ($.cookie('usePoorVisionOption') === 'true') {
+    var body = $('body');
+    var style = '';
+    var cookie = $.cookie('colorSpectrumForPoorVision');
+    if (cookie) {
+      body.addClass(cookie + 'ColorSpectrum');
+      switch (cookie) {
+        case 'white':
+          style = '#ffffff';
+          break;
+        case 'black':
+          style = '#000000';
+          break;
+        case 'blue':
+          style = '#9DD1FF';
+          break;
+        case 'brown':
+          style = '#442713';
+          break;
+        case 'biege':
+          style = '#F7F3D6';
+          break;
+        default:
+          break;
+      }
+      body.css({backgroundColor: style});
+    }
+
+    var fontZize = $.cookie('fontSizeForPoorVision');
+    if (fontZize) {
+      body.addClass('fontSizeForPoorVision' + fontZize);
+    }
+  }
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    
+        
+        
+        
+        
+        
+        
+        
+        
+        
+    
+
+
+
+
+
+
+
+
+
+
+
+<style>
+    .header-logo {
+        top: -5px;
+        background: none;
+    }
+</style>
+
+<div id="critical_notice"></div>
+
+    
+    
+        <header class="header header-top">
+            <div class="container">
+                <div class="row align-items-center">
+                    <div class="col-5" style="z-index: 1;">
+                        <span class="logo text-base-micro">Официальный сайт Единой информационной системы в сфере закупок</span>
+                    </div>
+                    <div class="col-3 offset-lg-1">
+                        <a id="chooseRegion" data-modalup href="/epz/nsi/kladr/chooseRegion.html">
+                            <div class="region d-flex align-items-center pr-0" data-toggle="modal-region"
+                                 data-target=".modal-region">
+                      <span class="region-city w-space-nowrap">
+                        <span class="region-city__icon">
+                          <img src="/epz/static/img/icons/icon_region.svg"
+                               title="Информация о местоположении пользователя используется в поисковых запросах для динамической детализации результатов поиска.">
+                        </span>
+                        <span class="region-city__text region-city__text_base text-base-micro">Мой регион: </span>
+                      </span>
+                                <span class="region-city pl-1">
+                        <span class="region-city__text region-city__text_prime text-base-micro region_name"
+                              id="popUpUserRegionName">
+                        </span>
+                      </span>
+                                <span class="region-city__icon pl-1">
+                            <img src="/epz/static/img/icons/icon_arrow_region.svg" alt="">
+                      </span>
+                            </div>
+                        </a>
+                    </div>
+                    <div class="col-1">
+                        <div class="header-links-group offset-block">
+                            <a href="#" class="header-link header-link_top">
+                                <span class="header-link__icon poorVisionLink">
+                                  <img class="glass-icon" src="/epz/static/img/icons/icon_eye.svg" alt="">
+                                </span>
+                            </a>
+                        </div>
+                    </div>
+                    <div class="col-2">
+                        <div class="account">
+                            <div class="account-block">
+                        <span class="icon">
+                            <img src="/epz/static/img/icons/icon_user.svg" alt="">
+                        </span>
+                                <span class="text padLeft4">Личный кабинет</span>
+                                <span class="button-open icon">
+                            <img src="/epz/static/img/icons/icon_arrow_lk.svg" alt="">
+                        </span>
+                            </div>
+                            <ul class="account-vars">
+                                <li class="account__var" data-toggle="modal-account44">
+                                    <a class="account__link" data-modalup
+                                       href="/epz/main/public/chooseAuth44.html" target="_blank">
+                                <span class="icon">
+                                  <img src="/epz/static/img/icons/arrow.svg" alt="">
+                                </span>
+                                        <span class="text text_bottom">Личный кабинет</span>
+                                        <span class="subtext">44-Ф3</span>
+                                    </a>
+                                </li>
+                                <li class="account__var" data-toggle="modal-account223">
+                                    <a class="account__link" data-modalup
+                                       href="/epz/main/public/chooseAuth223.html" target="_blank">
+                                <span class="icon">
+                                  <img src="/epz/static/img/icons/arrow.svg" alt="">
+                                </span>
+                                        <span class="text text_bottom">Личный кабинет</span>
+                                        <span class="subtext">223-ФЗ</span>
+                                    </a>
+                                </li>
+                                <li class="account__var" data-toggle="modal-account-private">
+                                    <a href="https://zakupki.gov.ru/auth/welcome" class="account__link">
+                                <span class="icon">
+                                  <img src="/epz/static/img/icons/arrow.svg" alt="">
+                                </span>
+                                        <span class="text text_bottom">Личный кабинет участника закупок</span>
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </header>
+        <header class="header header-mid">
+            <div class="container">
+                <div class="row">
+                    <div class="col-1">
+                        <figure class="header-logo">
+                            <a href="/epz/main/public/home.html">
+                                <img src="/epz/static/img/header/emblem.svg" class="header-logo__img" alt="">
+                            </a>
+                        </figure>
+                    </div>
+                    <div class="col-2 custom-tooltip-main">
+                        <h3 id="header-title-site" class="heading-h3 header-offset">
+                        </h3>
+                        <span class="tooltiptext">  Официальный сайт единой информационной системы в сфере закупок в информационно-телекоммуникационной сети Интернет (далее – Официальный сайт ЕИС) предназначен для обеспечения свободного и безвозмездного доступа к полной и достоверной информации о контрактной системе в сфере закупок и закупках товаров, работ, услуг, отдельными видами юридических лиц, а также для формирования, обработки и хранения такой информации.   Порядок размещения информации на Официальном сайте ЕИС и ее содержание регламентируется Федеральным законом от 05.04.2013 № 44-ФЗ «О контрактной системе в сфере закупок товаров, работ, услуг для обеспечения государственных и муниципальных нужд» и Федеральным законом от 18.07.2011 № 223-ФЗ «О закупках товаров, работ, услуг отдельными видами юридических лиц», а также соответствующими подзаконными актами.</span>
+                    </div>
+                    <div class="col-3 offset-2 offset-lg-3 pr-0" style="font-size: 13px;">
+                        <a href="/epz/main/public/user-feedback.html">
+                            <img src="/epz/static/img/icons/icon_envelop_circle.svg" alt="">
+                            <span class="banners-top-item__title">Техническая поддержка</span>
+                        </a>
+                    </div>
+                    <div class="col-3 pl-0" style="font-size: 13px;">
+                        <a href="/epz/main/public/qa/view.html">
+                            <img src="/epz/static/img/icons/icon_faq.svg" alt="">
+                            <span class="banners-top-item__title">Часто задаваемые вопросы</span>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </header>
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    
+        
+        
+        
+        
+        
+        
+        
+        
+        
+    
+
+
+
+
+
+
+
+
+
+
+
+<header class="header header-bottom">
+    <div class="container">
+        <div class="row">
+            <div class="col-12">
+                <ul class="menu-mega mb-0">
+                    <ul class="menu-list">
+                        
+                        <li class="main-item" style="cursor: pointer;">
+                            <img src="/epz/static/img/icons/icon_sitemap.svg" alt="">
+                            <a href="/epz/main/public/siteMap.html"
+                               class="main-link">Все разделы</a>
+                        </li>
+                        
+
+
+
+
+
+
+
+    
+
+
+
+
+
+
+
+
+
+    <li class="main-item parent-node" style="cursor: pointer;">
+    <a
+         href="http://zakupki.gov.ru/epz/order/extendedsearch/results.html" 
+        class="main-link  _order "
+        data-law = "   "
+    >
+        Закупки
+    </a>
+    
+
+
+    
+    
+        
+    
+
+
+    
+    </li>
+
+
+    
+
+
+
+
+
+
+
+
+
+    <li class="main-item parent-node" style="cursor: pointer;">
+    <a
+        
+        class="main-link "
+        data-law = " "
+    >
+        Контракты и договоры
+    </a>
+    
+    <ul>
+    <li class="submenu-col">
+    
+
+
+    
+    
+        
+            
+
+
+
+
+
+
+
+    
+
+
+
+
+
+
+
+
+
+
+    
+        
+            <ul class="submenu-list menu-list child-node">
+        
+        <li class="submenu-list__item">
+            <a  href="http://zakupki.gov.ru/epz/contract/search/results.html" 
+                class="submenu-list__link  _contract  "
+            data-law="FZ44"
+            >
+            <span class="link__text">Реестр контрактов</span>
+            <span class="link__desc">44-ФЗ</span>
+        </a>
+        
+        </li>
+        
+    
+    
+
+
+
+    
+
+
+
+
+
+
+
+
+
+
+    
+        
+        <li class="submenu-list__item">
+            <a  href="http://zakupki.gov.ru/epz/contractfz223/search/results.html" 
+                class="submenu-list__link  _contractfz223  "
+            data-law="FZ223"
+            >
+            <span class="link__text">Реестр договоров</span>
+            <span class="link__desc">223-ФЗ</span>
+        </a>
+        
+        </li>
+        
+    
+    
+
+
+
+    
+
+
+
+
+
+
+
+
+
+
+    
+        
+        <li class="submenu-list__item">
+            <a  href="https://zakupki.gov.ru/epz/capitalrepairs/search/results.html" 
+                class="submenu-list__link  _capitalrepairs  "
+            data-law="PPRF615"
+            >
+            <span class="link__text">Реестр договоров о проведении капитального ремонта</span>
+            <span class="link__desc">ПП РФ-615</span>
+        </a>
+        
+        </li>
+        
+    
+    
+
+
+
+    
+
+
+
+
+
+
+
+
+
+
+    
+        
+        <li class="submenu-list__item">
+            <a  href="https://zakupki.gov.ru/epz/dizk/search/results.html" 
+                class="submenu-list__link  _dizk  "
+            data-law="FZ44"
+            >
+            <span class="link__text">Дополнительная информация о контрактах</span>
+            <span class="link__desc">44-ФЗ</span>
+        </a>
+        
+        </li>
+        
+    
+    
+
+
+
+    
+
+
+
+
+
+
+
+
+
+
+    
+        
+        <li class="submenu-list__item">
+            <a  href="http://zakupki.gov.ru/epz/btk/search/results.html" 
+                class="submenu-list__link  _btk  "
+            data-law="FZ44"
+            >
+            <span class="link__text">Библиотека типовых контрактов, типовых условий контрактов</span>
+            <span class="link__desc">44-ФЗ</span>
+        </a>
+        
+        </li>
+        
+            </ul>
+        
+    
+    
+
+
+
+        
+    
+
+
+    
+    </li>
+    </ul>
+    
+    </li>
+
+
+    
+
+
+
+
+
+
+
+
+
+    <li class="main-item parent-node" style="cursor: pointer;">
+    <a
+        
+        class="main-link "
+        data-law = " "
+    >
+        Планирование
+    </a>
+    
+    <ul>
+    <li class="submenu-col">
+    
+
+
+    
+    
+        
+            
+
+
+
+
+
+
+
+    
+
+
+
+
+
+
+
+
+
+
+    
+        
+            <ul class="submenu-list menu-list child-node">
+        
+        <li class="submenu-list__item">
+            <a  href="https://zakupki.gov.ru/epz/orderplan/search/results.html?morphology=on&search-filter=%D0%94%D0%B0%D1%82%D0%B5+%D1%80%D0%B0%D0%B7%D0%BC%D0%B5%D1%89%D0%B5%D0%BD%D0%B8%D1%8F&structured=true&fz44=on&customerPlaceWithNested=on&actualPeriodRangeYearFrom=2020&sortBy=BY_MODIFY_DATE&pageNumber=1&sortDirection=false&recordsPerPage=_10&searchType=false" 
+                class="submenu-list__link  _orderplan  "
+            data-law="FZ44"
+            >
+            <span class="link__text">Планы-графики закупок</span>
+            <span class="link__desc">44-ФЗ</span>
+        </a>
+        
+        </li>
+        
+    
+    
+
+
+
+    
+
+
+
+
+
+
+
+
+
+
+    
+        
+        <li class="submenu-list__item">
+            <a  href="http://zakupki.gov.ru/epz/orderplan/search/results.html?morphology=on&structured=true&searchType=false&fz223=on&region_regions_5277335=region_regions_5277335&regionDeleted=false&sortBy=BY_MODIFY_DATE&pageNumber=1&sortDirection=false&recordsPerPage=_10" 
+                class="submenu-list__link  _orderplan  "
+            data-law="FZ223"
+            >
+            <span class="link__text">Планы закупки</span>
+            <span class="link__desc">223-ФЗ</span>
+        </a>
+        
+        </li>
+        
+    
+    
+
+
+
+    
+
+
+
+
+
+
+
+
+
+
+    
+        
+        <li class="submenu-list__item">
+            <a  href="https://zakupki.gov.ru/epz/oboz/public/search/results.html" 
+                class="submenu-list__link  _oboz  "
+            data-law="FZ44"
+            >
+            <span class="link__text">Обязательное общественное обсуждение закупок</span>
+            <span class="link__desc">44-ФЗ</span>
+        </a>
+        
+        </li>
+        
+    
+    
+
+
+
+    
+
+
+
+
+
+
+
+
+
+
+    
+        
+        <li class="submenu-list__item">
+            <a  href="http://zakupki.gov.ru/epz/pricereq/search/results.html" 
+                class="submenu-list__link  _pricereq  "
+            data-law="FZ44"
+            >
+            <span class="link__text">Запросы цен товаров, работ, услуг</span>
+            <span class="link__desc">44-ФЗ</span>
+        </a>
+        
+        </li>
+        
+    
+    
+
+
+
+    
+
+
+
+
+
+
+
+
+
+
+    
+        
+        <li class="submenu-list__item">
+            <a  href="http://zakupki.gov.ru/epz/normalizationrules/search/results.html" 
+                class="submenu-list__link  _normalizationrules  "
+            data-law="FZ44"
+            >
+            <span class="link__text">Правила нормирования в сфере закупок</span>
+            <span class="link__desc">44-ФЗ</span>
+        </a>
+        
+        </li>
+        
+    
+    
+
+
+
+    
+
+
+
+
+
+
+
+
+
+
+    
+        
+        <li class="submenu-list__item">
+            <a  href="https://zakupki.gov.ru/epz/orderclause/search/results.html" 
+                class="submenu-list__link  _orderclause  "
+            data-law="FZ223"
+            >
+            <span class="link__text">Положения о закупке</span>
+            <span class="link__desc">223-ФЗ</span>
+        </a>
+        
+        </li>
+        
+    
+    
+
+
+
+    
+
+
+
+
+
+
+
+
+
+
+    
+        
+        <li class="submenu-list__item">
+            <a  href="https://zakupki.gov.ru/epz/typalclause/search/results.html" 
+                class="submenu-list__link  _typalclause  "
+            data-law="FZ223"
+            >
+            <span class="link__text">Типовые положения о закупке</span>
+            <span class="link__desc">223-ФЗ</span>
+        </a>
+        
+        </li>
+        
+            </ul>
+        
+    
+    
+
+
+
+        
+    
+
+
+    
+    </li>
+    </ul>
+    
+    </li>
+
+
+    
+
+
+
+
+
+
+
+
+
+    <li class="main-item parent-node" style="cursor: pointer;">
+    <a
+         href="http://zakupki.gov.ru/epz/ktru/start/startPage.html" 
+        class="main-link  _ktru "
+        data-law = " FZ44  "
+    >
+        Каталог
+    </a>
+    
+
+
+    
+    
+        
+    
+
+
+    
+    </li>
+
+
+    
+
+
+
+
+
+
+
+
+
+    <li class="main-item parent-node" style="cursor: pointer;">
+    <a
+        
+        class="main-link "
+        data-law = " "
+    >
+        Документы
+    </a>
+    
+    <ul>
+    <li class="submenu-col">
+    
+
+
+    
+    
+        
+            
+
+
+
+
+
+
+
+    
+
+
+
+
+
+
+
+
+
+
+    
+        
+            <ul class="submenu-list menu-list child-node">
+        
+        <li class="submenu-list__item">
+            <a  href="http://zakupki.gov.ru/epz/main/public/document/view.html?sectionId=1255" 
+                class="submenu-list__link  _document  "
+            data-law="1255"
+            >
+            <span class="link__text">Законодательство в сфере закупок</span>
+            <span class="link__desc"></span>
+        </a>
+        
+            
+
+
+
+
+
+
+
+    
+
+
+
+
+
+
+
+
+
+
+    
+        
+            <ul class="submenu-list menu-list child-node">
+        
+        <li class="submenu-list__item">
+            <a  href="http://zakupki.gov.ru/epz/main/public/document/view.html?sectionId=907" 
+                class="submenu-list__link  _document  "
+            data-law="907"
+            >
+            <span class="link__text">Нормативные правовые акты</span>
+            <span class="link__desc">44-ФЗ</span>
+        </a>
+        
+        </li>
+        
+    
+    
+
+
+
+    
+
+
+
+
+
+
+
+
+
+
+    
+        
+        <li class="submenu-list__item">
+            <a  href="http://zakupki.gov.ru/epz/main/public/document/view.html?sectionId=908" 
+                class="submenu-list__link  _document  "
+            data-law="908"
+            >
+            <span class="link__text">Нормативные правовые акты</span>
+            <span class="link__desc">223-ФЗ</span>
+        </a>
+        
+        </li>
+        
+    
+    
+
+
+
+    
+
+
+
+
+
+
+
+
+
+
+    
+        
+        <li class="submenu-list__item">
+            <a  href="http://zakupki.gov.ru/epz/main/public/document/view.html?sectionId=1261" 
+                class="submenu-list__link  _document  "
+            data-law="1261"
+            >
+            <span class="link__text">Национальный режим</span>
+            <span class="link__desc"></span>
+        </a>
+        
+        </li>
+        
+    
+    
+
+
+
+    
+
+
+
+
+
+
+
+
+
+
+    
+        
+        <li class="submenu-list__item">
+            <a  href="http://zakupki.gov.ru/epz/main/public/document/view.html?sectionId=910" 
+                class="submenu-list__link  _document  "
+            data-law="910"
+            >
+            <span class="link__text">Разъяснения законодательства</span>
+            <span class="link__desc"></span>
+        </a>
+        
+        </li>
+        
+            </ul>
+        
+    
+    
+
+
+
+        
+        </li>
+        
+    
+    
+
+
+
+    
+
+
+
+
+
+
+
+
+
+
+    
+        
+        <li class="submenu-list__item">
+            <a  href="https://zakupki.gov.ru/epz/legalacts/search/results.html" 
+                class="submenu-list__link  _legalacts  "
+            data-law=""
+            >
+            <span class="link__text">Нормативно-методическая информация, предусмотренная для размещения в ЕИС</span>
+            <span class="link__desc"></span>
+        </a>
+        
+        </li>
+        
+    
+    
+
+
+
+    
+
+
+
+
+
+
+
+
+
+
+    
+        
+        <li class="submenu-list__item">
+            <a  href="http://zakupki.gov.ru/epz/main/public/document/view.html?sectionId=1254" 
+                class="submenu-list__link  _document  "
+            data-law="1254"
+            >
+            <span class="link__text">Сведения о банках и финансовых организациях</span>
+            <span class="link__desc"></span>
+        </a>
+        
+        </li>
+        
+    
+    
+
+
+
+    
+
+
+
+
+
+
+
+
+
+
+    
+        
+        <li class="submenu-list__item">
+            <a  href="http://zakupki.gov.ru/epz/main/public/document/view.html?sectionId=1253" 
+                class="submenu-list__link  _document  "
+            data-law="1253"
+            >
+            <span class="link__text">Материалы для работы в ЕИС</span>
+            <span class="link__desc"></span>
+        </a>
+        
+        </li>
+        
+    
+    
+
+
+
+    
+
+
+
+
+
+
+
+
+
+
+    
+        
+        <li class="submenu-list__item">
+            <a  href="http://zakupki.gov.ru/epz/main/public/document/view.html?sectionId=1252" 
+                class="submenu-list__link  _document  "
+            data-law="1252"
+            >
+            <span class="link__text">Техническая информация</span>
+            <span class="link__desc"></span>
+        </a>
+        
+        </li>
+        
+            </ul>
+        
+    
+    
+
+
+
+        
+    
+
+
+    
+    </li>
+    </ul>
+    
+    </li>
+
+
+    
+
+
+
+
+
+
+
+
+
+    <li class="main-item parent-node" style="cursor: pointer;">
+    <a
+         href="http://zakupki.gov.ru/epz/main/public/news/news-search.html" 
+        class="main-link  _news "
+        data-law = " FZ44,FZ223,PPRF615  "
+    >
+        Новости
+    </a>
+    
+
+
+    
+    
+        
+    
+
+
+    
+    </li>
+
+
+                    </ul>
+                </ul>
+            </div>
+        </div>
+    </div>
+</header>
+
+<script type="text/javascript">
+    function selectCurrentMenuItem() {
+        var sectionSelector = '._' + getregistryName();
+
+        var fz44 = getURLParam('fz44'),
+            fz94 = getURLParam('fz44'),
+            fz223 = getURLParam('fz223'),
+            ppRf615 = getURLParam('fz44'),
+            documentSection = getURLParam('sectionId');
+
+        if ($(sectionSelector).length > 1) {
+            var selector = null;
+
+            $(sectionSelector).each(function () {
+                if ($(this).attr('data-law') !== undefined) {
+                    if (fz44 !== null && fz44 === 'on' && $(this).attr('data-law').trim() === 'FZ44') {selector = this; return true;}
+                    if (fz223 !== null && fz223 === 'on' && $(this).attr('data-law').trim() === 'FZ223') {selector = this; return true;}
+                    if (fz94 !== null && fz94 === 'on' && $(this).attr('data-law').trim() === 'FZ94') {selector = this; return true;}
+                    if (ppRf615 !== null && ppRf615 === 'on' && $(this).attr('data-law').trim() === 'PPRF615') {selector = this; return true;}
+                    if (documentSection !== null && documentSection !== '' && $(this).attr('data-law').trim() === documentSection) {selector = this; return true;}
+                }
+            });
+
+            if (selector !== null) {
+                if (!$(selector).parent().hasClass('parent-node'))
+                    $(selector).addClass('submenu-list__link--active');
+
+                $(selector).closest('li.main-item').css('border-bottom', '3px solid #0065dd');
+            }else{
+                $(sectionSelector).first().css('background-color', '#8c96ad');
+                $(sectionSelector).first().closest('li.main-item').css('border-bottom', '3px solid #0065dd');
+            }
+        } else {
+            if (!$(sectionSelector).parent().hasClass('parent-node') && checkStopListSelect(getregistryName()))
+                $(sectionSelector).addClass('submenu-list__link--active');
+
+            $(sectionSelector).closest('li.main-item').css('border-bottom', '3px solid #0065dd');
+        }
+    }
+
+    function checkStopListSelect(selector) {
+        var tempBitLink = window.location.pathname.split("/" + selector + "/");
+        return !(tempBitLink.length > 1 && tempBitLink[1].match("private"));
+    }
+
+    $(document).ready(function () {
+        selectCurrentMenuItem();
+    });
+</script>
+
+<div class="cardWrapper outerWrapper">
+
+  <div class="wrapper">
+    <div class="cardHeaderBlock">
+      
+
+
+
+
+
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        var poorVisionSettingsBlock = $('.poorVisionSettingsBlock');
+
+        
+        
+        
+        var poorVisionLink = poorVisionSettingsBlock.find('.poorVisionLink');
+
+        poorVisionLink.click(function (e) {
+            e.preventDefault();
+            $.cookie('usePoorVisionOption', 'true', {path: '/', expires: 365*100});
+            location.reload();
+        });
+        
+        
+    });
+
+</script>
+
+<div class="poorVisionSettingsBlock">
+    
+        
+        
+            <span>
+                <a class="poorVisionLink poorVisionBannerCards"></a>
+            </span>
+        
+    
+</div>
+
+      
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    
+        
+        
+        
+        
+        
+        
+        
+        
+        
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="container">
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    
+
+
+
+
+
+
+
+    
+
+
+
+
+    
+
+
+
+<div class="breadcrumb rowSpaceBetween flex-wrap">
+    <div class="navBreadcrumb time-zone_block">
+        <div class="navBreadcrumb__item navBreadcrumb__item_first">
+            <a
+                        
+                            onclick="goToSearchUrl(true, '/epz/order/extendedsearch/results.html')"
+                        
+                        
+                    class="navBreadcrumb__icon navBreadcrumb__icon_back align-middle cursor-pointer">
+                <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M8.66014 3.33333L7.32813 2L1.33398 8.00001L7.32804 14L8.66006 12.6667L4.93989 8.94282H15.334V7.05721H4.93995L8.66014 3.33333Z" fill="#0065DD"/>
+                </svg>
+            </a>
+            <a
+                        
+                            onclick="goToSearchUrl(true, '/epz/order/extendedsearch/results.html')"
+                        
+                        
+                    class="navBreadcrumb__text cursor-pointer">
+                Назад к результатам поиска
+            </a>
+        </div>
+        
+        
+            <div class="navBreadcrumb__item navBreadcrumb__item_active">
+                <span class="navBreadcrumb__icon align-middle">
+                    <svg width="4" height="8" viewBox="0 0 4 8" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M0 7.33301L4 3.99967L7.94992e-08 0.666341L0 7.33301Z" fill="#909EBB"/>
+                    </svg>
+                </span>
+                <span class="navBreadcrumb__text" >
+                    
+                        № 0834100000221000038
+                    
+                    
+            </span>
+        </div>
+        
+    </div>
+    
+        <div class="breadcrumb__addition time-zone">
+            <div class="time-zone__title">
+                Информация указана по местному времени организации, осуществляющей закупку
+            </div>
+            <div class="time-zone__value">
+                <span>Иркутск МСК+5 (UTC+8)</span>
+            </div>
+        </div>
+    
+    
+        <div class="breadcrumb__addition subscribeRss mt-4">
+            
+                
+                    <a class="subscribeRss__link" href="/epz/order/notice/rss?regNumber=0834100000221000038" target="_blank">
+                        Подписаться на RSS
+                    </a>
+                
+                
+            
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" class="subscribeRss__icon">
+                <path d="M0.5 3.5C7.125 3.5 12.5 8.875 12.5 15.5H15.5C15.5 7.25 8.75 0.5 0.5 0.5V3.5ZM0.5 5.625V8.625C4.25 8.625 7.375 11.75 7.375 15.5H10.375C10.375 10 6 5.625 0.5 5.625ZM4.625 13.5C4.625 14.625 3.75 15.5 2.625 15.5C1.375 15.5 0.5 14.625 0.5 13.5C0.5 12.375 1.375 11.5 2.5 11.5C3.625 11.5 4.625 12.375 4.625 13.5Z" fill="#E8523D"/>
+            </svg>
+        </div>
+    
+</div>
+
+<script>
+    $(document).ready(saveReferrerUrl());
+</script>
+
+    <div class="cardMainInfo row">
+        <div class="sectionMainInfo borderRight col-6">
+            <div class="sectionMainInfo__header">
+                <div class="rowSpaceBetween">
+                    <div class="cardMainInfo__title d-flex text-truncate"
+                         
+                    >44-ФЗ
+                        <span class="cardMainInfo__title distancedText ml-1">
+                            Электронный аукцион
+                            
+                            
+                        </span>
+                    </div>
+                    <div class="blockIcon">
+                        <a data-modalup href="/epz/order/notice/printForm/listModal.html?regNumber=0834100000221000038" class="distancedText">
+                            <img src="/epz/static/img/icons/icon_key.svg" alt=""/>
+                        </a>
+                        
+                        <a href="/epz/order/notice/printForm/view.html?regNumber=0834100000221000038" target="_blank">
+                            <img src="/epz/static/img/icons/icon_print_small.svg" alt=""/>
+                        </a>
+                        
+                    </div>
+                </div>
+                <div class="cardMainInfo__status">
+                    <span class="cardMainInfo__purchaseLink distancedText"><a href="#"
+                                                                              target="_blank">№ 0834100000221000038</a></span><span
+                        class="cardMainInfo__state distancedText">Подача заявок</span>
+                </div>
+            </div>
+            <div class="sectionMainInfo__body">
+                
+                
+                
+                    <div class="cardMainInfo__section">
+                        <span class="cardMainInfo__title">Объект закупки</span>
+                        <span class="cardMainInfo__content">Поставка шин пневматических для легковых автомобилей
+(Запасные части для ремонта к автотранспорту в рамках ГОЗ, в целях обеспечения
+ГПВ)</span>
+                    </div>
+                
+                <div class="cardMainInfo__section">
+                    <span class="cardMainInfo__title">
+                        
+                            
+                            
+                                Заказчик
+                            
+                        
+                    </span>
+                    <span class="cardMainInfo__content">
+                        <a href="https://zakupki.gov.ru/epz/organization/view/info.html?organizationCode=08341000002" target="_blank">ФЕДЕРАЛЬНОЕ КАЗЕННОЕ УЧРЕЖДЕНИЕ "ЦЕНТР ХОЗЯЙСТВЕННОГО И СЕРВИСНОГО ОБЕСПЕЧЕНИЯ ГЛАВНОГО УПРАВЛЕНИЯ МИНИСТЕРСТВА ВНУТРЕННИХ ДЕЛ РОССИЙСКОЙ ФЕДЕРАЦИИ ПО ИРКУТСКОЙ ОБЛАСТИ"</a>
+                    </span>
+                </div>
+            </div>
+        </div>
+        <div class="sectionMainInfo borderRight col-3 colSpaceBetween">
+            <div class="price">
+                
+                    <span class="cardMainInfo__title">
+                        Начальная цена
+                        
+                        
+                    </span>
+                    <span class="cardMainInfo__content cost">
+                        2 809 884,00 &#8381;
+                    </span>
+                
+            </div>
+            <div class="date">
+                <div class="row">
+                    <div class="cardMainInfo__section col-6">
+                        <span class="cardMainInfo__title">Размещено</span>
+                        <span class="cardMainInfo__content">
+                            20.08.2021 
+                        </span>
+                    </div>
+                    <div class="cardMainInfo__section col-6">
+                        <span class="cardMainInfo__title">Обновлено</span>
+                        <span class="cardMainInfo__content">
+                            20.08.2021 
+                        </span>
+                    </div>
+                </div>
+                <div class="cardMainInfo__section">
+                    
+                        <span class="cardMainInfo__title">Окончание подачи заявок</span>
+                        <span class="cardMainInfo__content">30.08.2021 </span>
+                    
+                </div>
+            </div>
+        </div>
+        <div class="sectionMainInfo col-3 colSpaceBetween mt-auto rel-links">
+            <div></div>
+            <div class="rel-links">
+                
+                    
+                        
+                    
+                    
+                
+                <a href="#positionKTRU">Позиция КТРУ</a>
+                
+                <a class="cursorPointer" onclick="openContractUrl('0834100000221000038')">Контракт</a>
+                
+                <a class="cursorPointer" onclick="openComplaintSearch('0834100000221000038')">Жалоба</a>
+                <a class="cursorPointer" onclick="openUnscheduledInspection('0834100000221000038')">Внеплановая
+                    проверка</a>
+            </div>
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+    function openComplaintSearch(number) {
+        var url = "/epz/complaint/search/search_eis.html?searchString=" +
+            number +
+            "&strictEqual=on&fz94=on&cancelled=on&considered=on&regarded=on";
+        window.open(url);
+    }
+
+    function bankGuaranteeUrl(recordNotificationNumber) {
+        var regex = /(<([^>]+)>)/ig;
+        var removeXML = recordNotificationNumber.replace(regex, "");
+        var url = "/epz/bankguarantee/search/results.html?searchString=&orderNumber=" + removeXML + "&openMode=USE_DEFAULT_PARAMS";
+        url += "&published=on&rejected=on&terminated=on&stopped=on&application=on&contract=on&currencyId=1";
+        window.open(url);
+    }
+
+    function openContractUrl(number) {
+        var url = "/epz/contract/search/results.html?searchString=&orderNumber=" + number + "&openMode=USE_DEFAULT_PARAMS";
+        url += "&fz44=on&priceFrom=0&priceTo=200000000000&contractStageList=0%2C1%2C2%2C3&budgetaryFunds=on&extraBudgetaryFunds=on";
+        window.open(url);
+    }
+
+    function openPlanGraphSearchUrl(notificationNumber) {
+        const url = "/epz/orderplan/search/results.html?notificationNumber=" + notificationNumber;
+        window.open(url);
+    }
+
+    function openUnscheduledInspection(notificationNumber) {
+        var url = "/epz/unscheduledinspection/search/results.html?order=" + notificationNumber;
+        window.open(url);
+    }
+</script>
+
+
+      
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    
+        
+        
+        
+        
+        
+        
+        
+        
+        
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="container">
+    <div class="tabsNav d-flex align-items-end">
+        
+            
+
+
+
+
+
+
+
+
+
+
+
+
+
+    
+
+
+
+
+    
+
+
+
+
+    
+
+
+
+
+    <a href="/epz/order/notice/ea44/view/common-info.html?regNumber=0834100000221000038"
+            
+                
+                    class="tabsNav__item tabsNav__item_active"
+                
+                
+            
+    >
+        
+            
+            
+            
+                
+            
+        
+        Общая информация
+    </a>
+
+
+
+            
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    
+
+
+
+    
+
+
+
+
+    
+
+
+
+
+
+
+            
+
+
+
+
+
+
+
+
+
+
+
+
+
+    
+
+
+
+
+    
+
+
+
+
+    
+
+
+
+
+    <a href="/epz/order/notice/ea44/view/documents.html?regNumber=0834100000221000038"
+            
+                
+                
+                    class="tabsNav__item"
+                
+            
+    >
+        
+            
+            
+            
+                
+            
+        
+        Документы
+    </a>
+
+
+        
+
+        
+
+        
+
+        
+            
+
+
+
+
+
+
+
+
+
+
+
+
+
+    
+
+
+
+
+    
+
+
+
+
+    
+
+
+
+
+    <a href="/epz/order/notice/ea44/view/event-journal.html?regNumber=0834100000221000038"
+            
+                
+                
+                    class="tabsNav__item"
+                
+            
+    >
+        
+            
+            
+            
+                
+            
+        
+        Журнал событий
+    </a>
+
+
+        
+    </div>
+</div>
+
+<script>
+    $(document).ready(function () {
+        $('.contentTabsWrapper td[tab = "MAIN_INFO"]').addClass('currentTab');
+        
+        if ($('.contentTabsWrapper tr').width() > 980 && false) {
+            $('[tab="EVENT_LOG"]').css('display', 'none');
+        }
+        
+    });
+</script>
+<script type="text/javascript" src="/epz/order/notice/js/card/view/medExport.js"></script>
+
+    </div>
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    
+        
+        
+        
+        
+        
+        
+        
+        
+        
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    
+
+
+
+
+    
+
+
+
+
+
+<div class="container">
+    
+    
+    
+
+    <div class="row blockInfo">
+        <div class="col">
+            <h2 class="blockInfo__title">Общая информация о закупке</h2>
+            <section class="blockInfo__section section">
+                <span class="section__title">Способ определения поставщика (подрядчика, исполнителя)</span>
+                <span class="section__info">Электронный аукцион</span>
+                
+            </section>
+            <section class="blockInfo__section section">
+                <span class="section__title">Наименование электронной площадки в информационно-телекоммуникационной сети "Интернет"</span>
+                <span class="section__info">АО «ЕЭТП»</span>
+            </section>
+            <section class="blockInfo__section section">
+                <span class="section__title">Адрес электронной площадки в информационно-телекоммуникационной сети "Интернет"</span>
+                <span class="section__info">
+                    <a
+                       href="http://roseltorg.ru"
+                       target="_blank"
+                    >
+                        http://roseltorg.ru
+                    </a>
+                </span>
+            </section>
+            <section class="blockInfo__section section">
+                <span class="section__title">Размещение осуществляет</span>
+                <span class="section__info">
+                    Заказчик<br>
+                    <a
+                       target="_blank"
+                       href="https://zakupki.gov.ru/epz/organization/view/info.html?organizationCode=08341000002"
+                    >
+                        ФЕДЕРАЛЬНОЕ КАЗЕННОЕ УЧРЕЖДЕНИЕ "ЦЕНТР ХОЗЯЙСТВЕННОГО И СЕРВИСНОГО ОБЕСПЕЧЕНИЯ ГЛАВНОГО УПРАВЛЕНИЯ МИНИСТЕРСТВА ВНУТРЕННИХ ДЕЛ РОССИЙСКОЙ ФЕДЕРАЦИИ ПО ИРКУТСКОЙ ОБЛАСТИ"
+                    </a>
+                </span>
+            </section>
+            
+            <section class="blockInfo__section section">
+                <span class="section__title">Наименование объекта закупки</span>
+                <span class="section__info">Поставка шин пневматических для легковых автомобилей
+(Запасные части для ремонта к автотранспорту в рамках ГОЗ, в целях обеспечения
+ГПВ)</span>
+            </section>
+            
+                
+
+
+<section class="blockInfo__section section">
+    <span class="section__title">Закупка товара, работы, услуги по государственному оборонному заказу в соответствии с ФЗ № 275-ФЗ от 29 декабря 2012 г.</span>
+    <span class="section__info">Да</span>
+</section>
+            
+            
+
+
+
+
+            
+
+
+
+
+            <section class="blockInfo__section section">
+                <span class="section__title">Этап закупки</span>
+                <span class="section__info">Подача заявок</span>
+            </section>
+            
+            
+                
+                
+                    <section class="blockInfo__section section">
+                        <span class="section__title">Сведения о связи с позицией плана-графика</span>
+                        <span class="section__info">
+                                
+                                
+                                    Связь с позицией плана-графика не установлена
+                                
+                        </span>
+                    </section>
+                
+            
+            
+            
+            
+
+
+
+
+
+        </div>
+    </div>
+</div>
+
+<hr class="graySeparator">
+
+<div class="container">
+    
+
+    <div class="row blockInfo">
+        <div class="col">
+            <h2 class="blockInfo__title">Контактная информация</h2>
+            
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <section class="blockInfo__section section">
+        <span class="section__title">Размещение осуществляет</span>
+        <span class="section__info">Заказчик</span>
+    </section>
+
+<section class="blockInfo__section section">
+    <span class="section__title">Организация, осуществляющая размещение</span>  <!-- -->
+    <span class="section__info">
+        ФЕДЕРАЛЬНОЕ КАЗЕННОЕ УЧРЕЖДЕНИЕ &#034;ЦЕНТР ХОЗЯЙСТВЕННОГО И СЕРВИСНОГО ОБЕСПЕЧЕНИЯ ГЛАВНОГО УПРАВЛЕНИЯ МИНИСТЕРСТВА ВНУТРЕННИХ ДЕЛ РОССИЙСКОЙ ФЕДЕРАЦИИ ПО ИРКУТСКОЙ ОБЛАСТИ&#034;
+    </span>
+</section>
+<section class="blockInfo__section section">
+    <span class="section__title">Почтовый адрес</span>
+    <span class="section__info">Российская Федерация, 664003, Иркутская обл, Иркутск г, УЛ ФУРЬЕ, 14</span>
+</section>
+<section class="blockInfo__section section">
+    <span class="section__title">Место нахождения</span>
+    <span class="section__info">
+        Российская Федерация, 664003, Иркутская обл, Иркутск г, УЛ ФУРЬЕ, 14
+    </span>
+</section>
+
+
+<section class="blockInfo__section section">
+    <span class="section__title">Ответственное должностное лицо</span>
+    <span class="section__info">
+        Верес В. А.<br/>
+    </span>
+</section>
+<section class="blockInfo__section section">
+    <span class="section__title">Адрес электронной почты</span>
+    <span class="section__info">
+        ooz_chiso38@mvd.ru
+    </span>
+</section>
+<section class="blockInfo__section section">
+    <span class="section__title">Номер контактного телефона</span>
+    <span class="section__info">7-3952-216472</span>
+</section>
+
+
+<section class="blockInfo__section section">
+    <span class="section__title">Дополнительная информация</span>
+    
+        
+            <span class="section__info">Информация отсутствует</span>
+        
+        
+    
+</section>
+
+    <section class="blockInfo__section section">
+        <span class="section__title">Регион</span>
+        <span class="section__info">Иркутская обл</span>
+    </section>
+
+
+        </div>
+    </div>
+</div>
+
+<hr class="graySeparator">
+
+<div class="container">
+    
+
+    <div class="row blockInfo">
+        <div class="col">
+            <h2 class="blockInfo__title">Информация о процедуре электронного аукциона</h2>
+            <section class="blockInfo__section">
+                <span class="section__title">Дата и время начала срока подачи заявок</span>
+                <span class="section__info">20.08.2021 18:49 <span class='timeZoneName' title='Иркутск, стандартное время'>(МСК+5)</span></span>
+            </section>
+            <section class="blockInfo__section">
+                <span class="section__title">Дата и время окончания срока подачи заявок на участие в электронном аукционе</span>
+                <span class="section__info">30.08.2021 09:00 <span class='timeZoneName' title='Иркутск, стандартное время'>(МСК+5)</span></span>
+            </section>
+            <section class="blockInfo__section">
+                <span class="section__title">Место подачи заявок</span>
+                <span class="section__info">
+                    АО «ЕЭТП»
+                </span>
+            </section>
+            <section class="blockInfo__section">
+                <span class="section__title">Порядок подачи заявок</span>
+                <span class="section__info">
+                    в электронной форме
+                </span>
+            </section>
+            
+                <section class="blockInfo__section">
+                    <span class="section__title">Дата окончания срока рассмотрения заявок на участие в электронном аукционе</span>
+                    <span class="section__info">31.08.2021</span>
+                </section>
+            
+            <section class="blockInfo__section">
+                <span class="section__title">Дата проведения аукциона в электронной форме</span>
+                <span  class="section__info" >
+                    01.09.2021
+                    
+                </span>
+            </section>
+            
+            <section class="blockInfo__section">
+                <span class="section__title">Время проведения аукциона</span>
+                <span class="section__info" >
+                    
+                        
+                            09:57
+                        
+                        
+                    
+                    
+                </span>
+            </section>
+            
+            <section class="blockInfo__section section">
+                <span class="section__title">Дополнительная информация</span>
+                
+                    
+                    
+                        <span class="section__info">Информация отсутствует</span>
+                    
+                
+            </section>
+        </div>
+    </div>
+</div>
+
+<hr class="graySeparator">
+
+<div class="container">
+    
+
+    <div class="row blockInfo">
+        <div class="col">
+            <h2 class="blockInfo__title">Начальная (максимальная) цена контракта</h2>
+            <section class="blockInfo__section section">
+                <span class="section__title">Начальная (максимальная) цена контракта</span>
+                <span class="section__info">
+                    2 809 884,00
+                </span>
+            </section>
+            <section class="blockInfo__section section">
+                <span class="section__title">Валюта</span>
+                <span class="section__info">Российский рубль</span>
+            </section>
+            
+            
+            
+
+
+
+
+
+
+            
+            
+                <section class="blockInfo__section section">
+                    <span class="section__title">Идентификационный код закупки (ИКЗ)</span>
+                    <span class="section__info">
+                        
+                            
+                                211380822504038080100100000362211340<br/>
+                            
+                        
+                    </span>
+                </section>
+            
+
+            
+
+
+
+
+
+
+
+
+
+
+
+            
+        </div>
+    </div>
+</div>
+
+    <hr class="graySeparator">
+    
+    
+
+
+
+
+
+
+
+
+
+
+
+
+    
+    
+
+
+
+
+
+    <hr class="graySeparator">
+
+    <div class="container">
+        <div class="row blockInfo">
+            <div class="col">
+                <h2 class="blockInfo__title">Информация об источниках финансирования</h2>
+                <section class="blockInfo__section section">
+                    <span class="section__title">Источник финансирования</span>
+                    <span class="section__info">
+                    
+                        
+                        
+                            Источник финансирования: Федеральный бюджет. Гособоронзаказ. ЛБО 2022.
+                        
+                        
+                    
+                </span>
+                </section>
+                <br>
+                
+                    <span class="section__title">Финансовое обеспечение закупки (всего)</span>
+                    <table class="blockInfo__table tableBlock">
+                        <tr>
+                            <th class="table__header-item table__row-item table-head-text tableBlock__col_right" style="width: 12%">
+                                На 2021 год, &#8381;
+                            </th>
+                            <th class="table__header-item table__row-item table-head-text tableBlock__col_right">
+                                На 2022 год, &#8381;
+                            </th>
+                            <th class="table__header-item table__row-item table-head-text tableBlock__col_right">
+                                На 2023 год, &#8381;
+                            </th>
+                            <th class="table__header-item table__row-item table-head-text tableBlock__col_right">На Последующие годы, &#8381;</th>
+                            <th class="table__row-item table-head-text tableBlock__col_right">Всего, &#8381;</th>
+                        </tr>
+                        <tr>
+                            <td class="table__row-item normal-text tableBlock__col_right">
+                                0,00
+                            </td>
+                            <td class="table__row-item normal-text tableBlock__col_right">
+                               2 809 884,00
+                            </td>
+                            <td class="table__row-item normal-text tableBlock__col_right">
+                               0,00
+                            </td>
+                            <td class="table__row-item normal-text tableBlock__col_right">
+                                0,00
+                            </td>
+                            <td class="table__row-item normal-text tableBlock__col_right">
+                               2 809 884,00
+                            </td>
+                        </tr>
+                    </table>
+                    <br/>
+                
+                
+                    <span class="section__title">За счет бюджетных средств</span>
+                    <table class="blockInfo__table tableBlock">
+                        <tr>
+                            <th class="table__header-item table__row-item table-head-text tableBlock__col_left">
+                                Код бюджетной классификации
+                            </th>
+                            <th class="table__header-item table__row-item table-head-text tableBlock__col_right">
+                                На 2021 год, &#8381;
+                            </th>
+                            <th class="table__header-item table__row-item table-head-text tableBlock__col_right">
+                                На 2022 год, &#8381;
+                            </th>
+                            <th class="table__header-item table__row-item table-head-text tableBlock__col_right">
+                                На 2023 год, &#8381;
+                            </th>
+                            <th class="table__header-item table__row-item table-head-text tableBlock__col_right">На Последующие годы, &#8381;</th>
+                            <th class="table__row-item table-head-text tableBlock__col_right">Всего, &#8381;</th>
+                        </tr>
+                        
+                            <tr>
+                                <td class="table__row-item normal-text tableBlock__col_left">
+                                   18803020840392019214
+                                </td>
+                                <td class="table__row-item normal-text tableBlock__col_right">
+                                   0,00
+                                </td>
+                                <td class="table__row-item normal-text tableBlock__col_right">
+                                   2 809 884,00
+                                </td>
+                                <td class="table__row-item normal-text tableBlock__col_right">
+                                   0,00
+                                </td>
+                                <td class="table__row-item normal-text tableBlock__col_right">
+                                   0,00
+                                </td>
+                                <td class="table__row-item normal-text tableBlock__col_right">
+                                   2 809 884,00
+                                </td>
+                            </tr>
+                        
+                        <tr>
+                            <td class="table__row-item normal-text tableBlock__col_right">
+                                <span class="tableBlock__resultTitle">Итого (1 запись):</span>
+                            </td>
+                            <td class="table__row-item normal-text tableBlock__col_right" style="font-weight: 900">
+                                    0,00
+                            </td>
+                            <td class="table__row-item normal-text tableBlock__col_right" style="font-weight: 900">
+                                    2 809 884,00
+                            </td>
+                            <td class="table__row-item normal-text tableBlock__col_right" style="font-weight: 900">
+                                    0,00
+                            </td>
+                            <td class="table__row-item normal-text tableBlock__col_right" style="font-weight: 900">
+                                    0,00
+                            </td>
+                            <td class="table__row-item normal-text tableBlock__col_right" style="font-weight: 900">
+                                    2 809 884,00
+                            </td>
+                        </tr>
+                    </table>
+                    <br/>
+                
+                
+                
+                
+            </div>
+         </div>
+    </div>
+
+
+
+<hr class="graySeparator">
+
+<div class="container" id="positionKTRU">
+    <div class="row blockInfo">
+        <div class="col">
+            <h2 class="blockInfo__title">Информация об объекте закупки</h2>
+            
+
+
+
+
+
+
+
+
+
+
+
+
+    
+        
+
+
+
+
+
+
+
+
+
+
+
+<div id="purchaseObjectTruTable27629151">
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table class="blockInfo__table tableBlock">
+    <thead>
+        <tr class="tableBlock__row">
+            
+            <td>&nbsp;</td>
+            
+            <th class="tableBlock__col tableBlock__col_header">Код позиции</th>
+            <th class="tableBlock__col tableBlock__col_header">
+                
+                    
+                    Наименование Товара, Работы, Услуги по КТРУ
+                
+            </th>
+            
+                <th class="tableBlock__col tableBlock__col_header">Ед. измерения</th>
+            
+            
+                <th class="tableBlock__col tableBlock__col_header">Количество</th>
+            
+            
+                <th class="tableBlock__col tableBlock__col_header tableBlock__col_right">
+                    
+                        
+                        
+                            Цена за ед., &#8381;
+                        
+                    
+                </th>
+            
+            
+                <th class="tableBlock__col tableBlock__col_header tableBlock__col_right">Стоимость, &#8381;</th>
+            
+        </tr>
+    </thead>
+    <tbody class="tableBlock__body">
+        
+            
+            
+            
+
+            <tr class="tableBlock__row">
+                
+                
+                <td class="tableBlock__col">
+                        <span class="chevronRight" onclick="showInfo('truInfo0_27629151', this)"></span>
+                </td>
+                
+                
+                <td class="tableBlock__col">
+                    
+                        
+                            <a href="/epz/ktru/ktruCard/commonInfo.html?itemVersionId=129300"
+                               target="_blank">22.11.11.000-00000007</a>
+                        
+                        
+                    
+                </td>
+                <td class="tableBlock__col">
+                    Шина пневматическая для легкового автомобиля
+                    
+                    
+                        <br/>
+                        <div class="section__title">
+                            
+                                Индекс нагрузки
+                                
+                                    
+                                    ≥ 80 и < 90, 
+                                
+                            
+                                Категория использования шины
+                                
+                                    
+                                    Дорожная, 
+                                
+                            
+                                Категория скорости
+                                
+                                    
+                                    H, 
+                                
+                            
+                                Номинальная ширина профиля
+                                
+                                    
+                                    175 мм, 
+                                
+                            
+                                Номинальное отношение высоты профиля шины к ее ширине
+                                
+                                    
+                                    65 %, 
+                                
+                            
+                                Номинальный посадочный диаметр обода
+                                
+                                    
+                                    14 дюйм, 
+                                
+                            
+                                Способ герметизации шины
+                                
+                                    
+                                    Бескамерная, 
+                                
+                            
+                                Тип конструкции
+                                
+                                    
+                                    Радиальная
+                                
+                            
+                        </div>
+                    
+                </td>
+                
+                    <td class="tableBlock__col">Штука</td>
+                
+                
+                    <td class="tableBlock__col">
+                        140,00
+                    </td>
+                
+                
+                    <td class="tableBlock__col tableBlock__col_right">
+                        2 369,00
+                    </td>
+                
+                
+                    <td class="tableBlock__col tableBlock__col_right">
+                        331 660,00
+                    </td>
+                
+            </tr>
+            
+
+            
+                <tr class="truInfo0_27629151" style="display: none">
+                    <td class="tableBlock__col"></td>
+                    <td colspan="6" class="tableBlock__col">
+                        <div class="tableBlock__scroll">
+                            <table class="tableBlock">
+                                
+
+
+
+
+
+
+
+
+
+
+
+<thead>
+    <tr class="tableBlock__row">
+        <td class="tableBlock__col tableBlock__col_header">Наименование характеристики</td>
+        <td class="tableBlock__col tableBlock__col_header">Значение характеристики</td>
+        <td class="tableBlock__col tableBlock__col_header">Единица измерения характеристики</td>
+    </tr>
+</thead>
+<tbody>
+    
+        
+            <tr class="tableBlock__row">
+                
+                    <td
+                            class="tableBlock__col"
+                            rowspan="1"
+                    >
+                            Индекс нагрузки
+                    </td>
+                
+                <td class="tableBlock__col">
+                        ≥ 80 и < 90
+                </td>
+                <td class="tableBlock__col">
+                        
+                </td>
+            </tr>
+        
+    
+        
+            <tr class="tableBlock__row">
+                
+                    <td
+                            class="tableBlock__col"
+                            rowspan="1"
+                    >
+                            Категория использования шины
+                    </td>
+                
+                <td class="tableBlock__col">
+                        Дорожная
+                </td>
+                <td class="tableBlock__col">
+                        
+                </td>
+            </tr>
+        
+    
+        
+            <tr class="tableBlock__row">
+                
+                    <td
+                            class="tableBlock__col"
+                            rowspan="1"
+                    >
+                            Категория скорости
+                    </td>
+                
+                <td class="tableBlock__col">
+                        H
+                </td>
+                <td class="tableBlock__col">
+                        
+                </td>
+            </tr>
+        
+    
+        
+            <tr class="tableBlock__row">
+                
+                    <td
+                            class="tableBlock__col"
+                            rowspan="1"
+                    >
+                            Номинальная ширина профиля
+                    </td>
+                
+                <td class="tableBlock__col">
+                        175
+                </td>
+                <td class="tableBlock__col">
+                        Миллиметр
+                </td>
+            </tr>
+        
+    
+        
+            <tr class="tableBlock__row">
+                
+                    <td
+                            class="tableBlock__col"
+                            rowspan="1"
+                    >
+                            Номинальное отношение высоты профиля шины к ее ширине
+                    </td>
+                
+                <td class="tableBlock__col">
+                        65
+                </td>
+                <td class="tableBlock__col">
+                        Процент
+                </td>
+            </tr>
+        
+    
+        
+            <tr class="tableBlock__row">
+                
+                    <td
+                            class="tableBlock__col"
+                            rowspan="1"
+                    >
+                            Номинальный посадочный диаметр обода
+                    </td>
+                
+                <td class="tableBlock__col">
+                        14
+                </td>
+                <td class="tableBlock__col">
+                        Дюйм (25,4 мм)
+                </td>
+            </tr>
+        
+    
+        
+            <tr class="tableBlock__row">
+                
+                    <td
+                            class="tableBlock__col"
+                            rowspan="1"
+                    >
+                            Способ герметизации шины
+                    </td>
+                
+                <td class="tableBlock__col">
+                        Бескамерная
+                </td>
+                <td class="tableBlock__col">
+                        
+                </td>
+            </tr>
+        
+    
+        
+            <tr class="tableBlock__row">
+                
+                    <td
+                            class="tableBlock__col"
+                            rowspan="1"
+                    >
+                            Тип конструкции
+                    </td>
+                
+                <td class="tableBlock__col">
+                        Радиальная
+                </td>
+                <td class="tableBlock__col">
+                        
+                </td>
+            </tr>
+        
+    
+</tbody>
+                            </table>
+                        </div>
+                    </td>
+                </tr>
+            
+            
+        
+            
+            
+            
+
+            <tr class="tableBlock__row">
+                
+                
+                <td class="tableBlock__col">
+                        <span class="chevronRight" onclick="showInfo('truInfo1_27629151', this)"></span>
+                </td>
+                
+                
+                <td class="tableBlock__col">
+                    
+                        
+                            <a href="/epz/ktru/ktruCard/commonInfo.html?itemVersionId=129300"
+                               target="_blank">22.11.11.000-00000007</a>
+                        
+                        
+                    
+                </td>
+                <td class="tableBlock__col">
+                    Шина пневматическая для легкового автомобиля
+                    
+                    
+                        <br/>
+                        <div class="section__title">
+                            
+                                Индекс нагрузки
+                                
+                                    
+                                    ≥ 80 и < 90, 
+                                
+                            
+                                Категория использования шины
+                                
+                                    
+                                    Дорожная, 
+                                
+                            
+                                Категория скорости
+                                
+                                    
+                                    H, 
+                                
+                            
+                                Номинальная ширина профиля
+                                
+                                    
+                                    185 мм, 
+                                
+                            
+                                Номинальное отношение высоты профиля шины к ее ширине
+                                
+                                    
+                                    65 %, 
+                                
+                            
+                                Номинальный посадочный диаметр обода
+                                
+                                    
+                                    14 дюйм, 
+                                
+                            
+                                Способ герметизации шины
+                                
+                                    
+                                    Бескамерная, 
+                                
+                            
+                                Тип конструкции
+                                
+                                    
+                                    Радиальная
+                                
+                            
+                        </div>
+                    
+                </td>
+                
+                    <td class="tableBlock__col">Штука</td>
+                
+                
+                    <td class="tableBlock__col">
+                        20,00
+                    </td>
+                
+                
+                    <td class="tableBlock__col tableBlock__col_right">
+                        2 915,00
+                    </td>
+                
+                
+                    <td class="tableBlock__col tableBlock__col_right">
+                        58 300,00
+                    </td>
+                
+            </tr>
+            
+
+            
+                <tr class="truInfo1_27629151" style="display: none">
+                    <td class="tableBlock__col"></td>
+                    <td colspan="6" class="tableBlock__col">
+                        <div class="tableBlock__scroll">
+                            <table class="tableBlock">
+                                
+
+
+
+
+
+
+
+
+
+
+
+<thead>
+    <tr class="tableBlock__row">
+        <td class="tableBlock__col tableBlock__col_header">Наименование характеристики</td>
+        <td class="tableBlock__col tableBlock__col_header">Значение характеристики</td>
+        <td class="tableBlock__col tableBlock__col_header">Единица измерения характеристики</td>
+    </tr>
+</thead>
+<tbody>
+    
+        
+            <tr class="tableBlock__row">
+                
+                    <td
+                            class="tableBlock__col"
+                            rowspan="1"
+                    >
+                            Индекс нагрузки
+                    </td>
+                
+                <td class="tableBlock__col">
+                        ≥ 80 и < 90
+                </td>
+                <td class="tableBlock__col">
+                        
+                </td>
+            </tr>
+        
+    
+        
+            <tr class="tableBlock__row">
+                
+                    <td
+                            class="tableBlock__col"
+                            rowspan="1"
+                    >
+                            Категория использования шины
+                    </td>
+                
+                <td class="tableBlock__col">
+                        Дорожная
+                </td>
+                <td class="tableBlock__col">
+                        
+                </td>
+            </tr>
+        
+    
+        
+            <tr class="tableBlock__row">
+                
+                    <td
+                            class="tableBlock__col"
+                            rowspan="1"
+                    >
+                            Категория скорости
+                    </td>
+                
+                <td class="tableBlock__col">
+                        H
+                </td>
+                <td class="tableBlock__col">
+                        
+                </td>
+            </tr>
+        
+    
+        
+            <tr class="tableBlock__row">
+                
+                    <td
+                            class="tableBlock__col"
+                            rowspan="1"
+                    >
+                            Номинальная ширина профиля
+                    </td>
+                
+                <td class="tableBlock__col">
+                        185
+                </td>
+                <td class="tableBlock__col">
+                        Миллиметр
+                </td>
+            </tr>
+        
+    
+        
+            <tr class="tableBlock__row">
+                
+                    <td
+                            class="tableBlock__col"
+                            rowspan="1"
+                    >
+                            Номинальное отношение высоты профиля шины к ее ширине
+                    </td>
+                
+                <td class="tableBlock__col">
+                        65
+                </td>
+                <td class="tableBlock__col">
+                        Процент
+                </td>
+            </tr>
+        
+    
+        
+            <tr class="tableBlock__row">
+                
+                    <td
+                            class="tableBlock__col"
+                            rowspan="1"
+                    >
+                            Номинальный посадочный диаметр обода
+                    </td>
+                
+                <td class="tableBlock__col">
+                        14
+                </td>
+                <td class="tableBlock__col">
+                        Дюйм (25,4 мм)
+                </td>
+            </tr>
+        
+    
+        
+            <tr class="tableBlock__row">
+                
+                    <td
+                            class="tableBlock__col"
+                            rowspan="1"
+                    >
+                            Способ герметизации шины
+                    </td>
+                
+                <td class="tableBlock__col">
+                        Бескамерная
+                </td>
+                <td class="tableBlock__col">
+                        
+                </td>
+            </tr>
+        
+    
+        
+            <tr class="tableBlock__row">
+                
+                    <td
+                            class="tableBlock__col"
+                            rowspan="1"
+                    >
+                            Тип конструкции
+                    </td>
+                
+                <td class="tableBlock__col">
+                        Радиальная
+                </td>
+                <td class="tableBlock__col">
+                        
+                </td>
+            </tr>
+        
+    
+</tbody>
+                            </table>
+                        </div>
+                    </td>
+                </tr>
+            
+            
+        
+            
+            
+            
+
+            <tr class="tableBlock__row">
+                
+                
+                <td class="tableBlock__col">
+                        <span class="chevronRight" onclick="showInfo('truInfo2_27629151', this)"></span>
+                </td>
+                
+                
+                <td class="tableBlock__col">
+                    
+                        
+                            <a href="/epz/ktru/ktruCard/commonInfo.html?itemVersionId=129300"
+                               target="_blank">22.11.11.000-00000007</a>
+                        
+                        
+                    
+                </td>
+                <td class="tableBlock__col">
+                    Шина пневматическая для легкового автомобиля
+                    
+                    
+                        <br/>
+                        <div class="section__title">
+                            
+                                Индекс нагрузки
+                                
+                                    
+                                    ≥ 90 и < 100, 
+                                
+                            
+                                Категория использования шины
+                                
+                                    
+                                    Дорожная, 
+                                
+                            
+                                Категория скорости
+                                
+                                    
+                                    H, 
+                                
+                            
+                                Номинальная ширина профиля
+                                
+                                    
+                                    195 мм, 
+                                
+                            
+                                Номинальное отношение высоты профиля шины к ее ширине
+                                
+                                    
+                                    65 %, 
+                                
+                            
+                                Номинальный посадочный диаметр обода
+                                
+                                    
+                                    15 дюйм, 
+                                
+                            
+                                Способ герметизации шины
+                                
+                                    
+                                    Бескамерная, 
+                                
+                            
+                                Тип конструкции
+                                
+                                    
+                                    Радиальная
+                                
+                            
+                        </div>
+                    
+                </td>
+                
+                    <td class="tableBlock__col">Штука</td>
+                
+                
+                    <td class="tableBlock__col">
+                        60,00
+                    </td>
+                
+                
+                    <td class="tableBlock__col tableBlock__col_right">
+                        2 827,00
+                    </td>
+                
+                
+                    <td class="tableBlock__col tableBlock__col_right">
+                        169 620,00
+                    </td>
+                
+            </tr>
+            
+
+            
+                <tr class="truInfo2_27629151" style="display: none">
+                    <td class="tableBlock__col"></td>
+                    <td colspan="6" class="tableBlock__col">
+                        <div class="tableBlock__scroll">
+                            <table class="tableBlock">
+                                
+
+
+
+
+
+
+
+
+
+
+
+<thead>
+    <tr class="tableBlock__row">
+        <td class="tableBlock__col tableBlock__col_header">Наименование характеристики</td>
+        <td class="tableBlock__col tableBlock__col_header">Значение характеристики</td>
+        <td class="tableBlock__col tableBlock__col_header">Единица измерения характеристики</td>
+    </tr>
+</thead>
+<tbody>
+    
+        
+            <tr class="tableBlock__row">
+                
+                    <td
+                            class="tableBlock__col"
+                            rowspan="1"
+                    >
+                            Индекс нагрузки
+                    </td>
+                
+                <td class="tableBlock__col">
+                        ≥ 90 и < 100
+                </td>
+                <td class="tableBlock__col">
+                        
+                </td>
+            </tr>
+        
+    
+        
+            <tr class="tableBlock__row">
+                
+                    <td
+                            class="tableBlock__col"
+                            rowspan="1"
+                    >
+                            Категория использования шины
+                    </td>
+                
+                <td class="tableBlock__col">
+                        Дорожная
+                </td>
+                <td class="tableBlock__col">
+                        
+                </td>
+            </tr>
+        
+    
+        
+            <tr class="tableBlock__row">
+                
+                    <td
+                            class="tableBlock__col"
+                            rowspan="1"
+                    >
+                            Категория скорости
+                    </td>
+                
+                <td class="tableBlock__col">
+                        H
+                </td>
+                <td class="tableBlock__col">
+                        
+                </td>
+            </tr>
+        
+    
+        
+            <tr class="tableBlock__row">
+                
+                    <td
+                            class="tableBlock__col"
+                            rowspan="1"
+                    >
+                            Номинальная ширина профиля
+                    </td>
+                
+                <td class="tableBlock__col">
+                        195
+                </td>
+                <td class="tableBlock__col">
+                        Миллиметр
+                </td>
+            </tr>
+        
+    
+        
+            <tr class="tableBlock__row">
+                
+                    <td
+                            class="tableBlock__col"
+                            rowspan="1"
+                    >
+                            Номинальное отношение высоты профиля шины к ее ширине
+                    </td>
+                
+                <td class="tableBlock__col">
+                        65
+                </td>
+                <td class="tableBlock__col">
+                        Процент
+                </td>
+            </tr>
+        
+    
+        
+            <tr class="tableBlock__row">
+                
+                    <td
+                            class="tableBlock__col"
+                            rowspan="1"
+                    >
+                            Номинальный посадочный диаметр обода
+                    </td>
+                
+                <td class="tableBlock__col">
+                        15
+                </td>
+                <td class="tableBlock__col">
+                        Дюйм (25,4 мм)
+                </td>
+            </tr>
+        
+    
+        
+            <tr class="tableBlock__row">
+                
+                    <td
+                            class="tableBlock__col"
+                            rowspan="1"
+                    >
+                            Способ герметизации шины
+                    </td>
+                
+                <td class="tableBlock__col">
+                        Бескамерная
+                </td>
+                <td class="tableBlock__col">
+                        
+                </td>
+            </tr>
+        
+    
+        
+            <tr class="tableBlock__row">
+                
+                    <td
+                            class="tableBlock__col"
+                            rowspan="1"
+                    >
+                            Тип конструкции
+                    </td>
+                
+                <td class="tableBlock__col">
+                        Радиальная
+                </td>
+                <td class="tableBlock__col">
+                        
+                </td>
+            </tr>
+        
+    
+</tbody>
+                            </table>
+                        </div>
+                    </td>
+                </tr>
+            
+            
+        
+            
+            
+            
+
+            <tr class="tableBlock__row">
+                
+                
+                <td class="tableBlock__col">
+                        <span class="chevronRight" onclick="showInfo('truInfo3_27629151', this)"></span>
+                </td>
+                
+                
+                <td class="tableBlock__col">
+                    
+                        
+                            <a href="/epz/ktru/ktruCard/commonInfo.html?itemVersionId=129300"
+                               target="_blank">22.11.11.000-00000007</a>
+                        
+                        
+                    
+                </td>
+                <td class="tableBlock__col">
+                    Шина пневматическая для легкового автомобиля
+                    
+                    
+                        <br/>
+                        <div class="section__title">
+                            
+                                Индекс нагрузки
+                                
+                                    
+                                    ≥ 80 и < 90, 
+                                
+                            
+                                Категория использования шины
+                                
+                                    
+                                    Дорожная, 
+                                
+                            
+                                Категория скорости
+                                
+                                    
+                                    H, 
+                                
+                            
+                                Номинальная ширина профиля
+                                
+                                    
+                                    185 мм, 
+                                
+                            
+                                Номинальное отношение высоты профиля шины к ее ширине
+                                
+                                    
+                                    65 %, 
+                                
+                            
+                                Номинальный посадочный диаметр обода
+                                
+                                    
+                                    15 дюйм, 
+                                
+                            
+                                Способ герметизации шины
+                                
+                                    
+                                    Бескамерная, 
+                                
+                            
+                                Тип конструкции
+                                
+                                    
+                                    Радиальная
+                                
+                            
+                        </div>
+                    
+                </td>
+                
+                    <td class="tableBlock__col">Штука</td>
+                
+                
+                    <td class="tableBlock__col">
+                        132,00
+                    </td>
+                
+                
+                    <td class="tableBlock__col tableBlock__col_right">
+                        3 124,00
+                    </td>
+                
+                
+                    <td class="tableBlock__col tableBlock__col_right">
+                        412 368,00
+                    </td>
+                
+            </tr>
+            
+
+            
+                <tr class="truInfo3_27629151" style="display: none">
+                    <td class="tableBlock__col"></td>
+                    <td colspan="6" class="tableBlock__col">
+                        <div class="tableBlock__scroll">
+                            <table class="tableBlock">
+                                
+
+
+
+
+
+
+
+
+
+
+
+<thead>
+    <tr class="tableBlock__row">
+        <td class="tableBlock__col tableBlock__col_header">Наименование характеристики</td>
+        <td class="tableBlock__col tableBlock__col_header">Значение характеристики</td>
+        <td class="tableBlock__col tableBlock__col_header">Единица измерения характеристики</td>
+    </tr>
+</thead>
+<tbody>
+    
+        
+            <tr class="tableBlock__row">
+                
+                    <td
+                            class="tableBlock__col"
+                            rowspan="1"
+                    >
+                            Индекс нагрузки
+                    </td>
+                
+                <td class="tableBlock__col">
+                        ≥ 80 и < 90
+                </td>
+                <td class="tableBlock__col">
+                        
+                </td>
+            </tr>
+        
+    
+        
+            <tr class="tableBlock__row">
+                
+                    <td
+                            class="tableBlock__col"
+                            rowspan="1"
+                    >
+                            Категория использования шины
+                    </td>
+                
+                <td class="tableBlock__col">
+                        Дорожная
+                </td>
+                <td class="tableBlock__col">
+                        
+                </td>
+            </tr>
+        
+    
+        
+            <tr class="tableBlock__row">
+                
+                    <td
+                            class="tableBlock__col"
+                            rowspan="1"
+                    >
+                            Категория скорости
+                    </td>
+                
+                <td class="tableBlock__col">
+                        H
+                </td>
+                <td class="tableBlock__col">
+                        
+                </td>
+            </tr>
+        
+    
+        
+            <tr class="tableBlock__row">
+                
+                    <td
+                            class="tableBlock__col"
+                            rowspan="1"
+                    >
+                            Номинальная ширина профиля
+                    </td>
+                
+                <td class="tableBlock__col">
+                        185
+                </td>
+                <td class="tableBlock__col">
+                        Миллиметр
+                </td>
+            </tr>
+        
+    
+        
+            <tr class="tableBlock__row">
+                
+                    <td
+                            class="tableBlock__col"
+                            rowspan="1"
+                    >
+                            Номинальное отношение высоты профиля шины к ее ширине
+                    </td>
+                
+                <td class="tableBlock__col">
+                        65
+                </td>
+                <td class="tableBlock__col">
+                        Процент
+                </td>
+            </tr>
+        
+    
+        
+            <tr class="tableBlock__row">
+                
+                    <td
+                            class="tableBlock__col"
+                            rowspan="1"
+                    >
+                            Номинальный посадочный диаметр обода
+                    </td>
+                
+                <td class="tableBlock__col">
+                        15
+                </td>
+                <td class="tableBlock__col">
+                        Дюйм (25,4 мм)
+                </td>
+            </tr>
+        
+    
+        
+            <tr class="tableBlock__row">
+                
+                    <td
+                            class="tableBlock__col"
+                            rowspan="1"
+                    >
+                            Способ герметизации шины
+                    </td>
+                
+                <td class="tableBlock__col">
+                        Бескамерная
+                </td>
+                <td class="tableBlock__col">
+                        
+                </td>
+            </tr>
+        
+    
+        
+            <tr class="tableBlock__row">
+                
+                    <td
+                            class="tableBlock__col"
+                            rowspan="1"
+                    >
+                            Тип конструкции
+                    </td>
+                
+                <td class="tableBlock__col">
+                        Радиальная
+                </td>
+                <td class="tableBlock__col">
+                        
+                </td>
+            </tr>
+        
+    
+</tbody>
+                            </table>
+                        </div>
+                    </td>
+                </tr>
+            
+            
+        
+            
+            
+            
+
+            <tr class="tableBlock__row">
+                
+                
+                <td class="tableBlock__col">
+                        <span class="chevronRight" onclick="showInfo('truInfo4_27629151', this)"></span>
+                </td>
+                
+                
+                <td class="tableBlock__col">
+                    
+                        
+                            <a href="/epz/ktru/ktruCard/commonInfo.html?itemVersionId=129300"
+                               target="_blank">22.11.11.000-00000007</a>
+                        
+                        
+                    
+                </td>
+                <td class="tableBlock__col">
+                    Шина пневматическая для легкового автомобиля
+                    
+                    
+                        <br/>
+                        <div class="section__title">
+                            
+                                Индекс нагрузки
+                                
+                                    
+                                    ≥ 90 и < 100, 
+                                
+                            
+                                Категория использования шины
+                                
+                                    
+                                    Дорожная, 
+                                
+                            
+                                Категория скорости
+                                
+                                    
+                                    V, 
+                                
+                            
+                                Номинальная ширина профиля
+                                
+                                    
+                                    205 мм, 
+                                
+                            
+                                Номинальное отношение высоты профиля шины к ее ширине
+                                
+                                    
+                                    55 %, 
+                                
+                            
+                                Номинальный посадочный диаметр обода
+                                
+                                    
+                                    16 дюйм, 
+                                
+                            
+                                Способ герметизации шины
+                                
+                                    
+                                    Бескамерная, 
+                                
+                            
+                                Тип конструкции
+                                
+                                    
+                                    Радиальная
+                                
+                            
+                        </div>
+                    
+                </td>
+                
+                    <td class="tableBlock__col">Штука</td>
+                
+                
+                    <td class="tableBlock__col">
+                        24,00
+                    </td>
+                
+                
+                    <td class="tableBlock__col tableBlock__col_right">
+                        3 618,00
+                    </td>
+                
+                
+                    <td class="tableBlock__col tableBlock__col_right">
+                        86 832,00
+                    </td>
+                
+            </tr>
+            
+
+            
+                <tr class="truInfo4_27629151" style="display: none">
+                    <td class="tableBlock__col"></td>
+                    <td colspan="6" class="tableBlock__col">
+                        <div class="tableBlock__scroll">
+                            <table class="tableBlock">
+                                
+
+
+
+
+
+
+
+
+
+
+
+<thead>
+    <tr class="tableBlock__row">
+        <td class="tableBlock__col tableBlock__col_header">Наименование характеристики</td>
+        <td class="tableBlock__col tableBlock__col_header">Значение характеристики</td>
+        <td class="tableBlock__col tableBlock__col_header">Единица измерения характеристики</td>
+    </tr>
+</thead>
+<tbody>
+    
+        
+            <tr class="tableBlock__row">
+                
+                    <td
+                            class="tableBlock__col"
+                            rowspan="1"
+                    >
+                            Индекс нагрузки
+                    </td>
+                
+                <td class="tableBlock__col">
+                        ≥ 90 и < 100
+                </td>
+                <td class="tableBlock__col">
+                        
+                </td>
+            </tr>
+        
+    
+        
+            <tr class="tableBlock__row">
+                
+                    <td
+                            class="tableBlock__col"
+                            rowspan="1"
+                    >
+                            Категория использования шины
+                    </td>
+                
+                <td class="tableBlock__col">
+                        Дорожная
+                </td>
+                <td class="tableBlock__col">
+                        
+                </td>
+            </tr>
+        
+    
+        
+            <tr class="tableBlock__row">
+                
+                    <td
+                            class="tableBlock__col"
+                            rowspan="1"
+                    >
+                            Категория скорости
+                    </td>
+                
+                <td class="tableBlock__col">
+                        V
+                </td>
+                <td class="tableBlock__col">
+                        
+                </td>
+            </tr>
+        
+    
+        
+            <tr class="tableBlock__row">
+                
+                    <td
+                            class="tableBlock__col"
+                            rowspan="1"
+                    >
+                            Номинальная ширина профиля
+                    </td>
+                
+                <td class="tableBlock__col">
+                        205
+                </td>
+                <td class="tableBlock__col">
+                        Миллиметр
+                </td>
+            </tr>
+        
+    
+        
+            <tr class="tableBlock__row">
+                
+                    <td
+                            class="tableBlock__col"
+                            rowspan="1"
+                    >
+                            Номинальное отношение высоты профиля шины к ее ширине
+                    </td>
+                
+                <td class="tableBlock__col">
+                        55
+                </td>
+                <td class="tableBlock__col">
+                        Процент
+                </td>
+            </tr>
+        
+    
+        
+            <tr class="tableBlock__row">
+                
+                    <td
+                            class="tableBlock__col"
+                            rowspan="1"
+                    >
+                            Номинальный посадочный диаметр обода
+                    </td>
+                
+                <td class="tableBlock__col">
+                        16
+                </td>
+                <td class="tableBlock__col">
+                        Дюйм (25,4 мм)
+                </td>
+            </tr>
+        
+    
+        
+            <tr class="tableBlock__row">
+                
+                    <td
+                            class="tableBlock__col"
+                            rowspan="1"
+                    >
+                            Способ герметизации шины
+                    </td>
+                
+                <td class="tableBlock__col">
+                        Бескамерная
+                </td>
+                <td class="tableBlock__col">
+                        
+                </td>
+            </tr>
+        
+    
+        
+            <tr class="tableBlock__row">
+                
+                    <td
+                            class="tableBlock__col"
+                            rowspan="1"
+                    >
+                            Тип конструкции
+                    </td>
+                
+                <td class="tableBlock__col">
+                        Радиальная
+                </td>
+                <td class="tableBlock__col">
+                        
+                </td>
+            </tr>
+        
+    
+</tbody>
+                            </table>
+                        </div>
+                    </td>
+                </tr>
+            
+            
+        
+            
+            
+            
+
+            <tr class="tableBlock__row">
+                
+                
+                <td class="tableBlock__col">
+                        <span class="chevronRight" onclick="showInfo('truInfo5_27629151', this)"></span>
+                </td>
+                
+                
+                <td class="tableBlock__col">
+                    
+                        
+                            <a href="/epz/ktru/ktruCard/commonInfo.html?itemVersionId=129300"
+                               target="_blank">22.11.11.000-00000007</a>
+                        
+                        
+                    
+                </td>
+                <td class="tableBlock__col">
+                    Шина пневматическая для легкового автомобиля
+                    
+                    
+                        <br/>
+                        <div class="section__title">
+                            
+                                Индекс нагрузки
+                                
+                                    
+                                    ≥ 90 и < 100, 
+                                
+                            
+                                Категория использования шины
+                                
+                                    
+                                    Дорожная, 
+                                
+                            
+                                Категория скорости
+                                
+                                    
+                                    T, 
+                                
+                            
+                                Номинальная ширина профиля
+                                
+                                    
+                                    205 мм, 
+                                
+                            
+                                Номинальное отношение высоты профиля шины к ее ширине
+                                
+                                    
+                                    70 %, 
+                                
+                            
+                                Номинальный посадочный диаметр обода
+                                
+                                    
+                                    15 дюйм, 
+                                
+                            
+                                Способ герметизации шины
+                                
+                                    
+                                    Бескамерная, 
+                                
+                            
+                                Тип конструкции
+                                
+                                    
+                                    Радиальная
+                                
+                            
+                        </div>
+                    
+                </td>
+                
+                    <td class="tableBlock__col">Штука</td>
+                
+                
+                    <td class="tableBlock__col">
+                        120,00
+                    </td>
+                
+                
+                    <td class="tableBlock__col tableBlock__col_right">
+                        3 674,00
+                    </td>
+                
+                
+                    <td class="tableBlock__col tableBlock__col_right">
+                        440 880,00
+                    </td>
+                
+            </tr>
+            
+
+            
+                <tr class="truInfo5_27629151" style="display: none">
+                    <td class="tableBlock__col"></td>
+                    <td colspan="6" class="tableBlock__col">
+                        <div class="tableBlock__scroll">
+                            <table class="tableBlock">
+                                
+
+
+
+
+
+
+
+
+
+
+
+<thead>
+    <tr class="tableBlock__row">
+        <td class="tableBlock__col tableBlock__col_header">Наименование характеристики</td>
+        <td class="tableBlock__col tableBlock__col_header">Значение характеристики</td>
+        <td class="tableBlock__col tableBlock__col_header">Единица измерения характеристики</td>
+    </tr>
+</thead>
+<tbody>
+    
+        
+            <tr class="tableBlock__row">
+                
+                    <td
+                            class="tableBlock__col"
+                            rowspan="1"
+                    >
+                            Индекс нагрузки
+                    </td>
+                
+                <td class="tableBlock__col">
+                        ≥ 90 и < 100
+                </td>
+                <td class="tableBlock__col">
+                        
+                </td>
+            </tr>
+        
+    
+        
+            <tr class="tableBlock__row">
+                
+                    <td
+                            class="tableBlock__col"
+                            rowspan="1"
+                    >
+                            Категория использования шины
+                    </td>
+                
+                <td class="tableBlock__col">
+                        Дорожная
+                </td>
+                <td class="tableBlock__col">
+                        
+                </td>
+            </tr>
+        
+    
+        
+            <tr class="tableBlock__row">
+                
+                    <td
+                            class="tableBlock__col"
+                            rowspan="1"
+                    >
+                            Категория скорости
+                    </td>
+                
+                <td class="tableBlock__col">
+                        T
+                </td>
+                <td class="tableBlock__col">
+                        
+                </td>
+            </tr>
+        
+    
+        
+            <tr class="tableBlock__row">
+                
+                    <td
+                            class="tableBlock__col"
+                            rowspan="1"
+                    >
+                            Номинальная ширина профиля
+                    </td>
+                
+                <td class="tableBlock__col">
+                        205
+                </td>
+                <td class="tableBlock__col">
+                        Миллиметр
+                </td>
+            </tr>
+        
+    
+        
+            <tr class="tableBlock__row">
+                
+                    <td
+                            class="tableBlock__col"
+                            rowspan="1"
+                    >
+                            Номинальное отношение высоты профиля шины к ее ширине
+                    </td>
+                
+                <td class="tableBlock__col">
+                        70
+                </td>
+                <td class="tableBlock__col">
+                        Процент
+                </td>
+            </tr>
+        
+    
+        
+            <tr class="tableBlock__row">
+                
+                    <td
+                            class="tableBlock__col"
+                            rowspan="1"
+                    >
+                            Номинальный посадочный диаметр обода
+                    </td>
+                
+                <td class="tableBlock__col">
+                        15
+                </td>
+                <td class="tableBlock__col">
+                        Дюйм (25,4 мм)
+                </td>
+            </tr>
+        
+    
+        
+            <tr class="tableBlock__row">
+                
+                    <td
+                            class="tableBlock__col"
+                            rowspan="1"
+                    >
+                            Способ герметизации шины
+                    </td>
+                
+                <td class="tableBlock__col">
+                        Бескамерная
+                </td>
+                <td class="tableBlock__col">
+                        
+                </td>
+            </tr>
+        
+    
+        
+            <tr class="tableBlock__row">
+                
+                    <td
+                            class="tableBlock__col"
+                            rowspan="1"
+                    >
+                            Тип конструкции
+                    </td>
+                
+                <td class="tableBlock__col">
+                        Радиальная
+                </td>
+                <td class="tableBlock__col">
+                        
+                </td>
+            </tr>
+        
+    
+</tbody>
+                            </table>
+                        </div>
+                    </td>
+                </tr>
+            
+            
+        
+            
+            
+            
+
+            <tr class="tableBlock__row">
+                
+                
+                <td class="tableBlock__col">
+                        <span class="chevronRight" onclick="showInfo('truInfo6_27629151', this)"></span>
+                </td>
+                
+                
+                <td class="tableBlock__col">
+                    
+                        
+                            <a href="/epz/ktru/ktruCard/commonInfo.html?itemVersionId=129300"
+                               target="_blank">22.11.11.000-00000007</a>
+                        
+                        
+                    
+                </td>
+                <td class="tableBlock__col">
+                    Шина пневматическая для легкового автомобиля
+                    
+                    
+                        <br/>
+                        <div class="section__title">
+                            
+                                Индекс нагрузки
+                                
+                                    
+                                    ≥ 100 и < 110, 
+                                
+                            
+                                Категория использования шины
+                                
+                                    
+                                    Дорожная, 
+                                
+                            
+                                Категория скорости
+                                
+                                    
+                                    N, 
+                                
+                            
+                                Номинальная ширина профиля
+                                
+                                    
+                                    185 мм, 
+                                
+                            
+                                Номинальное отношение высоты профиля шины к ее ширине
+                                
+                                    
+                                    75 %, 
+                                
+                            
+                                Номинальный посадочный диаметр обода
+                                
+                                    
+                                    16 дюйм, 
+                                
+                            
+                                Способ герметизации шины
+                                
+                                    
+                                    Бескамерная, 
+                                
+                            
+                                Тип конструкции
+                                
+                                    
+                                    Радиальная, 
+                                
+                            
+                                Предназначение
+                                
+                                    
+                                    Для легких грузовиков
+                                
+                            
+                        </div>
+                    
+                </td>
+                
+                    <td class="tableBlock__col">Штука</td>
+                
+                
+                    <td class="tableBlock__col">
+                        108,00
+                    </td>
+                
+                
+                    <td class="tableBlock__col tableBlock__col_right">
+                        3 988,00
+                    </td>
+                
+                
+                    <td class="tableBlock__col tableBlock__col_right">
+                        430 704,00
+                    </td>
+                
+            </tr>
+            
+
+            
+                <tr class="truInfo6_27629151" style="display: none">
+                    <td class="tableBlock__col"></td>
+                    <td colspan="6" class="tableBlock__col">
+                        <div class="tableBlock__scroll">
+                            <table class="tableBlock">
+                                
+
+
+
+
+
+
+
+
+
+
+
+<thead>
+    <tr class="tableBlock__row">
+        <td class="tableBlock__col tableBlock__col_header">Наименование характеристики</td>
+        <td class="tableBlock__col tableBlock__col_header">Значение характеристики</td>
+        <td class="tableBlock__col tableBlock__col_header">Единица измерения характеристики</td>
+    </tr>
+</thead>
+<tbody>
+    
+        
+            <tr class="tableBlock__row">
+                
+                    <td
+                            class="tableBlock__col"
+                            rowspan="1"
+                    >
+                            Индекс нагрузки
+                    </td>
+                
+                <td class="tableBlock__col">
+                        ≥ 100 и < 110
+                </td>
+                <td class="tableBlock__col">
+                        
+                </td>
+            </tr>
+        
+    
+        
+            <tr class="tableBlock__row">
+                
+                    <td
+                            class="tableBlock__col"
+                            rowspan="1"
+                    >
+                            Категория использования шины
+                    </td>
+                
+                <td class="tableBlock__col">
+                        Дорожная
+                </td>
+                <td class="tableBlock__col">
+                        
+                </td>
+            </tr>
+        
+    
+        
+            <tr class="tableBlock__row">
+                
+                    <td
+                            class="tableBlock__col"
+                            rowspan="1"
+                    >
+                            Категория скорости
+                    </td>
+                
+                <td class="tableBlock__col">
+                        N
+                </td>
+                <td class="tableBlock__col">
+                        
+                </td>
+            </tr>
+        
+    
+        
+            <tr class="tableBlock__row">
+                
+                    <td
+                            class="tableBlock__col"
+                            rowspan="1"
+                    >
+                            Номинальная ширина профиля
+                    </td>
+                
+                <td class="tableBlock__col">
+                        185
+                </td>
+                <td class="tableBlock__col">
+                        Миллиметр
+                </td>
+            </tr>
+        
+    
+        
+            <tr class="tableBlock__row">
+                
+                    <td
+                            class="tableBlock__col"
+                            rowspan="1"
+                    >
+                            Номинальное отношение высоты профиля шины к ее ширине
+                    </td>
+                
+                <td class="tableBlock__col">
+                        75
+                </td>
+                <td class="tableBlock__col">
+                        Процент
+                </td>
+            </tr>
+        
+    
+        
+            <tr class="tableBlock__row">
+                
+                    <td
+                            class="tableBlock__col"
+                            rowspan="1"
+                    >
+                            Номинальный посадочный диаметр обода
+                    </td>
+                
+                <td class="tableBlock__col">
+                        16
+                </td>
+                <td class="tableBlock__col">
+                        Дюйм (25,4 мм)
+                </td>
+            </tr>
+        
+    
+        
+            <tr class="tableBlock__row">
+                
+                    <td
+                            class="tableBlock__col"
+                            rowspan="1"
+                    >
+                            Способ герметизации шины
+                    </td>
+                
+                <td class="tableBlock__col">
+                        Бескамерная
+                </td>
+                <td class="tableBlock__col">
+                        
+                </td>
+            </tr>
+        
+    
+        
+            <tr class="tableBlock__row">
+                
+                    <td
+                            class="tableBlock__col"
+                            rowspan="1"
+                    >
+                            Тип конструкции
+                    </td>
+                
+                <td class="tableBlock__col">
+                        Радиальная
+                </td>
+                <td class="tableBlock__col">
+                        
+                </td>
+            </tr>
+        
+    
+        
+            <tr class="tableBlock__row">
+                
+                    <td
+                            class="tableBlock__col"
+                            rowspan="1"
+                    >
+                            Предназначение
+                    </td>
+                
+                <td class="tableBlock__col">
+                        Для легких грузовиков
+                </td>
+                <td class="tableBlock__col">
+                        
+                </td>
+            </tr>
+        
+    
+</tbody>
+                            </table>
+                        </div>
+                    </td>
+                </tr>
+            
+            
+                <tr class="truInfo6_27629151" style="display: none">
+                    <td colspan="1" class="tableBlock__col tableBlock__col_first"></td>
+                    <td colspan="7" class="tableBlock__row tableBlock__row pt-2 pb-2">
+                        <span class="section__title">Обоснование включения
+                            дополнительной информации в сведения о
+                            товаре, работе, услуге</span>
+                        <span class="d-block">
+                                В соответствии с требованием завода изготовителя
+                        </span>
+                    </td>
+                </tr>
+            
+        
+            
+            
+            
+
+            <tr class="tableBlock__row">
+                
+                
+                <td class="tableBlock__col">
+                        <span class="chevronRight" onclick="showInfo('truInfo7_27629151', this)"></span>
+                </td>
+                
+                
+                <td class="tableBlock__col">
+                    
+                        
+                            <a href="/epz/ktru/ktruCard/commonInfo.html?itemVersionId=129300"
+                               target="_blank">22.11.11.000-00000007</a>
+                        
+                        
+                    
+                </td>
+                <td class="tableBlock__col">
+                    Шина пневматическая для легкового автомобиля
+                    
+                    
+                        <br/>
+                        <div class="section__title">
+                            
+                                Индекс нагрузки
+                                
+                                    
+                                    ≥ 100 и < 110, 
+                                
+                            
+                                Категория использования шины
+                                
+                                    
+                                    Дорожная, 
+                                
+                            
+                                Категория скорости
+                                
+                                    
+                                    Q, 
+                                
+                            
+                                Номинальная ширина профиля
+                                
+                                    
+                                    225 мм, 
+                                
+                            
+                                Номинальное отношение высоты профиля шины к ее ширине
+                                
+                                    
+                                    75 %, 
+                                
+                            
+                                Номинальный посадочный диаметр обода
+                                
+                                    
+                                    16 дюйм, 
+                                
+                            
+                                Способ герметизации шины
+                                
+                                    
+                                    Бескамерная, 
+                                
+                            
+                                Тип конструкции
+                                
+                                    
+                                    Радиальная
+                                
+                            
+                        </div>
+                    
+                </td>
+                
+                    <td class="tableBlock__col">Штука</td>
+                
+                
+                    <td class="tableBlock__col">
+                        40,00
+                    </td>
+                
+                
+                    <td class="tableBlock__col tableBlock__col_right">
+                        5 944,00
+                    </td>
+                
+                
+                    <td class="tableBlock__col tableBlock__col_right">
+                        237 760,00
+                    </td>
+                
+            </tr>
+            
+
+            
+                <tr class="truInfo7_27629151" style="display: none">
+                    <td class="tableBlock__col"></td>
+                    <td colspan="6" class="tableBlock__col">
+                        <div class="tableBlock__scroll">
+                            <table class="tableBlock">
+                                
+
+
+
+
+
+
+
+
+
+
+
+<thead>
+    <tr class="tableBlock__row">
+        <td class="tableBlock__col tableBlock__col_header">Наименование характеристики</td>
+        <td class="tableBlock__col tableBlock__col_header">Значение характеристики</td>
+        <td class="tableBlock__col tableBlock__col_header">Единица измерения характеристики</td>
+    </tr>
+</thead>
+<tbody>
+    
+        
+            <tr class="tableBlock__row">
+                
+                    <td
+                            class="tableBlock__col"
+                            rowspan="1"
+                    >
+                            Индекс нагрузки
+                    </td>
+                
+                <td class="tableBlock__col">
+                        ≥ 100 и < 110
+                </td>
+                <td class="tableBlock__col">
+                        
+                </td>
+            </tr>
+        
+    
+        
+            <tr class="tableBlock__row">
+                
+                    <td
+                            class="tableBlock__col"
+                            rowspan="1"
+                    >
+                            Категория использования шины
+                    </td>
+                
+                <td class="tableBlock__col">
+                        Дорожная
+                </td>
+                <td class="tableBlock__col">
+                        
+                </td>
+            </tr>
+        
+    
+        
+            <tr class="tableBlock__row">
+                
+                    <td
+                            class="tableBlock__col"
+                            rowspan="1"
+                    >
+                            Категория скорости
+                    </td>
+                
+                <td class="tableBlock__col">
+                        Q
+                </td>
+                <td class="tableBlock__col">
+                        
+                </td>
+            </tr>
+        
+    
+        
+            <tr class="tableBlock__row">
+                
+                    <td
+                            class="tableBlock__col"
+                            rowspan="1"
+                    >
+                            Номинальная ширина профиля
+                    </td>
+                
+                <td class="tableBlock__col">
+                        225
+                </td>
+                <td class="tableBlock__col">
+                        Миллиметр
+                </td>
+            </tr>
+        
+    
+        
+            <tr class="tableBlock__row">
+                
+                    <td
+                            class="tableBlock__col"
+                            rowspan="1"
+                    >
+                            Номинальное отношение высоты профиля шины к ее ширине
+                    </td>
+                
+                <td class="tableBlock__col">
+                        75
+                </td>
+                <td class="tableBlock__col">
+                        Процент
+                </td>
+            </tr>
+        
+    
+        
+            <tr class="tableBlock__row">
+                
+                    <td
+                            class="tableBlock__col"
+                            rowspan="1"
+                    >
+                            Номинальный посадочный диаметр обода
+                    </td>
+                
+                <td class="tableBlock__col">
+                        16
+                </td>
+                <td class="tableBlock__col">
+                        Дюйм (25,4 мм)
+                </td>
+            </tr>
+        
+    
+        
+            <tr class="tableBlock__row">
+                
+                    <td
+                            class="tableBlock__col"
+                            rowspan="1"
+                    >
+                            Способ герметизации шины
+                    </td>
+                
+                <td class="tableBlock__col">
+                        Бескамерная
+                </td>
+                <td class="tableBlock__col">
+                        
+                </td>
+            </tr>
+        
+    
+        
+            <tr class="tableBlock__row">
+                
+                    <td
+                            class="tableBlock__col"
+                            rowspan="1"
+                    >
+                            Тип конструкции
+                    </td>
+                
+                <td class="tableBlock__col">
+                        Радиальная
+                </td>
+                <td class="tableBlock__col">
+                        
+                </td>
+            </tr>
+        
+    
+</tbody>
+                            </table>
+                        </div>
+                    </td>
+                </tr>
+            
+            
+        
+            
+            
+            
+
+            <tr class="tableBlock__row">
+                
+                
+                <td class="tableBlock__col">
+                        <span class="chevronRight" onclick="showInfo('truInfo8_27629151', this)"></span>
+                </td>
+                
+                
+                <td class="tableBlock__col">
+                    
+                        
+                            <a href="/epz/ktru/ktruCard/commonInfo.html?itemVersionId=129295"
+                               target="_blank">22.11.11.000-00000003</a>
+                        
+                        
+                    
+                </td>
+                <td class="tableBlock__col">
+                    Шина пневматическая для легкового автомобиля
+                    
+                    
+                        <br/>
+                        <div class="section__title">
+                            
+                                Индекс нагрузки
+                                
+                                    
+                                    ≥ 90 и < 100, 
+                                
+                            
+                                Категория использования шины
+                                
+                                    
+                                    Всесезонная, 
+                                
+                            
+                                Категория скорости
+                                
+                                    
+                                    T, 
+                                
+                            
+                                Номинальная ширина профиля
+                                
+                                    
+                                    185 мм, 
+                                
+                            
+                                Номинальное отношение высоты профиля шины к ее ширине
+                                
+                                    
+                                    75 %, 
+                                
+                            
+                                Номинальный посадочный диаметр обода
+                                
+                                    
+                                    16 дюйм, 
+                                
+                            
+                                Способ герметизации шины
+                                
+                                    
+                                    Бескамерная, 
+                                
+                            
+                                Тип конструкции
+                                
+                                    
+                                    Радиальная
+                                
+                            
+                        </div>
+                    
+                </td>
+                
+                    <td class="tableBlock__col">Штука</td>
+                
+                
+                    <td class="tableBlock__col">
+                        160,00
+                    </td>
+                
+                
+                    <td class="tableBlock__col tableBlock__col_right">
+                        4 011,00
+                    </td>
+                
+                
+                    <td class="tableBlock__col tableBlock__col_right">
+                        641 760,00
+                    </td>
+                
+            </tr>
+            
+
+            
+                <tr class="truInfo8_27629151" style="display: none">
+                    <td class="tableBlock__col"></td>
+                    <td colspan="6" class="tableBlock__col">
+                        <div class="tableBlock__scroll">
+                            <table class="tableBlock">
+                                
+
+
+
+
+
+
+
+
+
+
+
+<thead>
+    <tr class="tableBlock__row">
+        <td class="tableBlock__col tableBlock__col_header">Наименование характеристики</td>
+        <td class="tableBlock__col tableBlock__col_header">Значение характеристики</td>
+        <td class="tableBlock__col tableBlock__col_header">Единица измерения характеристики</td>
+    </tr>
+</thead>
+<tbody>
+    
+        
+            <tr class="tableBlock__row">
+                
+                    <td
+                            class="tableBlock__col"
+                            rowspan="1"
+                    >
+                            Индекс нагрузки
+                    </td>
+                
+                <td class="tableBlock__col">
+                        ≥ 90 и < 100
+                </td>
+                <td class="tableBlock__col">
+                        
+                </td>
+            </tr>
+        
+    
+        
+            <tr class="tableBlock__row">
+                
+                    <td
+                            class="tableBlock__col"
+                            rowspan="1"
+                    >
+                            Категория использования шины
+                    </td>
+                
+                <td class="tableBlock__col">
+                        Всесезонная
+                </td>
+                <td class="tableBlock__col">
+                        
+                </td>
+            </tr>
+        
+    
+        
+            <tr class="tableBlock__row">
+                
+                    <td
+                            class="tableBlock__col"
+                            rowspan="1"
+                    >
+                            Категория скорости
+                    </td>
+                
+                <td class="tableBlock__col">
+                        T
+                </td>
+                <td class="tableBlock__col">
+                        
+                </td>
+            </tr>
+        
+    
+        
+            <tr class="tableBlock__row">
+                
+                    <td
+                            class="tableBlock__col"
+                            rowspan="1"
+                    >
+                            Номинальная ширина профиля
+                    </td>
+                
+                <td class="tableBlock__col">
+                        185
+                </td>
+                <td class="tableBlock__col">
+                        Миллиметр
+                </td>
+            </tr>
+        
+    
+        
+            <tr class="tableBlock__row">
+                
+                    <td
+                            class="tableBlock__col"
+                            rowspan="1"
+                    >
+                            Номинальное отношение высоты профиля шины к ее ширине
+                    </td>
+                
+                <td class="tableBlock__col">
+                        75
+                </td>
+                <td class="tableBlock__col">
+                        Процент
+                </td>
+            </tr>
+        
+    
+        
+            <tr class="tableBlock__row">
+                
+                    <td
+                            class="tableBlock__col"
+                            rowspan="1"
+                    >
+                            Номинальный посадочный диаметр обода
+                    </td>
+                
+                <td class="tableBlock__col">
+                        16
+                </td>
+                <td class="tableBlock__col">
+                        Дюйм (25,4 мм)
+                </td>
+            </tr>
+        
+    
+        
+            <tr class="tableBlock__row">
+                
+                    <td
+                            class="tableBlock__col"
+                            rowspan="1"
+                    >
+                            Способ герметизации шины
+                    </td>
+                
+                <td class="tableBlock__col">
+                        Бескамерная
+                </td>
+                <td class="tableBlock__col">
+                        
+                </td>
+            </tr>
+        
+    
+        
+            <tr class="tableBlock__row">
+                
+                    <td
+                            class="tableBlock__col"
+                            rowspan="1"
+                    >
+                            Тип конструкции
+                    </td>
+                
+                <td class="tableBlock__col">
+                        Радиальная
+                </td>
+                <td class="tableBlock__col">
+                        
+                </td>
+            </tr>
+        
+    
+</tbody>
+                            </table>
+                        </div>
+                    </td>
+                </tr>
+            
+            
+        
+    </tbody>
+    <tfoot class="tableBlock__foot">
+        
+            <tr class="tableBlock__row">
+                <td colspan="7" class="tableBlock__col tableBlock__col_right">
+                    <span class="tableBlock__resultTitle">Итого (9 записей):</span>
+                    
+                        
+                        
+                            <span class="cost">
+                                2 809 884,00
+                                &#8381;
+                            </span>
+                        
+                    
+                    
+                </td>
+            </tr>
+        
+    </tfoot>
+</table>
+
+
+
+<script>
+    $(document).ready(function () {
+        if ($(".orderKtruContent").outerWidth() <= 870) {
+            $(".scrollableTable").removeClass("scrollableTable");
+        }
+    });
+</script>
+
+</div>
+    
+    
+
+        </div>
+    </div>
+</div>
+
+
+
+
+    <hr class="graySeparator">
+
+    <div class="container">
+        <div class="row blockInfo">
+            <div class="col">
+                <h2 class="blockInfo__title">Преимущества, требования к участникам</h2>
+                
+
+
+
+
+ 
+<section class="blockInfo__section section">
+    <span class="section__title">Преимущества</span>
+    <span class="section__info">
+    
+        
+        
+                
+                    Участникам, заявки или окончательные предложения которых содержат предложения о поставке товаров в соответствии с приказом Минфина России от 04.06.2018 № 126н - 15 %
+                    <br/>
+                
+        
+        
+    
+    </span>
+</section>
+<section class="blockInfo__section section">
+    <span class="section__title">Требования к участникам</span>
+    <span class="section__info requirements_participants">
+                
+
+
+
+
+
+
+
+
+
+
+    
+            
+
+                
+                
+                
+                    <span class="requirements_participants_block">
+                
+                
+                    1
+                
+                
+                &nbsp;Единые требования к участникам закупок в соответствии с ч. 1 ст. 31 Закона № 44-ФЗ<br/>
+                
+                    
+                    
+                        дополнительная информация к требованию отсутствует
+                    
+                <br>
+                 </span>
+                    
+
+
+
+
+
+
+
+
+
+
+    
+    
+
+
+                
+                    <span class="requirements_participants_block">
+                
+                
+                    2
+                
+                
+                &nbsp;Требования к участникам закупок в соответствии с частью 1.1 статьи 31 Федерального закона № 44-ФЗ<br/>
+                
+                    
+                    
+                        дополнительная информация к требованию отсутствует
+                    
+                <br>
+                 </span>
+                    
+
+
+
+
+
+
+
+
+
+
+    
+    
+
+
+                
+                
+            
+    
+    
+
+
+    </span>
+</section>
+<section class="blockInfo__section section">
+    <span class="section__title">Ограничения и запреты</span>
+    <span class="section__info">
+    
+        
+            
+                
+                
+            
+                1&nbsp;Запрет на допуск товаров, работ, услуг при осуществлении закупок, а также ограничения и условия допуска в соответствии с требованиями, установленными ст. 14 Закона № 44-ФЗ
+                
+                    
+                    
+                        <br/>дополнительная информация к ограничению отсутствует
+                    
+                
+                
+            
+                
+            
+        
+        
+    
+    </span>
+</section>
+
+
+
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <div class="npa-card"></div>
+
+    <script type="text/javascript">
+        $(document).ready(function () {
+            goToPage(1, 10);
+        });
+
+        function goToPage(page, pageSize) {
+            $.ajax({
+                url: "/epz/order/notice/ea44/view/truAdmissionNpaTable.html",
+                data: {
+                    id: 27629151,
+                    pageNumber: page,
+                    recordsPerPage: pageSize ? pageSize :
+                        $('.npa-card .show-by .select-record-per-page--number').text(),
+                    regNumber: getURLParam("regNumber")
+                },
+                success: function (html) {
+                    $(".npa-card").html(html);
+                    document.dispatchEvent(new CustomEvent("reinitializeSelectEvent", {
+                            detail: {
+                                selectorDom: ".npa-card .show-by"
+                            }
+                        })
+                    );
+                }
+            });
+        }
+    </script>
+
+
+
+
+
+
+<script>
+    $(document).ready(function () {
+        var container = $('.requirements_participants:not(.moreItems):first');
+        container.addClass('moreItems');
+        var list = container.children();
+        var size = list.size();
+        if (size > 4) {
+            $(list).each(function (i, elem) {
+                if (i > 3) {
+                    $(elem).addClass('moreItemRequirements').addClass('displayNone');
+                }
+            });
+            container.append($("<a/>", {
+                    "count": size,
+                    class: 'cursorPointer margTop5 d-block show',
+                    text: 'Показать все (' + size + ')',
+                    onClick: 'showMoreItem(this, "Requirements", true)'
+                })
+            )
+        }
+    });
+</script>
+
+            </div>
+        </div>
+    </div>
+
+
+
+
+
+    
+    <hr class="graySeparator">
+
+    <div class="container">
+        
+
+
+
+
+
+
+
+
+
+    <div class="row blockInfo">
+        <div class="col">
+            <h2 class="blockInfo__title">Документация об электронном аукционе</h2>
+            
+            
+                <section class="blockInfo__section section">
+            <span class="section__title">
+                Предусмотрена возможность изменить предусмотренные контрактом количество товара, объем работы или услуги
+            </span>
+                    <span class="section__info">
+                Да
+            </span>
+                </section>
+            
+            <section>
+                <hr class="graySeparator">
+                <div class="section__fragment fragment">
+                    <h3 class="fragment__title">Информация о предоставлении разъяснений положений документации</h3>
+                    <section class="fragment__section section">
+                        <span class="section__title">Дата и время начала предоставления</span>
+                        <span class="section__info">
+                            20.08.2021 18:49 <span class='timeZoneName' title='Иркутск, стандартное время'>(МСК+5)</span>
+                </span>
+                    </section>
+                    <section class="fragment__section section">
+                        <span class="section__title">Дата и время окончания предоставления</span>
+                        <span class="section__info">
+                    27.08.2021 17:00 <span class='timeZoneName' title='Иркутск, стандартное время'>(МСК+5)</span>
+                </span>
+                    </section>
+                    <section class="fragment__section section">
+                        <span class="section__title">Порядок предоставления</span>
+                        <span class="section__info">
+                    В соответствии с документацией об электронном аукционе
+                </span>
+                    </section>
+                </div>
+                <hr class="graySeparator">
+            </section>
+            
+                <section class="blockInfo__section section">
+                    <span class="section__title">
+                        Предусмотрена возможность одностороннего отказа от исполнения контракта в соответствии с ч. 9 ст. 95 Закона № 44-ФЗ
+                    </span>
+                    <span class="section__info">Да</span>
+                </section>
+            
+        </div>
+    </div>
+
+
+    </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div id="custReqNotice">
+    
+    
+    <div id="custReqNoticeTable">
+        
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    
+    
+        
+
+            
+            
+
+            
+            
+                
+                
+                    <hr class="graySeparator">
+
+                    <div class="container">
+                        <div class="row blockInfo">
+                            <div class="col">
+                                
+
+
+
+
+
+
+
+
+
+
+<h2 class="blockInfo__title">
+    Обеспечение заявки
+</h2>
+<section class="blockInfo__section section">
+    <span class="section__title">Требуется обеспечение заявки</span>
+    <span class="section__info">Да</span>
+</section>
+<section class="blockInfo__section section">
+    <span class="section__title">Размер обеспечения заявки</span>
+    <span class="section__info">
+        28 098,84&nbsp;Российский рубль
+    </span>
+</section>
+<section class="blockInfo__section section">
+    <span class="section__title">
+        Порядок внесения денежных средств в качестве обеспечения заявки на участие в закупке,
+        а так же условия банковской гарантии
+    </span>
+    <span class="section__info">В соответствии с документацией об электронном аукционе</span>
+</section>
+<section class="blockInfo__section section">
+    <span class="section__title">
+        Платежные реквизиты для перечисления денежных средств при уклонении участника закупки от заключения
+        контракта
+    </span>
+    <span class="section__info">
+        
+        p/c 00000000000000000000, л/c См. прилагаемые документы, БИК 000000000
+    </span>
+</section>
+
+                            </div>
+                        </div>
+                    </div>
+                
+            
+
+            
+                <hr class="graySeparator">
+
+                <div class="container">
+                    <div class="row blockInfo">
+                        <div class="col">
+                            
+                            
+
+
+
+
+
+
+
+
+
+
+    <h2 class="blockInfo__title">Условия контракта</h2>
+    
+    <section class="blockInfo__section section">
+        <span class="section__title">
+            
+                
+                Место доставки товара, выполнения работы или оказания услуги
+            
+        </span>
+        <span class="section__info">
+            
+                
+                    Российская Федерация, Иркутская обл, Иркутск, ул. Лермонтова, 114<br/>
+                
+            
+        </span>
+    </section>
+    
+        <section class="blockInfo__section section">
+            <span class="section__title">
+                
+                    
+                    
+                    Сроки поставки товара или завершения работы либо график оказания услуг
+                
+            </span>
+            <span class="section__info">Поставщик обязан со дня заключения Контракта осуществить поставку Товара до 31.03.2022г., но не ранее 17.01.2022г. либо по согласованию сторон.</span>
+        </section>
+    
+    
+    
+    
+    
+            <section class="blockInfo__section section">
+            <span class="section__title">
+                Предусмотрена возможность одностороннего отказа от исполнения контракта в соответствии с ч. 9 ст. 95 Закона № 44-ФЗ
+            </span>
+            <span class="section__info">
+                Да
+            </span>
+    
+
+
+                        </div>
+                    </div>
+                </div>
+            
+
+            
+            
+                
+                
+                    <hr class="graySeparator">
+
+                    <div class="container">
+                        <div class="row blockInfo">
+                            <div class="col">
+                                
+
+
+
+
+
+
+
+
+<h2 class="blockInfo__title">Обеспечение исполнения контракта</h2>
+<section class="blockInfo__section section">
+    <span class="section__title">Требуется обеспечение исполнения контракта</span>
+    <span class="section__info">Да</span>
+</section>
+
+    <section class="blockInfo__section section">
+        <span class="section__title">Размер обеспечения исполнения контракта</span>
+        
+            
+                
+
+
+
+
+
+
+
+
+
+    
+
+
+
+
+    
+
+
+<span class="section__info">
+    
+        
+            140 494,20&nbsp;&#8381;
+            
+                (5&nbsp;%)
+            
+        
+        
+    
+</span>
+
+                
+            
+            
+        
+    </section>
+
+
+
+<section class="blockInfo__section section">
+    <span class="section__title">
+        Порядок предоставления обеспечения исполнения контракта, требования к обеспечению
+    </span>
+    <span class="section__info">
+        В соответствии с документацией об электронном аукционе
+    </span>
+</section>
+<section class="blockInfo__section section">
+    <span class="section__title">Платежные реквизиты для обеспечения исполнения контракта</span>
+    <span class="section__info">
+        
+        p/c 00000000000000000000, л/c См. прилагаемые документы, БИК 000000000
+    </span>
+</section>
+<section class="blockInfo__section section">
+    <span class="section__title">Дополнительная информация</span>
+    <span class="section__info">
+        
+            
+            
+                <span class="section__info">Информация отсутствует</span>
+            
+        
+    </span>
+</section>
+
+
+
+                            </div>
+                        </div>
+                    </div>
+                
+            
+
+            
+            
+                
+                
+                    <hr class="graySeparator">
+
+                    <div class="container">
+                        <div class="row blockInfo">
+                            <div class="col">
+                                
+
+
+
+
+
+<h2 class="blockInfo__title">Обеспечение гарантийных обязательств</h2>
+<section class="blockInfo__section section">
+    <span class="section__title">Требуется обеспечение гарантийных обязательств</span>
+    <span class="section__info">Да</span>
+</section>
+<section class="blockInfo__section section">
+    <span class="section__title">Размер обеспечения гарантийных обязательств</span>
+    <span class="section__info">
+        28 098,84&nbsp;Российский рубль
+    </span>
+</section>
+
+    <section class="blockInfo__section section">
+        <span class="section__title">
+            Порядок предоставления обеспечения гарантийных обязательств, требования к обеспечению
+        </span>
+        <span class="section__info">
+                В соответствии с документацией об электронном аукционе
+        </span>
+    </section>
+
+
+    <section class="blockInfo__section section">
+        <span class="section__title">Платежные реквизиты для обеспечения гарантийных обязательств</span>
+        <span class="section__info">p/c 00000000000000000000, л/c См. прилагаемые документы, БИК 000000000</span>
+    </section>
+
+
+                            </div>
+                        </div>
+                    </div>
+                
+            
+
+            <hr class="graySeparator">
+
+            <div class="container">
+                <div class="row blockInfo">
+                    <div class="col">
+                        
+                        
+
+
+
+
+
+
+
+
+<h2 class="blockInfo__title">
+    
+        
+        Информация о банковском и (или) казначейском сопровождении контракта
+    
+</h2>
+<section class="blockInfo__section section">
+    <span class="section__info">Требуется казначейское сопровождение контракта</span>
+</section>
+
+    <section class="blockInfo__section section">
+        <span class="section__title">
+            Тип казначейского сопровождения контракта
+            </span>
+        <span class="section__info">
+        
+            
+            
+        
+        </span>
+    </section>
+
+
+                    </div>
+                </div>
+            </div>
+        
+    
+
+
+    </div>
+</div>
+
+
+
+
+
+
+
+  </div>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    
+        
+        
+        
+        
+        
+        
+        
+        
+        
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<footer class="footer">
+    <div class="wrapperFooter">
+        
+            
+            
+                
+                    <div class="container">
+                        <div class="poll-banner">
+                            <div class="row align-items-center">
+                                <div class="col-9">
+                                    <div class="figure-footer d-flex align-items-center">
+                                        <div class="figure-footer__icon">
+                                            <img src="/epz/static/img/icons/ico_sub.svg" alt="" class="icon">
+                                        </div>
+                                        <div class="figure-footer__text">
+                                            <h4 class="heading-h4 poll-title">Поделитесь мнением о качестве работы единой
+                                                информационной системы</h4>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-3 text-right">
+                                    <a href="/epz/main/public/quiz/list.html"
+                                       class="btn btn-default poll-button">
+                                        <span class="separator"></span>
+                                        <span class="btn-text">Перейти к опросу</span>
+                                    </a>
+                                </div>
+                            </div>
+                            <figure class="poll__logo">
+                                <img src="/epz/static/img/icons/icon-footer-eagle.svg" alt="">
+                            </figure>
+                        </div>
+                    </div>
+                
+                <div class="container">
+                    <div class="partners-wrap">
+                        <div class="partners partners-slider">
+                            <figure class="partner">
+                                <p class="partner-logo-wrap">
+                                    <a target="_blank" href="http://www.sberbank-ast.ru/"><img class="partner__logo"
+                                                                                               src="/epz/static/img/partners/sberbank_new.svg"
+                                                                                               alt=""></a>
+                                </p>
+                                <figcaption class="partner__desc"> Система торгов <br> Сбербанк-АСТ
+                                </figcaption>
+                                <a target="_blank" href="http://www.sberbank-ast.ru/" class="partner__link">sberbank-ast.ru</a>
+                            </figure>
+                            <figure class="partner">
+                                <p class="partner-logo-wrap">
+                                    <a target="_blank" href="http://www.roseltorg.ru/"><img class="partner__logo"
+                                                                                            src="/epz/static/img/partners/rostorg_new.svg"
+                                                                                            alt=""></a>
+                                </p>
+                                <figcaption class="partner__desc"> Единая электронная торговая <br> площадка
+                                </figcaption>
+                                <a target="_blank" href="http://www.roseltorg.ru/"
+                                   class="partner__link">roseltorg.ru</a>
+                            </figure>
+                            <figure class="partner">
+                                <p class="partner-logo-wrap">
+                                    <a target="_blank" href="http://etp.zakazrf.ru/"><img class="partner__logo"
+                                                                                          src="/epz/static/img/partners/etp.svg"
+                                                                                          alt=""></a>
+                                </p>
+                                <figcaption class="partner__desc"> Общероссийская система <br> электронной торговли
+                                </figcaption>
+                                <a target="_blank" href="http://etp.zakazrf.ru/"
+                                   class="partner__link">etp.zakazrf.ru</a>
+                            </figure>
+                            <figure class="partner">
+                                <p class="partner-logo-wrap">
+                                    <a target="_blank" href="http://www.rts-tender.ru/"><img class="partner__logo"
+                                                                                             src="/epz/static/img/partners/rts.svg"
+                                                                                             alt=""></a>
+                                </p>
+                                <figcaption class="partner__desc"> Электронная площадка <br> России
+                                </figcaption>
+                                <a target="_blank" href="http://www.rts-tender.ru/"
+                                   class="partner__link">rts-tender.ru</a>
+                            </figure>
+                            <figure class="partner">
+                                <p class="partner-logo-wrap">
+                                    <a target="_blank" href="http://etp-ets.ru/"><img class="partner__logo"
+                                                                                      src="/epz/static/img/partners/ets.svg"
+                                                                                      alt=""></a>
+                                </p>
+                                <figcaption class="partner__desc"> Национальная электронная <br> площадка
+                                </figcaption>
+                                <a target="_blank" href="http://etp-ets.ru/" class="partner__link">etp-ets.ru</a>
+                            </figure>
+                            <figure class="partner">
+                                <p class="partner-logo-wrap">
+                                    <a target="_blank" href="https://gz.lot-online.ru"><img class="partner__logo"
+                                                                                            src="/epz/static/img/partners/newGZ.svg"
+                                                                                            alt=""></a>
+                                </p>
+                                <figcaption class="partner__desc"> Всероссийская <br> универсальная площадка
+                                </figcaption>
+                                <a target="_blank" href="https://gz.lot-online.ru" class="partner__link">gz.lot-online.ru</a>
+                            </figure>
+                            <figure class="partner">
+                                <p class="partner-logo-wrap">
+                                    <a target="_blank" href="https://www.tektorg.ru/"><img class="partner__logo"
+                                                                                           src="/epz/static/img/partners/tektorg_new.svg"
+                                                                                           alt=""></a>
+                                </p>
+                                <figcaption class="partner__desc"> Федеральная электронная<br/>площадка ТЭК-Торг
+
+                                </figcaption>
+                                <a target="_blank" href="https://www.tektorg.ru/" class="partner__link">tektorg.ru</a>
+                            </figure>
+                            <figure class="partner">
+                                <p class="partner-logo-wrap">
+                                    <a target="_blank" href="https://etpgpb.ru/"><img class="partner__logo"
+                                                                                      src="/epz/static/img/partners/etpgpb.svg"
+                                                                                      alt=""></a>
+                                </p>
+                                <figcaption class="partner__desc"> Электронная торговая<br/>площадка ГПБ
+                                </figcaption>
+                                <a target="_blank" href="https://etpgpb.ru/" class="partner__link">etpgpb.ru</a>
+                            </figure>
+                            <figure class="partner">
+                                <p class="partner-logo-wrap">
+                                    <a target="_blank" href="http://www.astgoz.ru/"><img class="partner__logo"
+                                                                                         src="/epz/static/img/partners/astgoz.svg"
+                                                                                         alt=""></a>
+                                </p>
+                                <figcaption class="partner__desc"> Автоматизированная система торгов государственного
+                                    оборонного
+                                    заказа <br></figcaption>
+                                <a target="_blank" href="http://www.astgoz.ru/" class="partner__link">astgoz.ru</a>
+                            </figure>
+                        </div>
+                        <span class="partners-slider__btn partners-slider__btn_prev">
+                    <img src="/epz/static/img/icons/arrow_blue.svg" alt="">
+                </span> 
+                        <span class="partners-slider__btn partners-slider__btn_next">
+                    <img src="/epz/static/img/icons/arrow_blue.svg" alt="">
+                </span> 
+                    </div>
+                </div>
+                <section class="footer-nav">
+                    <div class="container">
+                        <div class="row">
+                            <div class="col-md-12 col-lg-12">
+                                <ul class="footer-nav-list">
+                                    <li class="footer-nav__item">
+                                        <a href="/epz/main/public/news/news-search.html" class="footer-nav__link">Новости</a>
+                                    </li>
+                                    <li class="footer-nav__item">
+                                        <a href="/epz/main/public/siteMap.html?section=suppliers" class="footer-nav__link">Поставщикам</a>
+                                    </li>
+                                    <li class="footer-nav__item">
+                                        <a href="/epz/main/public/siteMap.html?section=customers" class="footer-nav__link">Заказчикам</a>
+                                    </li>
+                                    <li class="footer-nav__item">
+                                        <a href="/epz/main/public/siteMap.html?section=control-bodies" class="footer-nav__link">Органам контроля</a>
+                                    </li>
+                                    <li class="footer-nav__item">
+                                        <a href="/epz/main/public/quiz/list.html" class="footer-nav__link">Опросы</a>
+                                    </li>
+                                    <li class="footer-nav__item">
+                                        <a href="/epz/main/public/home.html#statAnchor" class="footer-nav__link">Статистика</a>
+                                    </li>
+                                    <li class="footer-nav__item">
+                                        <a href="/epz/main/public/siteMap.html" class="footer-nav__link">Карта сайта</a>
+                                    </li>
+                                    <li class="footer-nav__item">
+                                        <a href="https://zakupki.gov.ru/rpt/cat02/zakupki-traffic.xlsx" class="footer-nav__link">Отчет о посещаемости</a>
+                                    </li>
+                                    <li class="footer-nav__item">
+                                        <a href="/epz/main/public/qa/view.html" class="footer-nav__link">Часто задаваемые вопросы</a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+                <section class="footer-links">
+                    <div class="container">
+                        <div class="row">
+                            <div class="col-4 col-sm-4 col-md-4 col-lg-4">
+                                <figure class="logo">
+                                    <img src="/epz/static/img/header/emblem.svg" alt="">
+                                    <figcaption class="logo__name filterParametrs"> Единая информационная система<br> в сфере закупок</figcaption>
+                                </figure>
+                                <div class="copyright">
+                                    <small class="copyright__text">© Федеральное казначейство, 2021</small>
+                                    <small class="copyright__text"> Версия 11.2.7.1 rev f8e803e4875 от 20.08.2021</small>
+                                </div>
+                            </div>
+                            <div class="col-4 col-sm-4 col-md-4 col-lg-4">
+                                <nav class="usefull-links">
+                                    <span class="list-title">Официальные ресурсы</span>
+                                    <ul class="list">
+                                        <li class="list-item">
+                                            <a target="_blank" href="http://www.kremlin.ru" class="list-item__link">Президент Российской Федерации</a>
+                                        </li>
+                                        <li class="list-item">
+                                            <a target="_blank" href="http://www.government.ru" class="list-item__link">Правительство Российской Федерации</a>
+                                        </li>
+                                        <li class="list-item">
+                                            <a target="_blank" href="http://www.economy.gov.ru" class="list-item__link">Министерство экономического развития Российской Федерации</a>
+                                        </li>
+                                        <li class="list-item">
+                                            <a target="_blank" href="http://www.minfin.ru" class="list-item__link">Министерство финансов Российской Федерации</a>
+                                        </li>
+                                        <li class="list-item">
+                                            <a target="_blank" href="http://www.fas.gov.ru" class="list-item__link">Федеральная антимонопольная служба</a>
+                                        </li>
+                                        <li class="list-item">
+                                            <a target="_blank" href="http://roskazna.ru" class="list-item__link">Федеральное казначейство</a>
+                                        </li>
+                                    </ul>
+                                </nav>
+                            </div>
+                            <div class="col-4 col-sm-4 col-md-4 col-lg-4">
+                                <nav class="usefull-links">
+                                    <span class="list-title">Техническая информация</span>
+                                    <ul class="list">
+                                        <li class="list-item">
+                                            <a href="/epz/main/public/user-feedback.html" class="list-item__link">Техническая поддержка</a>
+                                        </li>
+                                        <li class="list-item">
+                                            <a data-modalup href="/epz/main/public/userFeedback/openFeedbackForm.html" class="list-item__link">Ваши идеи по улучшению сайта</a>
+                                        </li>
+                                    </ul>
+                                </nav>
+                                <figure class="btn-on-top">
+                                    <a class="btn-on-top__link">
+                                        <img class="btn-on-top__image" src="/epz/static/img/icons/arrow-on-top.svg" alt="">
+                                    </a>
+                                </figure>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            
+        
+        <div class="clear"></div>
+    </div>
+</footer>
+<script src="/epz/static/js/ymaps/ymaps.js" type="text/javascript"></script>
+
+
+<script type="text/javascript">
+    var isRegisteredUserObozApp = Boolean("");
+    var sessionMaxInactiveInterval = "600";
+    $(document).ready(function () {
+
+        /* fix console.log in IE */
+        if (!window.console) window.console = {};
+        if (!window.console.log) window.console.log = function () { };
+        /* fix console.log in IE */
+
+        var userRegionName = $.cookie("userRegionName"),
+                userRegionId = $.cookie("userRegionId"),
+                doNotShowKladrPopUp = $.cookie("doNotShowKladrPopUp"),
+                doNotUseRegionToFind = $.cookie("doNotUseRegionToFind"),
+                doNotAdviseToChangeLocation = $.cookie("doNotAdviseToChangeLocation"),
+                goodVisionLink = $(document).find('.goodVisionLink');
+
+        function detectGeolocation(callback) {
+            ymaps.ready(function () {
+                ymaps.geolocation.get({
+                    provider: 'yandex',
+                    autoReverseGeocode: true
+                }).then(function (result) {
+                    callback(result);
+                });
+            });
+        }
+
+        function getRegionIdByName(regionName, callback) {
+            $.get('/epz/nsi/kladr/regionIdByName.json', {regionName : regionName}).done(function(data) {
+                callback(data);
+            });
+        }
+
+        function getAdministrativeAreaName(responseFromYandexGeolocationService) {
+            return responseFromYandexGeolocationService.geoObjects.get(0).properties.get('metaDataProperty.GeocoderMetaData.AddressDetails.Country.AdministrativeArea.AdministrativeAreaName');
+        }
+
+        function getSubAdministrativeAreaName(responseFromYandexGeolocationService) {
+            return responseFromYandexGeolocationService.geoObjects.get(0).properties.get('metaDataProperty.GeocoderMetaData.AddressDetails.Country.AdministrativeArea.SubAdministrativeArea.SubAdministrativeAreaName');
+        }
+
+        goodVisionLink.click(function (e) {
+            e.preventDefault();
+            $.removeCookie('usePoorVisionOption', { path: '/'});
+            $.removeCookie('colorSpectrumForPoorVision', { path: '/'});
+            $.removeCookie('fontSizeForPoorVision', { path: '/'});
+            location.reload();
+        });
+
+        if (userRegionId != null && userRegionId != 0) {
+            setRegionNameHeader(userRegionName);
+            if(doNotUseRegionToFind != 'true' && doNotAdviseToChangeLocation != 'true') {
+                detectGeolocation(function(responseFromYandexGeolocationService) {
+                    var administrativeAreaName = getAdministrativeAreaName(responseFromYandexGeolocationService),
+                            subAdministrativeAreaName = getSubAdministrativeAreaName(responseFromYandexGeolocationService),
+                            preparedUserRegionName = null;
+
+                    if (findFederalRegionYandexAnswer(administrativeAreaName)) {
+                        userRegionName = subAdministrativeAreaName;
+                    } else {
+                        userRegionName = administrativeAreaName;
+                    }
+
+                    preparedUserRegionName = prepareYandexRegionName(userRegionName);
+
+                    if(preparedUserRegionName && preparedUserRegionName.trim()) {
+                        getRegionIdByName(preparedUserRegionName, function(data) {
+                            var regionId = data ? data.regionId : null;
+                            if(regionId && regionId != userRegionId) {
+                                $.cookie("possibleRegionIdChange", regionId, { path: '/epz', expires: 1 });
+                                $("#chooseRegion").click();
+                            }
+                        });
+                    }
+
+                });
+            }
+        } else {
+            setRegionNameHeader("Не выбран");
+
+            detectGeolocation(function(responseFromYandexGeolocationService) {
+                var administrativeAreaName = getAdministrativeAreaName(responseFromYandexGeolocationService),
+                        subAdministrativeAreaName = getSubAdministrativeAreaName(responseFromYandexGeolocationService);
+
+                if (findFederalRegionYandexAnswer(administrativeAreaName)) {
+                    userRegionName = subAdministrativeAreaName;
+                } else {
+                    userRegionName = administrativeAreaName;
+                }
+
+                $.cookie("userRegionName", prepareYandexRegionName(userRegionName), { path: '/epz', expires: 182 });
+                $.cookie("yandexRegionName", administrativeAreaName + ', ' + subAdministrativeAreaName, { path: '/epz', expires: 182 });
+
+                if (doNotShowKladrPopUp != 'true') {
+                    $("#chooseRegion").click();
+                }
+            });
+        }
+
+        $(".poorVisionLink").click(function(e) {
+            e.preventDefault();
+            $.cookie('usePoorVisionOption', 'true', {path: '/', expires: 365*100});
+            location.reload();
+        });
+    });
+
+    function setRegionNameHeader(regionName) {
+        $("#headerUserRegionName").text(regionName);
+    }
+
+    function prepareYandexRegionName(regionName) {
+        if (regionName === 'Москва и Московская область') {
+            return 'Московская';
+        }
+
+        if (regionName === 'Москва и область') {
+            return 'Московская';
+        }
+
+        if (regionName === 'Санкт-Петербург и Ленинградская область') {
+            return 'Ленинградская';
+        }
+
+        if (regionName === 'Санкт-Петербург и область') {
+            return 'Ленинградская';
+        }
+
+        var resultRegionName = null;
+        var stringToRemoveArray = [' автономный округ', ' автономная область', ' АО', ' область', ' край', 'Республика ', ' Республика', ' республика'];
+
+        for (var j = 0; j < stringToRemoveArray.length; j++) {
+            if (regionName.search(stringToRemoveArray[j]) > -1) {
+                resultRegionName = regionName.replace(stringToRemoveArray[j], '');
+
+                break;
+            } else {
+                resultRegionName = regionName;
+            }
+        }
+
+        return resultRegionName.split('-')[0];
+    }
+
+    function findFederalRegionYandexAnswer(yandexAnswer) {
+        var answerArray = yandexAnswer.split(' ');
+
+        for (var i = 0; i < answerArray.length; i++) {
+            if (answerArray[i] === 'округ') {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    /*Отладочная информация - все регионы РФ из ответа Яндекса https://yandex.ru/yaca/geo.c2n */
+    /*var yandexRegionNameArray = ['Москва и область', 'Белгородская область', 'Брянская область', 'Владимирcкая область', 'Воронежcкая область', 'Ивановская область', 'Калужская область', 'Костромская область', 'Курская область',
+     'Липецкая область', 'Орловская область', 'Рязанская область', 'Смоленская область', 'Тамбовская область', 'Тверская область', 'Тульская область', 'Ярославская область',
+     'Санкт-Петербург и Ленинградская область', 'Архангельская область', 'Вологодская область', 'Калининградская область', 'Мурманская область',
+     'Новгородская область', 'Псковская область', 'Республика Коми', 'Республика Карелия', 'Ненецкий АО',
+     'Астраханская область', 'Волгоградская область', 'Краснодарский край', 'Республика Адыгея', 'Республика Калмыкия', 'Ростовская область',
+     'Кировская область', 'Республика Марий Эл', 'Нижегородская область', 'Оренбургская область', 'Пензенская область', 'Пермский край', 'Республика Башкортостан',
+     'Республика Мордовия', 'Татарстан', 'Самарская область', 'Саратовская область', 'Удмуртская республика', 'Ульяновская область', 'Чувашская республика',
+     'Курганская область', 'Свердловская область', 'Тюменская область', 'Ханты-Мансийский АО', 'Челябинская область', 'Ямало-Ненецкий АО',
+     'Алтайский край', 'Иркутская область', 'Кемеровская область', 'Красноярский край', 'Новосибирская область', 'Омская область',
+     'Республика Алтай', 'Республика Бурятия', 'Республика Тыва', 'Республика Хакасия', 'Томская область', 'Забайкальский край',
+     'Магаданская область', 'Камчатский край', 'Еврейская автономная область', 'Чукотский автономный округ', 'Хабаровский край', 'Приморский край', 'Амурская область', 'Республика Саха (Якутия)', 'Сахалинская область',
+     'Республика Дагестан', 'Республика Ингушетия', 'Республика Кабардино-Балкария', 'Республика Северная Осетия-Алания', 'Ставропольский край', 'Карачаево-Черкесская Республика', 'Чеченская Республика', 'Крым', 'Севастополь'];*/
+</script>
+
+
+<!-- Yandex.Metrika counter -->
+<script type="text/javascript" >
+    (function(m,e,t,r,i,k,a){m[i]=m[i]||function(){(m[i].a=m[i].a||[]).push(arguments)};
+        m[i].l=1*new Date();k=e.createElement(t),a=e.getElementsByTagName(t)[0],k.async=1,k.src=r,a.parentNode.insertBefore(k,a)})
+    (window, document, "script", "https://mc.yandex.ru/metrika/tag.js", "ym");
+
+    ym(36706425, "init", {
+        clickmap:true,
+        trackLinks:true,
+        accurateTrackBounce:true,
+        webvisor:true
+    });
+</script>
+<noscript><div><img src="https://mc.yandex.ru/watch/36706425" style="position:absolute; left:-9999px;" alt="" /></div></noscript>
+<!-- /Yandex.Metrika counter -->
+
+
+
+<script type="text/javascript">if (window.epzAnalytics) window.epzAnalytics.track();
+$(document).ready(function () {
+        checkNotice();
+});
+</script>
+
+
+<div id="custom-tooltip"></div>
+</body>
+
+</html>
