@@ -60,7 +60,7 @@ public class ZakupkiParser44Fz implements ZakupkiParser {
 
         /*Stage stage = getStage(htmlFile);
         String uin = getUin(htmlFile);
-        String fzNumber = getFzNumber(htmlFile);
+        int fzNumber = getFzNumber(htmlFile);
         ZonedDateTime applicationDeadline = getApplicationDeadline(htmlFile);
         BigDecimal contractPrice = getContractPrice(htmlFile);
         ProcedureType procedureType = getProcedureType(htmlFile);
@@ -115,9 +115,9 @@ public class ZakupkiParser44Fz implements ZakupkiParser {
         }
     }
 
-    String getFzNumber(Document htmlFile) {
+    int getFzNumber(Document htmlFile) {
         try {
-            return htmlFile.select(FZ_NUMBER_SELECTOR).first().text().substring(0,2);//next().html().replace("№ ", "");
+            return Integer.parseInt(htmlFile.select(FZ_NUMBER_SELECTOR).first().text().substring(0,2));
         } catch (NullPointerException exception) {
             logger.error(BAD_DATA_EXCEPTION, "getFzNumber", exception);
             throw new BadDataParsingException("getFzNumber", exception);
