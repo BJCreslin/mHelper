@@ -5,6 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.Type;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -39,7 +40,7 @@ public class Procurement implements Serializable {
     //Уникальный идентификатор закупки
     //regNumber в ссылке на закупки или просто номер закупки
     //ОБЩИЕ СВЕДЕНИЯ О ЗАКУПКЕ -> Реестровый номер извещения
-    @Column
+    @Column(unique = true, nullable = false, length = 30)
     private String uin;
 
     //Номер федерального закона
@@ -102,7 +103,8 @@ public class Procurement implements Serializable {
     //ОБЩАЯ ИНФОРМАЦИЯ О ЗАКУПКЕ -> Наименование объекта закупки
     //ОБЩИЕ СВЕДЕНИЯ О ЗАКУПКЕ -> Наименование закупки
     @Lob
-    @Column( length = 100000 )
+    @Column( length = 100000)
+    @Type(type = "org.hibernate.type.TextType")
     private String objectOf;
 
     //Поле нужно чтобы отслеживать на сайте закупок необходимость обновить данные

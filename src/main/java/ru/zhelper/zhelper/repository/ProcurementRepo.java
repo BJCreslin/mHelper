@@ -6,4 +6,6 @@ import ru.zhelper.zhelper.models.Procurement;
 
 @Repository
 public interface ProcurementRepo extends JpaRepository<Procurement, Long> {
+
+    Procurement getByUin(String uin);
 }
