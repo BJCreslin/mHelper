@@ -1,5 +1,6 @@
 package ru.zhelper.zhelper.services;
 
+import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 import ru.zhelper.zhelper.models.Procurement;
 import ru.zhelper.zhelper.models.dto.ProcurementAddress;
@@ -19,6 +20,12 @@ public class ProcurementServiceImpl implements ProcurementService {
     @Override
     public void action(ProcurementAddress procurementAddress) {
         Procurement procurement = parser.parse(procurementAddress.getAddress());
-        repository.save(procurement);
+        Procurement procurementFromDB = repository.getByUin(procurement.getUin());
+        if (procurementFromDB == null) {
+            repository.save(procurement);
+        } else {
+            BeanUtils.copyProperties(procurement, procurementFromDB, "id", "uin");
+            repository.save(procurementFromDB);
+        }
     }
 }
