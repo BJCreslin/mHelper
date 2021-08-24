@@ -78,4 +78,21 @@ class URLValidatorImplTest {
         Assertions.assertTrue(result);
     }
 
+    @Test
+    void getProcurementTypeValueTest() {
+        boolean result = false;
+        ProcurementType procurementType;
+
+        URLValidatorImpl urlValidator = new URLValidatorImpl();
+
+        procurementType = urlValidator.getProcurementType("https://zakupki.gov.ru/epz/order/notice/ea44/view/common-info.html?regNumber=0547600000521000006");
+        Assertions.assertEquals(procurementType.name(),"LAW_44");
+
+        procurementType = urlValidator.getProcurementType("https://zakupki.gov.ru/223/purchase/public/purchase/info/common-info.html?regNumber=32110575951");
+        Assertions.assertEquals(procurementType.name(),"LAW_223");
+
+        procurementType = urlValidator.getProcurementType("https://zakupki.gov.ru/epz/order/notice/po615/view/common-info.html?regNumber=015450000042100007");
+        Assertions.assertEquals(procurementType.name(),"LAW_615");
+    }
+
 }
