@@ -1,5 +1,7 @@
 package ru.zhelper.zhelper.services;
 
+import java.util.List;
+
 import org.springframework.stereotype.Repository;
 
 import ru.zhelper.zhelper.models.Procurement;
@@ -14,4 +16,6 @@ public interface ProcurementDataManager {
     void deleteProcurement(Procurement p);
     
     void deleteProcurementById(Long idToDelete);
+
+	List<Procurement> getProcurementsByFzNumber(Integer fzNumber);
 }

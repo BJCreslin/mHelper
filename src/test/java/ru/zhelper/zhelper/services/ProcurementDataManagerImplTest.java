@@ -11,6 +11,7 @@ import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.transaction.annotation.Transactional;
 
+import org.junit.Assert;
 import ru.zhelper.zhelper.models.Procurement;
 
 @SpringBootTest
@@ -23,15 +24,52 @@ public class ProcurementDataManagerImplTest  {
 	
 	private static final Logger LOGGER = LoggerFactory.getLogger(ProcurementDataManagerImplTest.class);
 	
+	private final static String MY_UIN = "202320000012100777";
+	private final static int FZ_NUMBER_OF_PREV = 44;
+	
+	
 	@Test
 	@Transactional
-	public void testSaveProcurement() {
+	public void testDataManager() {
+		
+		// 1. Create test data and save it
 		Procurement p = new Procurement();
-		p.setId(123L);
 		p.setContractPrice(BigDecimal.TEN);
 		p.setUin("ABC124z34");
 		
-		LOGGER.info("Now we will save procurement...");
-		procurementDataManager.saveProcurement(p);
+		Procurement saved = procurementDataManager.saveProcurement(p);
+		long savedId = saved.getId();
+		Assert.assertEquals(saved.getContractPrice(), p.getContractPrice());
+		Assert.assertEquals(saved.getUin(), p.getUin());
+		
+		LOGGER.info("Saved procurement has natively generated identity: {}", saved.getId());
+		
+		// 2. Get previous procurement
+		Long idOfPrevious = saved.getId() - 1;
+		Procurement prev = procurementDataManager.loadProcurement(idOfPrevious);
+		LOGGER.info("Previous procurement: {}", prev);
+		Assert.assertEquals(FZ_NUMBER_OF_PREV, prev.getFzNumber());
+		
+		// 3. Update some data of previous procurement
+		prev.setUin(MY_UIN);
+		Procurement updated = procurementDataManager.saveProcurement(prev);
+		
+		Assert.assertEquals(MY_UIN, updated.getUin());
+		Assert.assertEquals(FZ_NUMBER_OF_PREV, updated.getFzNumber());
+		
+		// 4. Test getProcurementsByFzNumber()
+		Assert.assertEquals(1, 
+				procurementDataManager.getProcurementsByFzNumber(FZ_NUMBER_OF_PREV).size());
+		
+		// 5. Test deletion of object (not by id)
+		procurementDataManager.deleteProcurement(prev);
+		
+		// 6. After deletion test getProcurementsByFzNumber() again.
+		// Search by previous ID should not return a result since object was deleted.
+		Assert.assertEquals(0,
+				procurementDataManager.getProcurementsByFzNumber(FZ_NUMBER_OF_PREV).size());
+		
+		// 7. Delete other procurement by id
+		procurementDataManager.deleteProcurementById(savedId);
 	}
 }
