@@ -80,7 +80,7 @@ class URLValidatorImplTest {
 
     @Test
     void getProcurementTypeValueTest() {
-        boolean result = false;
+
         ProcurementType procurementType;
 
         URLValidatorImpl urlValidator = new URLValidatorImpl();
