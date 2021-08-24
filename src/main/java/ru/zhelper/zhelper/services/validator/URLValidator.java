@@ -3,5 +3,6 @@ package ru.zhelper.zhelper.services.validator;
 import ru.zhelper.zhelper.models.ProcurementType;
 
 public interface URLValidator {
-    boolean isValidUrl (String url, ProcurementType procurementType);
+    boolean isValidUrl (String url);
+    ProcurementType getProcurementType (String url);
 }
