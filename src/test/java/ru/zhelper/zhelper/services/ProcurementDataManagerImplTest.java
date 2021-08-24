@@ -3,40 +3,23 @@ package ru.zhelper.zhelper.services;
 import java.math.BigDecimal;
 
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.junit.runner.RunWith;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.ApplicationContextAware;
-import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.context.ContextConfiguration;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.jdbc.Sql;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.transaction.annotation.Transactional;
 
 import ru.zhelper.zhelper.models.Procurement;
 
-@RunWith(SpringJUnit4ClassRunner.class)
-@ExtendWith(SpringExtension.class)
-//@ContextConfiguration("/spring-config.xml")
-//ApplicationContext will be loaded from "classpath:/app-config.xml"
-@ContextConfiguration({"/app-config.xml", "/test-data-access-config.xml"})
-@Sql({"/test-schema.sql", "/test-data.sql"})
-@ActiveProfiles("dev")
-public class ProcurementDataManagerImplTest implements ApplicationContextAware {
+@SpringBootTest
+@Sql(value = "/sql/test-data.sql", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
+@TestPropertySource(locations="classpath:test.properties")
+public class ProcurementDataManagerImplTest  {
 
-	/**
-	 * https://docs.spring.io/spring-framework/docs/4.2.0.RC2/spring-framework-reference/html/integration-testing.html
-	 * https://stackoverflow.com/questions/7416024/spring-3-1-datasource-not-autowired-to-configuration-class
-	 */
-	private ApplicationContext applicationContext;
-	
 	@Autowired
-	private ProcurementDataManager procurementDataManager;
+	private ProcurementDataManagerImpl procurementDataManager;
 	
 	private static final Logger LOGGER = LoggerFactory.getLogger(ProcurementDataManagerImplTest.class);
 	
@@ -46,16 +29,9 @@ public class ProcurementDataManagerImplTest implements ApplicationContextAware {
 		Procurement p = new Procurement();
 		p.setId(123L);
 		p.setContractPrice(BigDecimal.TEN);
+		p.setUin("ABC124z34");
 		
 		LOGGER.info("Now we will save procurement...");
 		procurementDataManager.saveProcurement(p);
-	}
-
-	public ApplicationContext getApplicationContext() {
-		return applicationContext;
-	}
-
-	public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
-		this.setApplicationContext(applicationContext);
 	}
 }
