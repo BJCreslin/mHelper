@@ -28,7 +28,7 @@ public class ZakupkiParser44Fz implements ZakupkiParser {
     private static final String CONTRACT_PRICE_SELECTOR = "span[class=cardMainInfo__content cost]";
     private static final String PROCEDURE_TYPE_SELECTOR = "span[class=section__title]:contains(Способ определения поставщика)";
     private static final String PUBLISHER_NAME_SELECTOR = "span[class=section__title]:contains(Организация, осуществляющая размещение)";
-    private static final String RESTRICTIONS_SELECTOR = "span[class=requirements_participants_block]";
+    private static final String RESTRICTIONS_SELECTOR = "span[class=section__title]:contains(Требования к участникам)";
     private static final String LINK_ON_PLACEMENT_SELECTOR = "span[class=section__title]:contains(Адрес электронной площадки в информационно-телекоммуникационной сети \"Интернет\")";
     private static final String APPLICATION_SECURE_SELECTOR = "span[class=section__title]:contains(Размер обеспечения заявки)";
     private static final String CONTRACT_SECURE_SELECTOR = "span[class=section__title]:contains(Размер обеспечения исполнения контракта)";
@@ -37,9 +37,9 @@ public class ZakupkiParser44Fz implements ZakupkiParser {
     private static final String LAST_UPDATED_FROM_EIS_SELECTOR = "span[class=cardMainInfo__title]:contains(Размещено)";
     private static final String DATE_TIME_LAST_UPDATED_SELECTOR = "span[class=cardMainInfo__title]:contains(Обновлено)";
     private static final String BAD_DATA_EXCEPTION = "Bad data in {}.";
-    private static final String DATE_TIME_FORMATTER = "dd.MM.yyyy HH:mm";
-    private static final String DATE_FORMATTER = "dd.MM.yyyy";
-    private static final String TIME_ZONE_SELECTOR = "div[class=time-zone__value]";
+    static final String DATE_TIME_FORMATTER = "dd.MM.yyyy HH:mm";
+    static final String DATE_FORMATTER = "dd.MM.yyyy";
+    static final String TIME_ZONE_SELECTOR = "div[class=time-zone__value]";
     private static final String PARSING = "Starting parse from html. Size {}";
     private static final String PARSED = "Procurement {} was parsed.";
 
@@ -58,23 +58,7 @@ public class ZakupkiParser44Fz implements ZakupkiParser {
             exception.printStackTrace();
         }
 
-        /*Stage stage = getStage(htmlFile);
-        String uin = getUin(htmlFile);
-        int fzNumber = getFzNumber(htmlFile);
-        ZonedDateTime applicationDeadline = getApplicationDeadline(htmlFile);
-        BigDecimal contractPrice = getContractPrice(htmlFile);
-        ProcedureType procedureType = getProcedureType(htmlFile);
-        String publisherName = getPublisherName(htmlFile);
-        String restrictions = getRestrictions(htmlFile);
-        URL linkOnPlacement = getLinkOnPlacement(htmlFile);
-        String applicationSecure = getApplicationSecure(htmlFile);
-        String contractSecure = getContractSecure(htmlFile);
-        String objectOf = getObjectOf(htmlFile);
-        LocalDate lastUpdatedFromEIS = getLastUpdatedFromEIS(htmlFile);
-        LocalDate dateTimeLastUpdated = getDateTimeLastUpdated(htmlFile);*/
-
-        return null;
-        /*Procurement procurement = new Procurement();
+        Procurement procurement = new Procurement();
         procurement.setStage(getStage(htmlFile));
         procurement.setUin(getUin(htmlFile));
         procurement.setFzNumber(getFzNumber(htmlFile));
@@ -94,12 +78,12 @@ public class ZakupkiParser44Fz implements ZakupkiParser {
             logger.debug(PARSED, procurement);
         }
 
-        return procurement;*/
+        return procurement;
     }
 
     Stage getStage(Document htmlFile) {
         try {
-            return Stage.get(htmlFile.select(STAGE_SELECTOR).html());
+            return Stage.get(htmlFile.select(STAGE_SELECTOR).first().text());
         } catch (NullPointerException exception) {
             logger.error(BAD_DATA_EXCEPTION, "getStage", exception);
             throw new BadDataParsingException("getStage", exception);
@@ -108,7 +92,7 @@ public class ZakupkiParser44Fz implements ZakupkiParser {
 
     String getUin(Document htmlFile) {
         try {
-            return htmlFile.select(UIN_SELECTOR).html().replace("№ ", "");//next().html().replace("№ ", "");
+            return htmlFile.select(UIN_SELECTOR).first().text().replace("№ ", "");
         } catch (NullPointerException exception) {
             logger.error(BAD_DATA_EXCEPTION, "getUin", exception);
             throw new BadDataParsingException("getUin", exception);
@@ -157,7 +141,10 @@ public class ZakupkiParser44Fz implements ZakupkiParser {
 
     String getRestrictions(Document htmlFile) {
         try {
-            return htmlFile.select(RESTRICTIONS_SELECTOR).html().replaceAll("&nbsp;","").replaceAll("<br>","").trim();
+            return htmlFile.select(RESTRICTIONS_SELECTOR).first().siblingElements().first().text()
+                    .replaceAll("&nbsp;","")
+                    .replaceAll("<br>","")
+                    .trim();
         } catch (NullPointerException exception) {
             logger.error(BAD_DATA_EXCEPTION, "getRestrictions", exception);
             throw new BadDataParsingException("getRestrictions", exception);
@@ -212,7 +199,6 @@ public class ZakupkiParser44Fz implements ZakupkiParser {
     ZonedDateTime getApplicationDeadline(Document htmlFile) {
         try {
             String datetime = htmlFile.select(APPLICATION_DEADLINE_SELECTOR).first().siblingElements().first().text().substring(0,16);
-            //String datetime = temp.substring(0,16);
             DateTimeFormatter format = DateTimeFormatter.ofPattern(DATE_TIME_FORMATTER);
             ZoneId zoneId = ZoneId.of(getTimeZone(htmlFile));
             ZonedDateTime zonedDateTime = ZonedDateTime.of(LocalDateTime.parse(datetime, format), zoneId);
