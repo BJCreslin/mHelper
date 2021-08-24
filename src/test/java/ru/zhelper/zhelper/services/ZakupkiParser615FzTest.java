@@ -3,8 +3,11 @@ package ru.zhelper.zhelper.services;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Element;
 import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
 import ru.zhelper.zhelper.models.ProcedureType;
 import ru.zhelper.zhelper.models.Stage;
 import ru.zhelper.zhelper.services.exceptions.BadDataParsingException;
@@ -12,16 +15,15 @@ import ru.zhelper.zhelper.services.exceptions.BadDataParsingException;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.net.MalformedURLException;
-import java.net.URISyntaxException;
 import java.net.URL;
 import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
+@SpringBootTest
 class ZakupkiParser615FzTest {
     private static final String DATE_TIME_FORMATTER = "dd.MM.yyyy HH:mm";
-    private static final String fileName = "206520000012100111.html";
+    private static final String fileName = "classpath:206520000012100111.html";
     private static final String fileBadName = "206520000012100111bad.html";
     private static final String UIN = "206520000012100111";
     private static final String PUBLISHER = "ФОНД \"РЕГИОНАЛЬНЫЙ ФОНД КАПИТАЛЬНОГО РЕМОНТА МНОГОКВАРТИРНЫХ ДОМОВ ТОМСКОЙ ОБЛАСТИ\"";
@@ -30,6 +32,8 @@ class ZakupkiParser615FzTest {
     private static final String DEADLINE = "01.09.2021 23:59";
     private static final String APPLICATION_SECURE = "13055.24";
     private static final String CONTRACT_SECURE = "39165.72";
+    private static final String CODE = "UTF-8";
+
     private static URL LINK = null;
 
     static {
@@ -42,15 +46,22 @@ class ZakupkiParser615FzTest {
 
     private static final BigDecimal CONTRACT_PRICE = new BigDecimal("1305523.99");
     private static final Integer FZ = 615;
-    private ZakupkiParser615Fz parser;
-    private Element fineHtml;
-    private Element badHtml;
+    private static ZakupkiParser615Fz parser;
+    private static Element fineHtml;
+    private static Element badHtml;
 
-    @BeforeEach
-    private void init() throws IOException, URISyntaxException {
+    private static final ApplicationContext context = new ClassPathXmlApplicationContext();
+
+    @BeforeAll
+    static void init() throws IOException {
         parser = new ZakupkiParser615Fz();
-        fineHtml = Jsoup.parse(new String(Files.readAllBytes(Paths.get(this.getClass().getClassLoader().getResource(fileName).toURI())))).body();
-        badHtml = Jsoup.parse(new String(Files.readAllBytes(Paths.get(this.getClass().getClassLoader().getResource(fileBadName).toURI())))).body();
+        context.getId();
+        fineHtml = Jsoup.parse(getStringFromResourceFile(fileName)).body();
+        badHtml = Jsoup.parse(getStringFromResourceFile(fileBadName)).body();
+    }
+
+    private static String getStringFromResourceFile(String file) throws IOException {
+        return new String(Files.readAllBytes(context.getResource(file).getFile().toPath()), CODE);
     }
 
     @Test
@@ -78,13 +89,13 @@ class ZakupkiParser615FzTest {
     }
 
     @Test
-    void givenHtml_whenGetUin_getFzNumber() {
+    void givenHtml_whenGetFzNumber_getFzNumber() {
         Integer result = parser.getFzNumber(fineHtml);
         Assertions.assertEquals(FZ, result);
     }
 
     @Test
-    void givenBadHtml_whenGetUin_getFzNumber() {
+    void givenBadHtml_whenGetFzNumber_getException() {
         Assertions.assertThrows(BadDataParsingException.class,
                 () -> parser.getFzNumber(badHtml));
     }
@@ -175,7 +186,7 @@ class ZakupkiParser615FzTest {
     }
 
     @Test
-    void givenHtml_whenGetContractSecure_getApplicationSecure() {
+    void givenHtml_whenGetContractSecure_getContractSecure() {
         String result = parser.getContractSecure(fineHtml);
         Assertions.assertEquals(CONTRACT_SECURE, result);
     }
