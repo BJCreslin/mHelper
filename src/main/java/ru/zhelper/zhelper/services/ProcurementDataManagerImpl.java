@@ -23,29 +23,29 @@ public class ProcurementDataManagerImpl implements ProcurementDataManager {
 	private ProcurementRepo repository;
 
 	@Override
-	public Procurement loadProcurement(Long id) {
-		Procurement p = null;
+	public Procurement loadEntity(Long id) {
+		Procurement procurement = null;
 		
 		try {
-			p = repository.getById(id);
+			procurement = repository.getById(id);
 		} catch (EntityNotFoundException e) {
 			LOGGER.warn("Found no Procurement with id {}!", id);
 		}
-		return p;
+		return procurement;
 	}
 
 	@Override
-	public Procurement saveProcurement(Procurement p) {
-		return repository.save(p);
+	public Procurement saveEntity(Procurement procurement) {
+		return repository.save(procurement);
 	}
 
 	@Override
-	public void deleteProcurement(Procurement p) {
-		repository.delete(p);
+	public void deleteEntity(Procurement procurement) {
+		repository.delete(procurement);
 	}
 
 	@Override
-	public void deleteProcurementById(Long idToDelete) {
+	public void deleteEntityById(Long idToDelete) {
 		repository.deleteById(idToDelete);
 	}
 	

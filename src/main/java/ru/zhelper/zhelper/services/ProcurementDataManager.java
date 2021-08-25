@@ -9,13 +9,13 @@ import ru.zhelper.zhelper.models.Procurement;
 @Repository
 public interface ProcurementDataManager {
     
-    Procurement loadProcurement(Long id);
+    Procurement loadEntity(Long id);
     
-    Procurement saveProcurement(Procurement p);
+    Procurement saveEntity(Procurement p);
     
-    void deleteProcurement(Procurement p);
+    void deleteEntity(Procurement p);
     
-    void deleteProcurementById(Long idToDelete);
+    void deleteEntityById(Long idToDelete);
 
 	List<Procurement> getProcurementsByFzNumber(Integer fzNumber);
 }
