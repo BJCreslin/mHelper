@@ -2,7 +2,6 @@ package ru.zhelper.zhelper.services.validator;
 
 import org.springframework.stereotype.Service;
 import ru.zhelper.zhelper.models.ProcurementType;
-import ru.zhelper.zhelper.services.validator.URLValidator;
 
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;

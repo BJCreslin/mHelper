@@ -12,7 +12,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class URLValidatorImplTest {
 
-    private static ArrayList<String> testURLs = new ArrayList<>();
+    private static final ArrayList<String> testURLs = new ArrayList<>();
 
     static {
         testURLs.add("https://zakupki.gov.ru/epz/order/notice/ea44/view/common-info.html?regNumber=0547600000521000006");
@@ -37,9 +37,7 @@ class URLValidatorImplTest {
         testURLs.add("https://zakupki.gov.ru/223/purchase/public/purchase/info/common-info.html?regNumber=32110575951");
         testURLs.add("https://zakupki.gov.ru/epz/order/notice/po615/view/common-info.html?regNumber=015450000042100007");
         testURLs.add("https://zakupki.gov.ru/epz/order/notice/ea615/view/common-info.html?regNumber=202320000012100328");
-
     }
-
 
     @Test
     void isValidUrlTest() {
@@ -47,9 +45,7 @@ class URLValidatorImplTest {
         URLValidatorImpl urlValidator = new URLValidatorImpl();
 
         for(String testURL : testURLs) {
-
             result = urlValidator.isValidUrl(testURL);
-
             if(!result) {
                 break;
             }
@@ -58,16 +54,13 @@ class URLValidatorImplTest {
     }
 
     @Test
-    void getProcurementTypeTest() {
+    void givenURL_whenIsValid_thenTrue() {
         boolean result = false;
         ProcurementType procurementType;
-
         URLValidatorImpl urlValidator = new URLValidatorImpl();
 
         for(String testURL : testURLs) {
-
             procurementType = urlValidator.getProcurementType(testURL);
-
             if(procurementType == null) {
                 result = false;
                 break;
@@ -79,10 +72,22 @@ class URLValidatorImplTest {
     }
 
     @Test
-    void getProcurementTypeValueTest() {
-
+    void givenURL_whenIsNotValid_thenFalse() {
+        boolean result = false;
         ProcurementType procurementType;
+        URLValidatorImpl urlValidator = new URLValidatorImpl();
 
+        procurementType = urlValidator.getProcurementType("https://zakupki.gov.ru/ddd/order/notice/ea615/view/common-info.html?regNumber=202320000012100328");
+        if(procurementType == null) {
+                result = true;
+            } 
+
+        Assertions.assertTrue(result);
+    }
+
+    @Test
+    void givenURL_whenIsValid_thenReturnProcurementType() {
+        ProcurementType procurementType;
         URLValidatorImpl urlValidator = new URLValidatorImpl();
 
         procurementType = urlValidator.getProcurementType("https://zakupki.gov.ru/epz/order/notice/ea44/view/common-info.html?regNumber=0547600000521000006");
@@ -94,5 +99,4 @@ class URLValidatorImplTest {
         procurementType = urlValidator.getProcurementType("https://zakupki.gov.ru/epz/order/notice/po615/view/common-info.html?regNumber=015450000042100007");
         Assertions.assertEquals(procurementType.name(),"LAW_615");
     }
-
 }
