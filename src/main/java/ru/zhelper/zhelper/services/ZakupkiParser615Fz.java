@@ -21,7 +21,7 @@ import java.time.format.DateTimeParseException;
 
 @Service("zakupkiParser615Fz")
 public class ZakupkiParser615Fz implements ZakupkiParser {
-    Logger logger = LoggerFactory.getLogger(ZakupkiParser615Fz.class);
+    private static final Logger logger = LoggerFactory.getLogger(ZakupkiParser615Fz.class);
     private static final String UIN_SELECTOR = "span[class=navBreadcrumb__text]";
     private static final String STAGE_SELECTOR = "span[class=cardMainInfo__state]";
     private static final String DEADLINE_SELECTOR = "span[class=section__title]:contains(Дата и время окончания срока подачи заявок на участие в электронном аукционе)";
@@ -64,6 +64,8 @@ public class ZakupkiParser615Fz implements ZakupkiParser {
     private static final String DATE_TIME_FORMATTER = "dd.MM.yyyy HH:mm";
     private static final String USER_AGENT = "Mozilla/5.0 (Linux; Android 6.0; Nexus 5 Build/MRA58N) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.88 Mobile Safari/537.36";
     private static final String UTC_ZONE = "UTC";
+    private static final String MSK_WITH_BKT="(МСК" ;
+    private static final String BKT=")" ;
     private static final int MOSCOW_OFFSET_FROM_UTC = 3;
 
     @Override
@@ -223,7 +225,7 @@ public class ZakupkiParser615Fz implements ZakupkiParser {
     }
 
     protected String getOffsetTimeZoneFromUTC(Element body) {
-        return body.select(TIME_ZONE_SELECTOR).first().text().replace("(МСК", REPLACEMENT).replace(")", REPLACEMENT);
+        return body.select(TIME_ZONE_SELECTOR).first().text().replace(MSK_WITH_BKT, REPLACEMENT).replace(BKT, REPLACEMENT);
     }
 
     protected ZoneOffset getTimeZone(String offSet) {
