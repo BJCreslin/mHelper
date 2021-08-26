@@ -42,6 +42,7 @@ class ZakupkiParser44FzTest {
     private static final String TEST_DATE_LAST_UPDATED = "20.08.2021";
     private static final String DATE_TIME_FORMATTER = "dd.MM.yyyy HH:mm";
     private static final String DATE_FORMATTER = "dd.MM.yyyy";
+    private static final String ENCODING = "UTF-8";
 
     private ZakupkiParser44Fz parser44Fz;
     private Document goodHTML;
@@ -50,8 +51,8 @@ class ZakupkiParser44FzTest {
     @BeforeEach
     void setUp() throws URISyntaxException, IOException {
         parser44Fz = new ZakupkiParser44Fz();
-        goodHTML = Jsoup.parse(new File(this.getClass().getClassLoader().getResource(FILE_NAME_GOOD_HTML).toURI()), null);
-        badHTML = Jsoup.parse(new File(this.getClass().getClassLoader().getResource(FILE_NAME_BAD_HTML).toURI()), null);
+        goodHTML = Jsoup.parse(new File(this.getClass().getClassLoader().getResource(FILE_NAME_GOOD_HTML).toURI()), ENCODING);
+        badHTML = Jsoup.parse(new File(this.getClass().getClassLoader().getResource(FILE_NAME_BAD_HTML).toURI()), ENCODING);
     }
 
     @Test
