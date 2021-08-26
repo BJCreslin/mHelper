@@ -1,0 +1,35 @@
+{
+  "name": "zHelper",
+  "description": "Маленький помощник в больших закупках",
+  "version": "1.0",
+  "manifest_version": 3,
+  "background": {
+    "service_worker": "background.js"
+  },
+  "permissions": [
+    "storage",
+    "activeTab",
+    "scripting"
+  ],
+  "action": {
+    "default_popup": "popup.html"
+  },
+  "options_page": "options.html",
+  "host_permissions": [
+    "https://zakupki.gov.ru/epz/order/notice/ea44/*",
+    "https://zakupki.gov.ru/223/purchase/public/purchase/info/*",
+    "https://zakupki.gov.ru/epz/order/notice/ea615/view/*"
+  ],
+  "content_scripts": [
+    {
+      "matches": [
+        "https://zakupki.gov.ru/epz/order/notice/ea44/*",
+        "https://zakupki.gov.ru/223/purchase/public/purchase/info/*",
+        "https://zakupki.gov.ru/epz/order/notice/ea615/view/*"
+      ],
+      "js": [
+        "app.js"
+      ]
+    }
+  ]
+}
