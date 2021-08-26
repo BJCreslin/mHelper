@@ -21,7 +21,7 @@ import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 
 public class ZakupkiParser44Fz implements ZakupkiParser {
-    private static final Logger logger = LoggerFactory.getLogger(ZakupkiParser44Fz.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(ZakupkiParser44Fz.class);
     private static final String STAGE_SELECTOR = "span[class=cardMainInfo__state distancedText]";
     private static final String UIN_SELECTOR = "span[class=navBreadcrumb__text]";
     private static final String FZ_NUMBER_SELECTOR = "div[class=cardMainInfo__title d-flex text-truncate]";
@@ -75,8 +75,8 @@ public class ZakupkiParser44Fz implements ZakupkiParser {
 
     @Override
     public Procurement parse(String url) {
-        if (logger.isDebugEnabled()) {
-            logger.debug(PARSING, url);
+        if (LOGGER.isDebugEnabled()) {
+            LOGGER.debug(PARSING, url);
         }
 
         Document htmlFile = null;
@@ -84,7 +84,7 @@ public class ZakupkiParser44Fz implements ZakupkiParser {
         try {
             htmlFile = Jsoup.connect(url).get();
         } catch (IOException exception) {
-            logger.error(CONNECTING_WRONG, METHOD_PARSE, exception);
+            LOGGER.error(CONNECTING_WRONG, METHOD_PARSE, exception);
             exception.printStackTrace();
         }
 
@@ -104,8 +104,8 @@ public class ZakupkiParser44Fz implements ZakupkiParser {
         procurement.setLastUpdatedFromEIS(getLastUpdatedFromEIS(htmlFile));
         procurement.setDateTimeLastUpdated(getDateTimeLastUpdated(htmlFile));
 
-        if (logger.isDebugEnabled()) {
-            logger.debug(PARSED, procurement);
+        if (LOGGER.isDebugEnabled()) {
+            LOGGER.debug(PARSED, procurement);
         }
 
         return procurement;
@@ -115,7 +115,7 @@ public class ZakupkiParser44Fz implements ZakupkiParser {
         try {
             return Stage.get(htmlFile.select(STAGE_SELECTOR).first().text());
         } catch (NullPointerException exception) {
-            logger.error(BAD_DATA_EXCEPTION, METHOD_GET_STAGE, exception);
+            LOGGER.error(BAD_DATA_EXCEPTION, METHOD_GET_STAGE, exception);
             throw new BadDataParsingException(METHOD_GET_STAGE, exception);
         }
     }
@@ -124,7 +124,7 @@ public class ZakupkiParser44Fz implements ZakupkiParser {
         try {
             return htmlFile.select(UIN_SELECTOR).first().text().replace(REPLACEMENT_NUMBER_TO_REPLACE, REPLACEMENT_EMPTY);
         } catch (NullPointerException exception) {
-            logger.error(BAD_DATA_EXCEPTION, METHOD_GET_UIN, exception);
+            LOGGER.error(BAD_DATA_EXCEPTION, METHOD_GET_UIN, exception);
             throw new BadDataParsingException(METHOD_GET_UIN, exception);
         }
     }
@@ -133,7 +133,7 @@ public class ZakupkiParser44Fz implements ZakupkiParser {
         try {
             return Integer.parseInt(htmlFile.select(FZ_NUMBER_SELECTOR).first().text().substring(0,2));
         } catch (NullPointerException exception) {
-            logger.error(BAD_DATA_EXCEPTION, METHOD_GET_FZNUMBER, exception);
+            LOGGER.error(BAD_DATA_EXCEPTION, METHOD_GET_FZNUMBER, exception);
             throw new BadDataParsingException(METHOD_GET_FZNUMBER, exception);
         }
     }
@@ -146,7 +146,7 @@ public class ZakupkiParser44Fz implements ZakupkiParser {
                     .replace(REPLACEMENT_SPACE, REPLACEMENT_EMPTY)
                     .replace(REPLACEMENT_COMMA,REPLACEMENT_DOT));
         } catch (NullPointerException exception) {
-            logger.error(BAD_DATA_EXCEPTION, METHOD_GET_CONTRACT_PRICE, exception);
+            LOGGER.error(BAD_DATA_EXCEPTION, METHOD_GET_CONTRACT_PRICE, exception);
             throw new BadDataParsingException(METHOD_GET_CONTRACT_PRICE, exception);
         }
     }
@@ -155,7 +155,7 @@ public class ZakupkiParser44Fz implements ZakupkiParser {
         try {
             return ProcedureType.get(htmlFile.select(PROCEDURE_TYPE_SELECTOR).first().siblingElements().first().text());
         } catch (NullPointerException exception) {
-            logger.error(BAD_DATA_EXCEPTION, METHOD_GET_PROCEDURE_TYPE, exception);
+            LOGGER.error(BAD_DATA_EXCEPTION, METHOD_GET_PROCEDURE_TYPE, exception);
             throw new BadDataParsingException(METHOD_GET_PROCEDURE_TYPE, exception);
         }
     }
@@ -164,7 +164,7 @@ public class ZakupkiParser44Fz implements ZakupkiParser {
         try {
             return htmlFile.select(PUBLISHER_NAME_SELECTOR).first().siblingElements().html();
         } catch (NullPointerException exception) {
-            logger.error(BAD_DATA_EXCEPTION, METHOD_GET_PUBLISHER_NAME, exception);
+            LOGGER.error(BAD_DATA_EXCEPTION, METHOD_GET_PUBLISHER_NAME, exception);
             throw new BadDataParsingException(METHOD_GET_PUBLISHER_NAME, exception);
         }
     }
@@ -172,11 +172,11 @@ public class ZakupkiParser44Fz implements ZakupkiParser {
     protected String getRestrictions(Document htmlFile) {
         try {
             return htmlFile.select(RESTRICTIONS_SELECTOR).first().siblingElements().first().text()
-                    .replaceAll(REPLACEMENT_NBSP,REPLACEMENT_EMPTY)
-                    .replaceAll(REPLACEMENT_BR,REPLACEMENT_EMPTY)
+                    .replace(REPLACEMENT_NBSP,REPLACEMENT_EMPTY)
+                    .replace(REPLACEMENT_BR,REPLACEMENT_EMPTY)
                     .trim();
         } catch (NullPointerException exception) {
-            logger.error(BAD_DATA_EXCEPTION, METHOD_GET_RESTRICTIONS, exception);
+            LOGGER.error(BAD_DATA_EXCEPTION, METHOD_GET_RESTRICTIONS, exception);
             throw new BadDataParsingException(METHOD_GET_RESTRICTIONS, exception);
         }
     }
@@ -185,7 +185,7 @@ public class ZakupkiParser44Fz implements ZakupkiParser {
         try {
             return new URL(htmlFile.select(LINK_ON_PLACEMENT_SELECTOR).first().siblingElements().select(SELECTOR_A).html());
         } catch (NullPointerException | MalformedURLException exception) {
-            logger.error(BAD_DATA_EXCEPTION, METHOD_GET_LINK_OF_PLACEMENT, exception);
+            LOGGER.error(BAD_DATA_EXCEPTION, METHOD_GET_LINK_OF_PLACEMENT, exception);
             throw new BadDataParsingException(METHOD_GET_LINK_OF_PLACEMENT, exception);
         }
     }
@@ -198,7 +198,7 @@ public class ZakupkiParser44Fz implements ZakupkiParser {
                     .replace(REPLACEMENT_COMMA, REPLACEMENT_DOT)
                     .replace(REPLACEMENT_SPACE, REPLACEMENT_EMPTY);
         } catch (NullPointerException exception) {
-            logger.error(BAD_DATA_EXCEPTION, METHOD_GET_APPLICATION_SECURE, exception);
+            LOGGER.error(BAD_DATA_EXCEPTION, METHOD_GET_APPLICATION_SECURE, exception);
             throw new BadDataParsingException(METHOD_GET_APPLICATION_SECURE, exception);
         }
     }
@@ -212,7 +212,7 @@ public class ZakupkiParser44Fz implements ZakupkiParser {
                     .replace(REPLACEMENT_SPACE, REPLACEMENT_EMPTY)
                     .replace(REPLACEMENT_SYMBOL_RUBLE, REPLACEMENT_EMPTY);
         } catch (NullPointerException exception) {
-            logger.error(BAD_DATA_EXCEPTION, METHOD_GET_CONTRACT_SECURE, exception);
+            LOGGER.error(BAD_DATA_EXCEPTION, METHOD_GET_CONTRACT_SECURE, exception);
             throw new BadDataParsingException(METHOD_GET_CONTRACT_SECURE, exception);
         }
     }
@@ -221,7 +221,7 @@ public class ZakupkiParser44Fz implements ZakupkiParser {
         try {
             return htmlFile.select(OBJECT_OF_SELECTOR).first().siblingElements().first().text();
         } catch (NullPointerException exception) {
-            logger.error(BAD_DATA_EXCEPTION, METHOD_GET_OBJECT_OF, exception);
+            LOGGER.error(BAD_DATA_EXCEPTION, METHOD_GET_OBJECT_OF, exception);
             throw new BadDataParsingException(METHOD_GET_OBJECT_OF, exception);
         }
     }
@@ -231,10 +231,9 @@ public class ZakupkiParser44Fz implements ZakupkiParser {
             String datetime = htmlFile.select(APPLICATION_DEADLINE_SELECTOR).first().siblingElements().first().text().substring(0,16);
             DateTimeFormatter format = DateTimeFormatter.ofPattern(DATE_TIME_FORMATTER);
             ZoneId zoneId = ZoneId.of(getTimeZone(htmlFile));
-            ZonedDateTime zonedDateTime = ZonedDateTime.of(LocalDateTime.parse(datetime, format), zoneId);
-            return zonedDateTime;
+            return ZonedDateTime.of(LocalDateTime.parse(datetime, format), zoneId);
         } catch (NullPointerException | DateTimeParseException exception) {
-            logger.error(BAD_DATA_EXCEPTION, METHOD_GET_APPLICATION_DEADLINE, exception);
+            LOGGER.error(BAD_DATA_EXCEPTION, METHOD_GET_APPLICATION_DEADLINE, exception);
             throw new BadDataParsingException(METHOD_GET_APPLICATION_DEADLINE, exception);
         }
     }
@@ -244,7 +243,7 @@ public class ZakupkiParser44Fz implements ZakupkiParser {
             String temp = htmlFile.select(LAST_UPDATED_FROM_EIS_SELECTOR).first().siblingElements().first().text();
             return LocalDate.parse(temp, DateTimeFormatter.ofPattern(DATE_FORMATTER));
         } catch (NullPointerException | DateTimeParseException exception) {
-            logger.error(BAD_DATA_EXCEPTION, METHOD_GET_LAST_UPDATED_FROM_EIS, exception);
+            LOGGER.error(BAD_DATA_EXCEPTION, METHOD_GET_LAST_UPDATED_FROM_EIS, exception);
             throw new BadDataParsingException(METHOD_GET_LAST_UPDATED_FROM_EIS, exception);
         }
     }
@@ -254,7 +253,7 @@ public class ZakupkiParser44Fz implements ZakupkiParser {
             String temp = htmlFile.select(DATE_TIME_LAST_UPDATED_SELECTOR).first().siblingElements().first().text();
             return LocalDate.parse(temp, DateTimeFormatter.ofPattern(DATE_FORMATTER));
         } catch (NullPointerException | DateTimeParseException exception) {
-            logger.error(BAD_DATA_EXCEPTION, METHOD_GET_DATE_TIME_LAST_UPDATED, exception);
+            LOGGER.error(BAD_DATA_EXCEPTION, METHOD_GET_DATE_TIME_LAST_UPDATED, exception);
             throw new BadDataParsingException(METHOD_GET_DATE_TIME_LAST_UPDATED, exception);
         }
     }
@@ -264,7 +263,7 @@ public class ZakupkiParser44Fz implements ZakupkiParser {
             String temp = htmlFile.select(TIME_ZONE_SELECTOR).first().text();
             return temp.substring(temp.indexOf(OPEN_PARENTHESIS)+1, temp.indexOf(CLOSE_PARENTHESIS));
         } catch (NullPointerException | DateTimeParseException exception) {
-            logger.error(BAD_DATA_EXCEPTION, METHOD_GET_TIME_ZONE, exception);
+            LOGGER.error(BAD_DATA_EXCEPTION, METHOD_GET_TIME_ZONE, exception);
             throw new BadDataParsingException(METHOD_GET_TIME_ZONE, exception);
         }
     }
