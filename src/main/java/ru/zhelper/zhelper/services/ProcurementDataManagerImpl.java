@@ -19,6 +19,8 @@ public class ProcurementDataManagerImpl implements ProcurementDataManager {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(ProcurementDataManagerImpl.class);
 
+	private static final String NO_PROCUREMENT_FOUND_MESSAGE = "Found no Procurement with id {}!";
+	
     @Autowired
 	private ProcurementRepo repository;
 
@@ -29,7 +31,7 @@ public class ProcurementDataManagerImpl implements ProcurementDataManager {
 		try {
 			procurement = repository.getById(id);
 		} catch (EntityNotFoundException e) {
-			LOGGER.warn("Found no Procurement with id {}!", id);
+			LOGGER.warn(NO_PROCUREMENT_FOUND_MESSAGE, id);
 		}
 		return procurement;
 	}
