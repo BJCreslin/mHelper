@@ -39,10 +39,10 @@ public class ZakupkiParser44Fz implements ZakupkiParser {
     private static final String DATE_TIME_FORMATTER = "dd.MM.yyyy HH:mm";
     private static final String DATE_FORMATTER = "dd.MM.yyyy";
     private static final String TIME_ZONE_SELECTOR = "div[class=time-zone__value]";
-    private static final String BAD_DATA_EXCEPTION = "Bad data in {}.";
+    private static final String BAD_DATA_EXCEPTION = "Bad data in method {}.";
     private static final String PARSING = "Starting parse from html. Size {}";
     private static final String PARSED = "Procurement {} was parsed.";
-    private static final String CONNECTING_WRONG = "Jsoup connect to url is bad";
+    private static final String CONNECTING_WRONG = "Jsoup connect to url is bad in method {}";
     private static final String METHOD_PARSE = "parse";
     private static final String METHOD_GET_STAGE = "getStage";
     private static final String METHOD_GET_UIN = "getUin";
