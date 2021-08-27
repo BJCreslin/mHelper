@@ -4,10 +4,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 import ru.zhelper.zhelper.controllers.exeptions.BadRequestException;
 import ru.zhelper.zhelper.models.Procurement;
 import ru.zhelper.zhelper.models.dto.ProcurementAddress;
@@ -20,6 +17,7 @@ import java.util.List;
 
 @Controller
 @RequestMapping({"/","/zhelper"})
+@CrossOrigin(maxAge = 3600)
 public class SimpleController {
     private static final Logger logger = LoggerFactory.getLogger(SimpleController.class);
 

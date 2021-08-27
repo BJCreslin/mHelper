@@ -46,7 +46,7 @@ function addCss(css) {
 async function post(url) {
     let procurementAddress = {
         address: url
-    }
+    };
     let response = await fetch(SERVER_URL,
         {
             method: 'POST',
