@@ -11,9 +11,9 @@ public interface ProcurementDataManager {
     
     Procurement loadEntity(Long id);
     
-    Procurement saveEntity(Procurement p);
+    Procurement saveEntity(Procurement procurement);
     
-    void deleteEntity(Procurement p);
+    void deleteEntity(Procurement procurement);
     
     void deleteEntityById(Long idToDelete);
 
