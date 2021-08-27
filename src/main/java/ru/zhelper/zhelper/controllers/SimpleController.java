@@ -17,7 +17,7 @@ import java.util.List;
 
 @Controller
 @RequestMapping({"/","/zhelper"})
-@CrossOrigin(maxAge = 3600)
+@CrossOrigin
 public class SimpleController {
     private static final Logger logger = LoggerFactory.getLogger(SimpleController.class);
 
