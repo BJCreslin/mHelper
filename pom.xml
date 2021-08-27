@@ -35,8 +35,6 @@
                 <activeProfile>dev</activeProfile>
             </properties>
         </profile>
-
-        <!--Profile 2-->
         <profile>
             <id>ci</id>
             <properties>
