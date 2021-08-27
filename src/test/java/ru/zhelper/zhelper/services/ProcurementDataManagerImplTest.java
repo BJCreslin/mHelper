@@ -36,6 +36,7 @@ class ProcurementDataManagerImplTest  {
 	private final static int FZ_NUMBER_OF_SAVED_PROCUREMENT = 615;
 	
 	private final static String DISPLAY_SAVED_ID = "Saved procurement has natively generated id: {}";
+	private final static String EXCEPTION_NOT_RECEIVED = "Exception not received: ";
 	
 	/**
 	 * 1. Create test data and save it
@@ -66,7 +67,6 @@ class ProcurementDataManagerImplTest  {
 	@Transactional
 	void testGetOfEntityUpdate() {
 		Procurement second = procurementDataManager.loadEntity(ID_OF_SECOND_PROCUREMENT);
-		LOGGER.info("Previous procurement: {}", second);
 		Assertions.assertEquals(FZ_NUMBER_OF_SECOND_PROCUREMENT, second.getFzNumber());		
 
 		second.setUin(MY_UIN);
@@ -117,7 +117,7 @@ class ProcurementDataManagerImplTest  {
 			String expectedMessage = String.format(
 					DataManagerException.NON_EXISTING_LOAD_OR_DELETE_EXCEPTION, ID_OF_FIRST_PROCUREMENT);
 			if (!expectedMessage.equals(dataMgrExc.getMessage())) {
-				fail("Exception not received: "+expectedMessage);
+				fail(EXCEPTION_NOT_RECEIVED+expectedMessage);
 			}
 		}
 	}
@@ -129,7 +129,7 @@ class ProcurementDataManagerImplTest  {
 			procurementDataManager.loadEntity(null);
 		} catch (DataManagerException dataMgrExc) {
 			if (!DataManagerException.COULD_NOT_LOAD_PROCUREMENT_NULL_DATA.equals(dataMgrExc.getMessage())) {
-				fail("Exception not received: "+DataManagerException.COULD_NOT_LOAD_PROCUREMENT_NULL_DATA);
+				fail(EXCEPTION_NOT_RECEIVED+DataManagerException.COULD_NOT_LOAD_PROCUREMENT_NULL_DATA);
 			}
 		}
 	}
@@ -143,7 +143,7 @@ class ProcurementDataManagerImplTest  {
 			String expectedMessage = String.format(
 					DataManagerException.NON_EXISTING_LOAD_OR_DELETE_EXCEPTION, ID_NON_EXISTING_PROCUREMENT);
 			if (!expectedMessage.equals(dataMgrExc.getMessage())) {
-				fail("Exception not received: "+expectedMessage);
+				fail(EXCEPTION_NOT_RECEIVED+expectedMessage);
 			}
 		}
 	}
