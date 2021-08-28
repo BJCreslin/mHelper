@@ -49,7 +49,6 @@ public class SimpleController {
         return INDEX_PAGE_NAME;
     }
 
-    @CrossOrigin
     @PostMapping("/")
     public String post(HttpServletRequest request, Model model, @ModelAttribute("address") ProcurementAddress address) {
         if (logger.isDebugEnabled()) {

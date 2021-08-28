@@ -48,7 +48,9 @@ async function post(url) {
         address: url
     };
     let xhr = new XMLHttpRequest();
-    xhr.open("POST", SERVER_URL);
-    xhr.setRequestHeader('Content-type', 'application/json; charset=utf-8');
+    xhr.open("POST", SERVER_URL,true);
+    xhr.setRequestHeader('Content-type', 'text/plain');
+    // xhr.setRequestHeader('Origin', 'https://zakupki.gov.ru/');
+    // xhr.onreadystatechange =handler;
     xhr.send(JSON.stringify(procurementAddress));
 }
