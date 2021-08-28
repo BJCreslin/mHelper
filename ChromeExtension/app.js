@@ -47,21 +47,8 @@ async function post(url) {
     let procurementAddress = {
         address: url
     };
-    let response = await fetch(SERVER_URL,
-        {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json;charset=utf-8'
-            },
-            body: JSON.stringify(procurementAddress)
-        });
-
-    if (response.ok) { // если HTTP-статус в диапазоне 200-299
-        // получаем тело ответа (см. про этот метод ниже)
-        let json = await response.json();
-    } else {
-        alert("Ошибка HTTP: " + response.status);
-    }
-
-
+    let xhr = new XMLHttpRequest();
+    xhr.open("POST", SERVER_URL);
+    xhr.setRequestHeader('Content-type', 'application/json; charset=utf-8');
+    xhr.send(JSON.stringify(procurementAddress));
 }
