@@ -12,6 +12,7 @@ import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.Keyboard
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 
 @Component
@@ -20,6 +21,8 @@ public class TelegramBotService extends TelegramLongPollingBot {
     private String username;
     @Value("${telegram.bot.token}")
     private String token;
+    private static final String TEMP_ACTIVATE_KEY = "a12345a";
+    private final HashSet<Long> verifiedUsers = new HashSet<>();
 
     @Override
     public String getBotUsername() {
@@ -35,6 +38,20 @@ public class TelegramBotService extends TelegramLongPollingBot {
     public void onUpdateReceived(Update update) {
         Message message = update.getMessage();
         if (message != null && message.hasText()) {
+            String text = message.getText();
+            if (text.startsWith("/key ") && text.length() < 20) {
+                String [] words = text.split(" ");
+                if (words.length > 1 && words[1].equals(TEMP_ACTIVATE_KEY)) {
+                    verifiedUsers.add(message.getFrom().getId());
+                    sendMsg(message, "Успешная активация!");
+                } else {
+                    sendMsg(message, "Ошибка ввода ключа активации");
+                }
+            }
+            if (!checkingUsers(message.getFrom().getId())) {
+                sendMsg(message, "введите ключ активации /key <ключ>");
+                return;
+            }
             switch (message.getText()) {
                 case "/help":
                     sendMsg(message, "чем могу помочь?");
@@ -45,6 +62,10 @@ public class TelegramBotService extends TelegramLongPollingBot {
                 default:
             }
         }
+    }
+
+    private boolean checkingUsers(Long userId) {
+        return verifiedUsers.contains(userId);
     }
 
     private void sendMsg(Message message, String text) {
@@ -76,6 +97,8 @@ public class TelegramBotService extends TelegramLongPollingBot {
         keyboardRowList.add(keyboardFirstRow);
         replyKeyboardMarkup.setKeyboard(keyboardRowList);
     }
+
+
 
     @Override
     public void onUpdatesReceived(List<Update> updates) {
