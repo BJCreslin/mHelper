@@ -1,5 +1,6 @@
 package ru.zhelper.zhelper.services;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
@@ -10,6 +11,8 @@ import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboardMar
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.KeyboardButton;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.KeyboardRow;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
+import ru.zhelper.zhelper.models.Procurement;
+import ru.zhelper.zhelper.repository.ProcurementRepo;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -23,6 +26,8 @@ public class TelegramBotService extends TelegramLongPollingBot {
     private String token;
     private static final String TEMP_ACTIVATE_KEY = "a12345a";
     private final HashSet<Long> verifiedUsers = new HashSet<>();
+    @Autowired
+    private ProcurementRepo procurementRepo;
 
     @Override
     public String getBotUsername() {
@@ -37,34 +42,66 @@ public class TelegramBotService extends TelegramLongPollingBot {
     @Override
     public void onUpdateReceived(Update update) {
         Message message = update.getMessage();
+        if (!checkTempActivateKey(message)) return;
+
         if (message != null && message.hasText()) {
-            String text = message.getText();
-            if (text.startsWith("/key ") && text.length() < 20) {
-                String [] words = text.split(" ");
-                if (words.length > 1 && words[1].equals(TEMP_ACTIVATE_KEY)) {
-                    verifiedUsers.add(message.getFrom().getId());
-                    sendMsg(message, "Успешная активация!");
-                } else {
-                    sendMsg(message, "Ошибка ввода ключа активации");
-                }
-            }
-            if (!checkingUsers(message.getFrom().getId())) {
-                sendMsg(message, "введите ключ активации /key <ключ>");
-                return;
-            }
             switch (message.getText()) {
                 case "/help":
-                    sendMsg(message, "чем могу помочь?");
+                    sendMsg(message, "Чем могу помочь?");
                     break;
                 case "/setting":
-                    sendMsg(message, "что будем настраивать?");
+                    sendMsg(message, "Что будем настраивать?");
+                    break;
+                case "/all":
+                    sendMsg(message, getAllProcurements());
                     break;
                 default:
             }
         }
     }
 
-    private boolean checkingUsers(Long userId) {
+    private String getAllProcurements() {
+        StringBuilder result = new StringBuilder();
+        List<Procurement> procurements = procurementRepo.findAll();
+        if (!procurements.isEmpty()) {
+            procurements.forEach(p -> result
+                    .append("id: ").append(p.getId())
+                    .append(" uin: ").append(p.getUin())
+                    .append(" end: ").append(p.getApplicationDeadline())
+                    .append("\n"));
+        } else {
+            result.append("Нет заявок!");
+        }
+        return result.toString();
+    }
+
+    private boolean checkTempActivateKey(Message message) {
+        if (message == null || !message.hasText()) {
+            return false; //todo telegram exception
+        }
+
+        String text = message.getText();
+        if (text.startsWith("/key ") && text.length() < 20) {
+            String [] words = text.split(" ");
+            if (words.length > 1 && words[1].equals(TEMP_ACTIVATE_KEY)) {
+                verifiedUsers.add(message.getFrom().getId());
+                sendMsg(message, "Успешная активация!");
+                return true;
+            } else {
+                sendMsg(message, "Ошибка ввода ключа активации, введите ещё раз!");
+                return false;
+            }
+        }
+
+        if (!checkUsers(message.getFrom().getId())) {
+            sendMsg(message, "Введите ключ активации /key <ключ>");
+            return false;
+        }
+
+        return true;
+    }
+
+    private boolean checkUsers(Long userId) {
         return verifiedUsers.contains(userId);
     }
 
@@ -93,12 +130,11 @@ public class TelegramBotService extends TelegramLongPollingBot {
         KeyboardRow keyboardFirstRow = new KeyboardRow();
         keyboardFirstRow.add(new KeyboardButton("/help"));
         keyboardFirstRow.add(new KeyboardButton("/setting"));
+        keyboardFirstRow.add(new KeyboardButton("/all"));
 
         keyboardRowList.add(keyboardFirstRow);
         replyKeyboardMarkup.setKeyboard(keyboardRowList);
     }
-
-
 
     @Override
     public void onUpdatesReceived(List<Update> updates) {
