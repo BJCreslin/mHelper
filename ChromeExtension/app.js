@@ -34,7 +34,7 @@ function addCss(css) {
     const s = document.createElement('style');
     s.setAttribute('type', 'text/css');
     s.setAttribute('integrity', 'BOOTSTRAP_INTEGRITY');
-    s.setAttribute('crossOrigin', 'anonymous');
+    s.setAttribute('crossOrigin', 'zakupki.gov.ru');
     if (s.styleSheet) {   // IE
         s.styleSheet.cssText = css;
     } else {                // the world
