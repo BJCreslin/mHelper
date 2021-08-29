@@ -11,7 +11,7 @@ import java.util.regex.Pattern;
 @Service
 public class URLValidatorImpl implements URLValidator {
 
-    private static Map<String, ProcurementType> regexProcurementType = new ConcurrentHashMap<>();
+    private static final Map<String, ProcurementType> regexProcurementType = new ConcurrentHashMap<>();
 
     static {
         regexProcurementType.put("^(https://zakupki.gov.ru/epz/order/notice/)(ea44|zk20|ep44|inm111|ok504|za44|zp504|po44|oku504|zk44|ok44" +
@@ -23,9 +23,11 @@ public class URLValidatorImpl implements URLValidator {
     @Override
     public boolean isValidUrl(String url) {
 
-        boolean isValid;
+        boolean isValid = false;
 
-        isValid = false;
+        if(url == null) {
+            return isValid;
+        }
 
         for(Map.Entry<String, ProcurementType> regexURL : regexProcurementType.entrySet()) {
            Pattern pattern = Pattern.compile(regexURL.getKey());
@@ -41,6 +43,7 @@ public class URLValidatorImpl implements URLValidator {
     @Override
     public ProcurementType getProcurementType(String url) {
         ProcurementType procurementType;
+
         boolean isValid;
 
         procurementType = null;

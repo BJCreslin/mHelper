@@ -40,7 +40,7 @@ class URLValidatorImplTest {
     }
 
     @Test
-    void isValidUrlTest() {
+    void givenURL_whenIsValid_thenTrue() {
         boolean result = false;
         URLValidatorImpl urlValidator = new URLValidatorImpl();
 
@@ -54,7 +54,7 @@ class URLValidatorImplTest {
     }
 
     @Test
-    void givenURL_whenIsValid_thenTrue() {
+    void givenURL_whenIsValid_thenProcurementType() {
         boolean result = false;
         ProcurementType procurementType;
         URLValidatorImpl urlValidator = new URLValidatorImpl();
@@ -69,6 +69,15 @@ class URLValidatorImplTest {
             }
         }
         Assertions.assertTrue(result);
+    }
+
+    @Test
+    void givenURL_whenNull_thenFalse() {
+        boolean result;
+        ProcurementType procurementType;
+        URLValidatorImpl urlValidator = new URLValidatorImpl();
+        result = urlValidator.isValidUrl(null);
+        Assertions.assertFalse(result);
     }
 
     @Test
@@ -91,12 +100,12 @@ class URLValidatorImplTest {
         URLValidatorImpl urlValidator = new URLValidatorImpl();
 
         procurementType = urlValidator.getProcurementType("https://zakupki.gov.ru/epz/order/notice/ea44/view/common-info.html?regNumber=0547600000521000006");
-        Assertions.assertEquals(procurementType.name(),"LAW_44");
+        Assertions.assertEquals("LAW_44", procurementType.name());
 
         procurementType = urlValidator.getProcurementType("https://zakupki.gov.ru/223/purchase/public/purchase/info/common-info.html?regNumber=32110575951");
-        Assertions.assertEquals(procurementType.name(),"LAW_223");
+        Assertions.assertEquals("LAW_223", procurementType.name());
 
         procurementType = urlValidator.getProcurementType("https://zakupki.gov.ru/epz/order/notice/po615/view/common-info.html?regNumber=015450000042100007");
-        Assertions.assertEquals(procurementType.name(),"LAW_615");
+        Assertions.assertEquals("LAW_615", procurementType.name());
     }
 }
