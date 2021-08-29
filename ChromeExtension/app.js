@@ -49,8 +49,8 @@ async function post(url) {
     };
     let xhr = new XMLHttpRequest();
     xhr.open("POST", SERVER_URL,true);
-    xhr.setRequestHeader('Content-type', 'text/plain');
-    // xhr.setRequestHeader('Origin', 'https://zakupki.gov.ru/');
+    xhr.setRequestHeader('Content-type', 'application/json');
+    // xhr.setRequestHeader('Origin', '*');
     // xhr.onreadystatechange =handler;
     xhr.send(JSON.stringify(procurementAddress));
 }
