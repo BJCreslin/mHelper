@@ -23,7 +23,7 @@ public class ChromeExtensionController {
     }
 
     @PostMapping("/procurements")
-    void newProcurement(@RequestBody ProcurementAddress address) {
+    public void newProcurement(@RequestBody ProcurementAddress address) {
         if (logger.isDebugEnabled()) {
             logger.debug(POST_FROM_IP, address);
         }
