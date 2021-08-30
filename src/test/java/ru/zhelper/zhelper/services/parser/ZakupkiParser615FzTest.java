@@ -1,4 +1,4 @@
-package ru.zhelper.zhelper.services;
+package ru.zhelper.zhelper.services.parser;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Element;
@@ -11,6 +11,7 @@ import org.springframework.context.support.ClassPathXmlApplicationContext;
 import ru.zhelper.zhelper.models.ProcedureType;
 import ru.zhelper.zhelper.models.Stage;
 import ru.zhelper.zhelper.services.exceptions.BadDataParsingException;
+import ru.zhelper.zhelper.services.parser.ZakupkiParser615Fz;
 
 import java.io.IOException;
 import java.math.BigDecimal;
