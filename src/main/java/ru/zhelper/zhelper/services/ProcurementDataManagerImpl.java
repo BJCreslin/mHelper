@@ -4,6 +4,8 @@ import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import javax.persistence.EntityNotFoundException;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,7 +33,7 @@ public class ProcurementDataManagerImpl implements ProcurementDataManager {
 		Procurement procurement = null;
 		try {
 			procurement = repository.getById(idToLoad);
-		} catch (RuntimeException e) {
+		} catch (EntityNotFoundException e) {
 			String msg = String.format(
 					DataManagerException.NON_EXISTING_LOAD_OR_DELETE_EXCEPTION, idToLoad);
 			LOGGER.warn(msg);
@@ -63,7 +65,7 @@ public class ProcurementDataManagerImpl implements ProcurementDataManager {
 		}
 		try {
 			repository.delete(procurement);
-		} catch (RuntimeException e) {
+		} catch (EntityNotFoundException e) {
 			String msg = String.format(
 					DataManagerException.NON_EXISTING_LOAD_OR_DELETE_EXCEPTION, procurement.getId());
 			LOGGER.warn(msg);
@@ -75,7 +77,7 @@ public class ProcurementDataManagerImpl implements ProcurementDataManager {
 	public void deleteEntityById(Long idToDelete) {
 		try {
 			repository.deleteById(idToDelete);
-		} catch (RuntimeException e) {
+		} catch (EntityNotFoundException e) {
 			String msg = String.format(
 					DataManagerException.NON_EXISTING_LOAD_OR_DELETE_EXCEPTION, idToDelete);
 			LOGGER.warn(msg);
