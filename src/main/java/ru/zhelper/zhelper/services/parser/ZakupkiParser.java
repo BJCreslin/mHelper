@@ -1,4 +1,4 @@
-package ru.zhelper.zhelper.services;
+package ru.zhelper.zhelper.services.parser;
 
 import ru.zhelper.zhelper.models.Procurement;
 

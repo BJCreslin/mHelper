@@ -12,7 +12,8 @@ import java.io.Serializable;
 
 import java.math.BigDecimal;
 import java.net.URL;
-import java.time.LocalDateTime;
+import java.time.LocalDate;
+import java.time.ZonedDateTime;
 
 @Entity
 @Data
@@ -53,7 +54,7 @@ public class Procurement implements Serializable {
     //ИНФОРМАЦИЯ О ПРОЦЕДУРЕ ЭЛЕКТРОННОГО АУКЦИОНА -> Дата и время окончания срока подачи заявок на участие в электронном аукционе
     //ПОРЯДОК ПРОВЕДЕНИЯ ПРОЦЕДУРЫ -> Дата и время окончания подачи заявок (по местному времени заказчика)
     @Column
-    private LocalDateTime applicationDeadline;
+    private ZonedDateTime applicationDeadline;
 
     //Максимальная цена
     //Начальная цена
@@ -110,9 +111,9 @@ public class Procurement implements Serializable {
     //Поле нужно чтобы отслеживать на сайте закупок необходимость обновить данные
     //Дата размещения текущей редакции извещения
     @Column
-    private LocalDateTime lastUpdatedFromEIS;
+    private LocalDate lastUpdatedFromEIS;
 
     //Поле нужно чтобы отслеживать необходимость обновить данные
     @Column
-    private LocalDateTime dateTimeLastUpdated;
+    private LocalDate dateTimeLastUpdated;
 }

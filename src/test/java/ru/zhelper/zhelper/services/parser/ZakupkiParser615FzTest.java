@@ -1,4 +1,4 @@
-package ru.zhelper.zhelper.services;
+package ru.zhelper.zhelper.services.parser;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Element;
@@ -11,6 +11,7 @@ import org.springframework.context.support.ClassPathXmlApplicationContext;
 import ru.zhelper.zhelper.models.ProcedureType;
 import ru.zhelper.zhelper.models.Stage;
 import ru.zhelper.zhelper.services.exceptions.BadDataParsingException;
+import ru.zhelper.zhelper.services.parser.ZakupkiParser615Fz;
 
 import java.io.IOException;
 import java.math.BigDecimal;
@@ -18,6 +19,9 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.nio.file.Files;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.ZoneOffset;
+import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 
 @SpringBootTest
@@ -33,6 +37,8 @@ class ZakupkiParser615FzTest {
     private static final String APPLICATION_SECURE = "13055.24";
     private static final String CONTRACT_SECURE = "39165.72";
     private static final String CODE = "UTF-8";
+    private static final String UTC_ZONE = "UTC";
+    private static final String OFFSET_ZONE = "+07:00:00";
 
     private static URL LINK = null;
 
@@ -102,9 +108,10 @@ class ZakupkiParser615FzTest {
 
     @Test
     void givenHtml_whenGetApplicationDeadline_getDeadLine() {
-        LocalDateTime result = parser.getApplicationDeadline(fineHtml);
+        ZonedDateTime result = parser.getApplicationDeadline(fineHtml);
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern(DATE_TIME_FORMATTER);
-        Assertions.assertEquals(result, LocalDateTime.parse(DEADLINE, formatter));
+        ZoneId zoneId = ZoneId.ofOffset(UTC_ZONE, ZoneOffset.of(OFFSET_ZONE));
+        Assertions.assertEquals(result, ZonedDateTime.of(LocalDateTime.parse(DEADLINE, formatter), zoneId));
     }
 
     @Test
