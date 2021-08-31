@@ -1,4 +1,4 @@
-package ru.zhelper.zhelper.services;
+package ru.zhelper.zhelper.services.parser;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Element;
@@ -8,6 +8,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
+import org.springframework.test.context.ActiveProfiles;
 import ru.zhelper.zhelper.models.ProcedureType;
 import ru.zhelper.zhelper.models.Stage;
 import ru.zhelper.zhelper.services.exceptions.BadDataParsingException;
@@ -24,10 +25,12 @@ import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 
 @SpringBootTest
+@ActiveProfiles("test")
 class ZakupkiParser615FzTest {
     private static final String DATE_TIME_FORMATTER = "dd.MM.yyyy HH:mm";
     private static final String fileName = "classpath:206520000012100111.html";
     private static final String fileBadName = "206520000012100111bad.html";
+    private static final String FILE_WITH_MSK_TIMEZONE = "011820000452100016(MCK0).html";
     private static final String UIN = "206520000012100111";
     private static final String PUBLISHER = "ФОНД \"РЕГИОНАЛЬНЫЙ ФОНД КАПИТАЛЬНОГО РЕМОНТА МНОГОКВАРТИРНЫХ ДОМОВ ТОМСКОЙ ОБЛАСТИ\"";
     private static final String RESTRICTION = "Оплата выполненных работ, включая форму, сроки и порядок оплаты работ, осуществляется в порядке, указанном в разделе XVII «Проект договора о выполнении капитального ремонта».";
@@ -37,6 +40,7 @@ class ZakupkiParser615FzTest {
     private static final String CONTRACT_SECURE = "39165.72";
     private static final String CODE = "UTF-8";
     private static final String UTC_ZONE = "UTC";
+    private static final String MSK_OFFSET_UTC_ZONE = "+03:00";
     private static final String OFFSET_ZONE = "+07:00:00";
 
     private static URL LINK = null;
@@ -54,6 +58,7 @@ class ZakupkiParser615FzTest {
     private static ZakupkiParser615Fz parser;
     private static Element fineHtml;
     private static Element badHtml;
+    private static Element mskZone;
 
     private static final ApplicationContext context = new ClassPathXmlApplicationContext();
 
@@ -63,6 +68,7 @@ class ZakupkiParser615FzTest {
         context.getId();
         fineHtml = Jsoup.parse(getStringFromResourceFile(fileName)).body();
         badHtml = Jsoup.parse(getStringFromResourceFile(fileBadName)).body();
+        mskZone = Jsoup.parse(getStringFromResourceFile(FILE_WITH_MSK_TIMEZONE)).body();
     }
 
     private static String getStringFromResourceFile(String file) throws IOException {
@@ -213,5 +219,11 @@ class ZakupkiParser615FzTest {
     void givenBadHtml_whenGetObjectOf_getException() {
         Assertions.assertThrows(BadDataParsingException.class,
                 () -> parser.getObjectOf(badHtml));
+    }
+
+    @Test
+    void givenHtmlWithMsk_whenGetTimeZone_GetTimeZone() {
+        String result = parser.getTimeZone(mskZone).toString();
+        Assertions.assertEquals(MSK_OFFSET_UTC_ZONE, result);
     }
 }
