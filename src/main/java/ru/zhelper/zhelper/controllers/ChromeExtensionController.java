@@ -3,6 +3,7 @@ package ru.zhelper.zhelper.controllers;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 import ru.zhelper.zhelper.controllers.exeptions.BadRequestException;
 import ru.zhelper.zhelper.models.dto.ProcurementDto;
@@ -23,7 +24,8 @@ public class ChromeExtensionController {
         this.service = service;
     }
 
-    @PostMapping("/")
+    @PostMapping(value = "/", consumes = MediaType.APPLICATION_JSON_VALUE,
+            produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.OK)
     public void newProcurement(@RequestBody ProcurementDto procurementDto) {
         if (logger.isDebugEnabled()) {
