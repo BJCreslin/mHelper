@@ -13,6 +13,7 @@ const BOOTSTRAP_LINK = "https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/css/bo
 const BOOTSTRAP_INTEGRITY = "sha384-KyZXEAg3QhqLMpG8r+8fhAXLRk2vvoC2f3B09zVXn8CA5QIVfZOJ3BCsw2P0p/We"
 const COMMON_INFO_OF_SELECTOR = "span.cardMainInfo__content";
 const OBJECT_OF_SELECTOR = "section.blockInfo__section span.section__info";
+const RUBLES = " ₽";
 
 const URL = document.documentURI;
 const dataAboutProcurement = {
@@ -36,18 +37,21 @@ if (URL.startsWith(ZAKUPKI)) {
     if (URL.startsWith(EA_615)) {
         dataAboutProcurement.fzNumber = FZ_615_NUMBER;
         dataAboutProcurement.uin = URL.replace(EA_615_FULL_WITHOUT_UIN, "");
+        dataAboutProcurement.applicationDeadline =document.body.querySelector("div.date div.cardMainInfo__section:last-child span.cardMainInfo__content").innerText;
         dataAboutProcurement.objectOf = document.body.querySelectorAll(COMMON_INFO_OF_SELECTOR)[0].innerHTML;
-        dataAboutProcurement.publisherName = document.body.querySelectorAll(COMMON_INFO_OF_SELECTOR)[1].innerHTML;
-        dataAboutProcurement.contractPrice = document.body.querySelectorAll(COMMON_INFO_OF_SELECTOR)[3].outerText;
+        dataAboutProcurement.publisherName = document.body.querySelectorAll(COMMON_INFO_OF_SELECTOR)[1].innerText;
+        dataAboutProcurement.contractPrice = document.body.querySelectorAll(COMMON_INFO_OF_SELECTOR)[3].outerText.replace(RUBLES, "").replace(" ", "").replace(",", ".");
         dataAboutProcurement.procedureType = document.body.querySelectorAll(OBJECT_OF_SELECTOR)[0].innerText;
         dataAboutProcurement.stage = document.body.querySelectorAll(OBJECT_OF_SELECTOR)[1].innerText;
         dataAboutProcurement.linkOnPlacement = document.body.querySelectorAll(OBJECT_OF_SELECTOR)[4].innerText;
-        dataAboutProcurement.applicationDeadline = document.body.querySelectorAll(OBJECT_OF_SELECTOR)[12].innerText;
-        dataAboutProcurement.applicationSecure = document.body.querySelectorAll(OBJECT_OF_SELECTOR)[18].innerText;
-        dataAboutProcurement.contractSecure = document.body.querySelectorAll(OBJECT_OF_SELECTOR)[19].innerText;
-        dataAboutProcurement.restrictions = document.body.querySelectorAll(OBJECT_OF_SELECTOR)[23].innerText;
+        dataAboutProcurement.applicationSecure = document.body.querySelectorAll(OBJECT_OF_SELECTOR)[21].innerText;
+        dataAboutProcurement.contractSecure = document.body.querySelectorAll(OBJECT_OF_SELECTOR)[22].innerText;
+        dataAboutProcurement.restrictions = document.body.querySelectorAll(OBJECT_OF_SELECTOR)[25].innerText;
 
-        console.log(document.body.querySelectorAll(OBJECT_OF_SELECTOR));
+
+
+
+        console.log(document.body.querySelector("div.date div.cardMainInfo__section:last-child span.cardMainInfo__content").innerText);
         console.log(dataAboutProcurement);
     }
     if (URL.startsWith(PO_615)) {
