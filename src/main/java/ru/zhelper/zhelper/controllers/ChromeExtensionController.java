@@ -27,7 +27,7 @@ public class ChromeExtensionController {
     @PostMapping(value = "/", consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.OK)
-    public void newProcurement(@RequestBody ProcurementDto procurementDto) {
+    public void newProcurement(@ModelAttribute("procurementDto") ProcurementDto procurementDto) {
         if (logger.isDebugEnabled()) {
             logger.debug(POST_FROM_IP, procurementDto);
         }
