@@ -1,5 +1,6 @@
 package ru.zhelper.zhelper.services;
 
+import java.time.LocalDate;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -9,6 +10,10 @@ import javax.persistence.EntityNotFoundException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import ru.zhelper.zhelper.models.Procurement;
@@ -19,12 +24,16 @@ import ru.zhelper.zhelper.services.exceptions.DataManagerException;
 public class ProcurementDataManagerImpl implements ProcurementDataManager {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(ProcurementDataManagerImpl.class);
+
+	Pageable firstPageWithFiveElements = PageRequest.of(0, 5);
+
+	Pageable secondPageWithFiveElements = PageRequest.of(1, 5);
 	
     @Autowired
 	private ProcurementRepo repository;
 
 	@Override
-	public Procurement loadEntity(Long idToLoad) {
+	public Procurement loadById(Long idToLoad) {
 		if (idToLoad == null) {
 			throw new DataManagerException(
 					DataManagerException.COULD_NOT_LOAD_PROCUREMENT_NULL_DATA, null);
@@ -43,7 +52,7 @@ public class ProcurementDataManagerImpl implements ProcurementDataManager {
 	}
 
 	@Override
-	public Procurement saveEntity(Procurement procurement) {
+	public Procurement save(Procurement procurement) {
 		if (procurement == null) {
 			throw new DataManagerException(
 					DataManagerException.COULD_NOT_SAVE_PROCUREMENT_NULL_DATA, null);
@@ -58,7 +67,7 @@ public class ProcurementDataManagerImpl implements ProcurementDataManager {
 	}
 
 	@Override
-	public void deleteEntity(Procurement procurement) {
+	public void delete(Procurement procurement) {
 		if (procurement == null) {
 			throw new DataManagerException(
 					DataManagerException.COULD_NOT_DELETE_PROCUREMENT_NULL_DATA, null);
@@ -74,10 +83,10 @@ public class ProcurementDataManagerImpl implements ProcurementDataManager {
 	}
 
 	@Override
-	public void deleteEntityById(Long idToDelete) {
+	public void deleteById(Long idToDelete) {
 		try {
 			repository.deleteById(idToDelete);
-		} catch (EntityNotFoundException e) {
+		} catch (EntityNotFoundException | EmptyResultDataAccessException e) {
 			String msg = String.format(
 					DataManagerException.NON_EXISTING_LOAD_OR_DELETE_EXCEPTION, idToDelete);
 			LOGGER.warn(msg);
@@ -86,11 +95,31 @@ public class ProcurementDataManagerImpl implements ProcurementDataManager {
 	}
 	
 	@Override
-	public List<Procurement> getProcurementsByFzNumber(Integer fzNumber) {
+	public List<Procurement> getListByFzNumber(Integer fzNumber) {
 		if (fzNumber == null) {
 			return Collections.emptyList();
 		}
 		return repository.findAll().stream().filter(proc -> fzNumber.equals(proc.getFzNumber()))
 				.collect(Collectors.toList());
+	}
+
+	@Override
+	public Pageable getPageableListByIdList(List<Integer> idList) {
+		// 5 = page size, 20 = page number
+		Pageable pageable = PageRequest.of(5, 20);
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public Pageable getPageableListOfCreatedBeforeDate(LocalDate date) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public Page<Procurement> findAll() {
+		Page<Procurement> allProcurementsSortedByName = repository.findAll(firstPageWithFiveElements);
+		return allProcurementsSortedByName;
 	}
 }

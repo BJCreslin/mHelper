@@ -11,6 +11,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.domain.Page;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.transaction.annotation.Transactional;
@@ -18,6 +20,7 @@ import org.springframework.transaction.annotation.Transactional;
 import ru.zhelper.zhelper.models.Procurement;
 import ru.zhelper.zhelper.services.exceptions.DataManagerException;
 
+@ActiveProfiles("test")
 @SpringBootTest
 @Sql(value = "/sql/test-data.sql", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
 @TestPropertySource(locations="classpath:test.properties")
@@ -43,13 +46,13 @@ class ProcurementDataManagerImplTest  {
 	 */
 	@Test
 	@Transactional
-	void testSaveEntity() {
+	void testSave() {
 		Procurement procurement = new Procurement();
 		procurement.setContractPrice(BigDecimal.TEN);
 		procurement.setUin("ABC124z34");
 		procurement.setFzNumber(FZ_NUMBER_OF_SAVED_PROCUREMENT);
 		
-		Procurement saved = procurementDataManager.saveEntity(procurement);
+		Procurement saved = procurementDataManager.save(procurement);
 		
 		// Check the saved data
 		Assertions.assertEquals(saved.getContractPrice(), procurement.getContractPrice());
@@ -65,12 +68,19 @@ class ProcurementDataManagerImplTest  {
 	 */
 	@Test
 	@Transactional
-	void testGetOfEntityUpdate() {
-		Procurement second = procurementDataManager.loadEntity(ID_OF_SECOND_PROCUREMENT);
+	void testGetOfUpdate() {
+		
+		Page<Procurement> allProcurements = procurementDataManager.findAll();
+		
+		System.out.println(" >>>>>>>>>> ALL PROCUREMENTS START");
+		allProcurements.stream().forEach(System.out::println);
+		System.out.println(" >>><<<<<<< ALL PROCUREMENTS END");
+		
+		Procurement second = procurementDataManager.loadById(ID_OF_SECOND_PROCUREMENT);
 		Assertions.assertEquals(FZ_NUMBER_OF_SECOND_PROCUREMENT, second.getFzNumber());		
 
 		second.setUin(MY_UIN);
-		Procurement updated = procurementDataManager.saveEntity(second);
+		Procurement updated = procurementDataManager.save(second);
 		
 		Assertions.assertEquals(MY_UIN, updated.getUin());
 		Assertions.assertEquals(FZ_NUMBER_OF_SECOND_PROCUREMENT, updated.getFzNumber());
@@ -83,7 +93,7 @@ class ProcurementDataManagerImplTest  {
 	@Transactional
 	void testGetProcurementsByFzNumber() {
 		Assertions.assertEquals(1, 
-				procurementDataManager.getProcurementsByFzNumber(FZ_NUMBER_OF_SECOND_PROCUREMENT).size());
+				procurementDataManager.getListByFzNumber(FZ_NUMBER_OF_SECOND_PROCUREMENT).size());
 	}	
 	
 	/**
@@ -94,12 +104,12 @@ class ProcurementDataManagerImplTest  {
 	@Test
 	@Transactional
 	void testDeleteAndCountRemaining() {
-		List<Procurement> foundList = procurementDataManager.getProcurementsByFzNumber(FZ_NUMBER_OF_SECOND_PROCUREMENT);
+		List<Procurement> foundList = procurementDataManager.getListByFzNumber(FZ_NUMBER_OF_SECOND_PROCUREMENT);
 		Assertions.assertEquals(1, foundList.size());
 
-		procurementDataManager.deleteEntity(foundList.get(0));
+		procurementDataManager.delete(foundList.get(0));
 		Assertions.assertEquals(0,
-			procurementDataManager.getProcurementsByFzNumber(FZ_NUMBER_OF_SECOND_PROCUREMENT).size());
+			procurementDataManager.getListByFzNumber(FZ_NUMBER_OF_SECOND_PROCUREMENT).size());
 	}	
 	
 	/**
@@ -107,12 +117,12 @@ class ProcurementDataManagerImplTest  {
 	 */
 	@Test
 	@Transactional
-	void testDeleteEntityById() {
-		procurementDataManager.deleteEntityById(ID_OF_FIRST_PROCUREMENT);
+	void testDeleteById() {
+		procurementDataManager.deleteById(ID_OF_FIRST_PROCUREMENT);
 		
 		// Assertion - is it really deleted?
 		try {
-			procurementDataManager.loadEntity(ID_OF_FIRST_PROCUREMENT);
+			procurementDataManager.loadById(ID_OF_FIRST_PROCUREMENT);
 		} catch (DataManagerException dataMgrExc) {
 			String expectedMessage = String.format(
 					DataManagerException.NON_EXISTING_LOAD_OR_DELETE_EXCEPTION, ID_OF_FIRST_PROCUREMENT);
@@ -126,7 +136,7 @@ class ProcurementDataManagerImplTest  {
 	@Transactional
 	void testLoadProcurementWithIdNull() {
 		try {
-			procurementDataManager.loadEntity(null);
+			procurementDataManager.loadById(null);
 		} catch (DataManagerException dataMgrExc) {
 			if (!DataManagerException.COULD_NOT_LOAD_PROCUREMENT_NULL_DATA.equals(dataMgrExc.getMessage())) {
 				fail(EXCEPTION_NOT_RECEIVED+DataManagerException.COULD_NOT_LOAD_PROCUREMENT_NULL_DATA);
@@ -138,7 +148,7 @@ class ProcurementDataManagerImplTest  {
 	@Transactional
 	void testDeleteNonExisting() {
 		try {
-			procurementDataManager.deleteEntityById(ID_NON_EXISTING_PROCUREMENT);
+			procurementDataManager.deleteById(ID_NON_EXISTING_PROCUREMENT);
 		} catch (DataManagerException dataMgrExc) {
 			String expectedMessage = String.format(
 					DataManagerException.NON_EXISTING_LOAD_OR_DELETE_EXCEPTION, ID_NON_EXISTING_PROCUREMENT);

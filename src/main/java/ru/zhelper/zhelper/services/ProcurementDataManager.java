@@ -1,7 +1,10 @@
 package ru.zhelper.zhelper.services;
 
+import java.time.LocalDate;
 import java.util.List;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 
 import ru.zhelper.zhelper.models.Procurement;
@@ -9,13 +12,19 @@ import ru.zhelper.zhelper.models.Procurement;
 @Repository
 public interface ProcurementDataManager {
     
-    Procurement loadEntity(Long id);
+    Procurement loadById(Long id);
     
-    Procurement saveEntity(Procurement procurement);
+    Procurement save(Procurement procurement);
     
-    void deleteEntity(Procurement procurement);
+    void delete(Procurement procurement);
     
-    void deleteEntityById(Long idToDelete);
+    void deleteById(Long idToDelete);
 
-	List<Procurement> getProcurementsByFzNumber(Integer fzNumber);
+	List<Procurement> getListByFzNumber(Integer fzNumber);
+	
+	Page<Procurement> findAll();
+	
+	Pageable getPageableListByIdList(List<Integer> idList);
+	
+	Pageable getPageableListOfCreatedBeforeDate(LocalDate date);
 }
