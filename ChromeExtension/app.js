@@ -18,10 +18,6 @@ const dataAboutProcurement = {
     uin: ""
 }
 
-if (URL.startsWith(ZAKUPKI)) {
-    addCss(BOOTSTRAP_LINK)
-    insertButton();
-}
 
 // if (URL.startsWith(FZ_44)) {
 //
@@ -35,7 +31,10 @@ if (URL.startsWith(PO_615)) {
     dataAboutProcurement.law = PO_615_NUMBER;
     dataAboutProcurement.uin = URL.replace(PO_615_FULL_WITHOUT_UIN, "")
 }
-
+if (URL.startsWith(ZAKUPKI)) {
+    addCss(BOOTSTRAP_LINK)
+    insertButton();
+}
 
 function insertButton() {
     let buttonPlace = document.getElementsByClassName(CLASS_SELECTOR_FZ44)[0];
@@ -43,7 +42,7 @@ function insertButton() {
     input.type = "button";
     input.setAttribute("class", BUTTON_CLASS);
     input.value = BUTTON_NAME;
-    console.log(dataAboutProcurement);
+    // console.log(dataAboutProcurement);
     input.onclick = function () {
         chrome.runtime.sendMessage(
             {
