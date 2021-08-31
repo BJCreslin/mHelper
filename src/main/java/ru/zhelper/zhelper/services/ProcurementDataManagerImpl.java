@@ -29,8 +29,12 @@ public class ProcurementDataManagerImpl implements ProcurementDataManager {
 
 	Pageable secondPageWithFiveElements = PageRequest.of(1, 5);
 	
-    @Autowired
 	private ProcurementRepo repository;
+    
+	@Autowired
+    public void setRepository(ProcurementRepo repo){
+       this.repository = repo;
+    }
 
 	@Override
 	public Procurement loadById(Long idToLoad) {
