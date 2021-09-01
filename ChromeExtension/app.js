@@ -46,7 +46,7 @@ if (URL.startsWith(ZAKUPKI)) {
         dataAboutProcurement.linkOnPlacement = document.body.querySelectorAll(OBJECT_OF_SELECTOR)[4].innerText;
         dataAboutProcurement.applicationSecure = document.body.querySelectorAll(OBJECT_OF_SELECTOR)[21].innerText;
         dataAboutProcurement.contractSecure = document.body.querySelectorAll(OBJECT_OF_SELECTOR)[22].innerText;
-        dataAboutProcurement.restrictions = document.body.querySelectorAll(OBJECT_OF_SELECTOR)[25].innerText;
+        dataAboutProcurement.restrictions = null;
 
         console.log(document.body.querySelector("div.date div.cardMainInfo__section:last-child span.cardMainInfo__content").innerText);
         console.log(dataAboutProcurement);
