@@ -11,9 +11,21 @@ const BUTTON_NAME = "To zHelper";
 const BUTTON_CLASS = "btn btn-primary";
 const BOOTSTRAP_LINK = "https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/css/bootstrap.min.css";
 const BOOTSTRAP_INTEGRITY = "sha384-KyZXEAg3QhqLMpG8r+8fhAXLRk2vvoC2f3B09zVXn8CA5QIVfZOJ3BCsw2P0p/We"
-const COMMON_INFO_OF_SELECTOR = "span.cardMainInfo__content";
-const OBJECT_OF_SELECTOR = "section.blockInfo__section span.section__info";
+
 const RUBLES = " ₽";
+const NBSP = "&nbsp;";
+
+const OBJECT_SELECTOR = "body > div.cardWrapper.outerWrapper > div > div.cardHeaderBlock > div:nth-child(3) > div.cardMainInfo.row > div.sectionMainInfo.borderRight.col-6 > div.sectionMainInfo__body > div:nth-child(1) > span.cardMainInfo__content";
+const PUBLISHER_NAME_SELECTOR = "body > div.cardWrapper.outerWrapper > div > div.cardHeaderBlock > div:nth-child(3) > div.cardMainInfo.row > div.sectionMainInfo.borderRight.col-6 > div.sectionMainInfo__body > div:nth-child(2) > span.cardMainInfo__content > a";
+const PRICE_SELECTOR = "body > div.cardWrapper.outerWrapper > div > div.cardHeaderBlock > div:nth-child(3) > div.cardMainInfo.row > div.sectionMainInfo.borderRight.col-3.colSpaceBetween > div.price > span.cardMainInfo__content.cost";
+const PROCEDURE_TYPE_SELECTOR = "body > div.cardWrapper.outerWrapper > div > div:nth-child(2) > div > div > section:nth-child(2) > span.section__info";
+const STAGE_SELECTOR = "body > div.cardWrapper.outerWrapper > div > div:nth-child(2) > div > div > section:nth-child(3) > span.section__info";
+const LINK_OF_PLACEMENT_SELECTOR = "body > div.cardWrapper.outerWrapper > div > div:nth-child(2) > div > div > section:nth-child(6) > span.section__info > a";
+const APPLICATION_SELECTOR = "body > div.cardWrapper.outerWrapper > div > div:nth-child(10) > div > div > section:nth-child(3) > span.section__info > span";
+const CONTRACT_SELECTOR = "body > div.cardWrapper.outerWrapper > div > div:nth-child(10) > div > div > section:nth-child(4) > span.section__info > span";
+const DATE_OF_PLACEMENT_SELECTOR = "body > div.cardWrapper.outerWrapper > div > div.cardHeaderBlock > div:nth-child(3) > div.cardMainInfo.row > div.sectionMainInfo.borderRight.col-3.colSpaceBetween > div.date > div:nth-child(1) > span.cardMainInfo__content";
+const DATE_OF_AUCTION_SELECTOR = "body > div.cardWrapper.outerWrapper > div > div:nth-child(8) > div > div > section:nth-child(4) > span.section__info";
+const TIME_OF_AUCTION_SELECTOR = "body > div.cardWrapper.outerWrapper > div > div:nth-child(8) > div > div > section:nth-child(5) > span.section__info > span";
 
 const URL = document.documentURI;
 const dataAboutProcurement = {
@@ -28,7 +40,10 @@ const dataAboutProcurement = {
     applicationDeadline: "",
     applicationSecure: "",
     contractSecure: "",
-    restrictions: ""
+    restrictions: "",
+    lastUpdatedFromEIS: "",
+    dateOfPlacement: "",
+    dateOfAuction: "",
 }
 
 if (URL.startsWith(ZAKUPKI)) {
@@ -37,18 +52,21 @@ if (URL.startsWith(ZAKUPKI)) {
     if (URL.startsWith(EA_615)) {
         dataAboutProcurement.fzNumber = FZ_615_NUMBER;
         dataAboutProcurement.uin = URL.replace(EA_615_FULL_WITHOUT_UIN, "");
-        dataAboutProcurement.applicationDeadline =document.body.querySelector("div.date div.cardMainInfo__section:last-child span.cardMainInfo__content").innerText;
-        dataAboutProcurement.objectOf = document.body.querySelectorAll(COMMON_INFO_OF_SELECTOR)[0].innerHTML;
-        dataAboutProcurement.publisherName = document.body.querySelectorAll(COMMON_INFO_OF_SELECTOR)[1].innerText;
-        dataAboutProcurement.contractPrice = document.body.querySelectorAll(COMMON_INFO_OF_SELECTOR)[3].outerText.replace(RUBLES, "").replace(" ", "").replace(",", ".");
-        dataAboutProcurement.procedureType = document.body.querySelectorAll(OBJECT_OF_SELECTOR)[0].innerText;
-        dataAboutProcurement.stage = document.body.querySelectorAll(OBJECT_OF_SELECTOR)[1].innerText;
-        dataAboutProcurement.linkOnPlacement = document.body.querySelectorAll(OBJECT_OF_SELECTOR)[4].innerText;
-        dataAboutProcurement.applicationSecure = document.body.querySelectorAll(OBJECT_OF_SELECTOR)[21].innerText;
-        dataAboutProcurement.contractSecure = document.body.querySelectorAll(OBJECT_OF_SELECTOR)[22].innerText;
+        dataAboutProcurement.applicationDeadline = document.body.querySelector("div.date div.cardMainInfo__section:last-child span.cardMainInfo__content").innerText;
+        dataAboutProcurement.objectOf = document.body.querySelector(OBJECT_SELECTOR).innerText;
+        dataAboutProcurement.publisherName = document.body.querySelector(PUBLISHER_NAME_SELECTOR).innerText;
+        dataAboutProcurement.contractPrice = document.body.querySelector(PRICE_SELECTOR).innerText.replace(RUBLES, "").replace(NBSP, "").replace(",", ".");
+        dataAboutProcurement.procedureType = document.body.querySelector(PROCEDURE_TYPE_SELECTOR).innerText;
+        dataAboutProcurement.stage = document.querySelector(STAGE_SELECTOR).innerText;
+        dataAboutProcurement.linkOnPlacement = document.querySelector(LINK_OF_PLACEMENT_SELECTOR).innerText;
+        dataAboutProcurement.applicationSecure = document.querySelector(APPLICATION_SELECTOR).innerText.replace(NBSP, "");
+        dataAboutProcurement.contractSecure = document.querySelector(CONTRACT_SELECTOR).innerText.replace(NBSP, "");
         dataAboutProcurement.restrictions = null;
+        dataAboutProcurement.lastUpdatedFromEIS = null;
+        dataAboutProcurement.dateOfPlacement = document.querySelector(DATE_OF_PLACEMENT_SELECTOR).innerText;
+        dataAboutProcurement.dateOfAuction = document.querySelector(DATE_OF_AUCTION_SELECTOR).innerText + " " + document.querySelector(TIME_OF_AUCTION_SELECTOR).innerText;
 
-        console.log(document.body.querySelector("div.date div.cardMainInfo__section:last-child span.cardMainInfo__content").innerText);
+        console.log(document.body.querySelectorAll("span.cardMainInfo__content"));
         console.log(dataAboutProcurement);
     }
     if (URL.startsWith(PO_615)) {

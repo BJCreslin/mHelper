@@ -22,4 +22,7 @@ public class ProcurementDto {
     private String applicationSecure;
     private String contractSecure;
     private String restrictions;
+    private String lastUpdatedFromEIS;
+    private String dateOfPlacement;
+    private String dateOfAuction;
 }
