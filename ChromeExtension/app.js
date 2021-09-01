@@ -66,13 +66,26 @@ if (URL.startsWith(ZAKUPKI)) {
         dataAboutProcurement.dateOfPlacement = document.querySelector(DATE_OF_PLACEMENT_SELECTOR).innerText;
         dataAboutProcurement.dateOfAuction = document.querySelector(DATE_OF_AUCTION_SELECTOR).innerText + " " + document.querySelector(TIME_OF_AUCTION_SELECTOR).innerText;
 
-        console.log(document.body.querySelectorAll("span.cardMainInfo__content"));
         console.log(dataAboutProcurement);
     }
     if (URL.startsWith(PO_615)) {
         dataAboutProcurement.fzNumber = FZ_615_NUMBER;
         dataAboutProcurement.uin = URL.replace(PO_615_FULL_WITHOUT_UIN, "");
+        dataAboutProcurement.applicationDeadline = document.body.querySelector("div.date div.cardMainInfo__section:last-child span.cardMainInfo__content").innerText;
+        dataAboutProcurement.objectOf = document.body.querySelector(OBJECT_SELECTOR).innerText;
+        dataAboutProcurement.publisherName = document.body.querySelector(PUBLISHER_NAME_SELECTOR).innerText;
+        dataAboutProcurement.contractPrice = null;
+        dataAboutProcurement.procedureType = document.body.querySelector(PROCEDURE_TYPE_SELECTOR).innerText;
+        dataAboutProcurement.stage = document.querySelector(STAGE_SELECTOR).innerText;
+        dataAboutProcurement.linkOnPlacement = document.querySelector("body > div.cardWrapper.outerWrapper > div > div:nth-child(2) > div > div > section:nth-child(7) > span.section__info > a").innerText;
+        dataAboutProcurement.applicationSecure = null;
+        dataAboutProcurement.contractSecure = null;
+        dataAboutProcurement.restrictions = null;
+        dataAboutProcurement.lastUpdatedFromEIS = null;
+        dataAboutProcurement.dateOfPlacement = document.querySelector(DATE_OF_PLACEMENT_SELECTOR).innerText;
+        dataAboutProcurement.dateOfAuction = null;
 
+        console.log(dataAboutProcurement);
     }
 }
 
