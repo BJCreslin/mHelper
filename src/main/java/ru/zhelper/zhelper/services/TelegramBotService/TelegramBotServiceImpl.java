@@ -13,7 +13,11 @@ import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.Keyboard
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.KeyboardRow;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 import ru.zhelper.zhelper.models.Procurement;
+import ru.zhelper.zhelper.models.ProcurementType;
+import ru.zhelper.zhelper.models.dto.ProcurementAddress;
 import ru.zhelper.zhelper.repository.ProcurementRepo;
+import ru.zhelper.zhelper.services.ProcurementService;
+import ru.zhelper.zhelper.services.validator.URLValidator;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -28,7 +32,7 @@ public class TelegramBotServiceImpl extends TelegramLongPollingBot implements Te
     private static final String COMMAND_KEY = "/key";
     private static final String SAY_HELP = "Я ваш помощник в закупках, всегда рад напомнить о ближайщих " +
             "закрывающихся позициях!";
-    private static final String SAY_UNKNOWN_COMMAND = "Неизвестная команда! Введите " + COMMAND_HELP +
+    private static final String SAY_UNKNOWN_COMMAND = "Неизвестная команда или ошибка в ссылке на закупку! Введите " + COMMAND_HELP +
             " для получения справки.";
     private static final String SAY_SUCCESSFUL_ACTIVATION =  "Успешная активация!";
     private static final String SAY_ERROR_ACTIVATION =  "Ошибка ввода ключа активации, введите ещё раз!";
@@ -36,20 +40,28 @@ public class TelegramBotServiceImpl extends TelegramLongPollingBot implements Te
     private static final String SPLIT_SYMBOL_FOR_COMMAND = "\\s";
     private static final String STRING_FORMAT_FOR_PROCUREMENTS = "id:%d uin:%s date:%s %n";
     private static final String SAY_NO_PROCUREMENTS = "Нет закупок!";
+    private static final String PROCESSING_IS_NOT_WORKING_YET = "Обработка этого типа закупок пока не работает!";
+    private static final String SENT_FOR_PROCESSING = "Закупка отправлена в обработку";
 
     private final HashSet<Long> verifiedUsers = new HashSet<>();
 
     private final String username;
     private final String token;
     private final ProcurementRepo procurementRepo;
+    private final ProcurementService  procurementService;
+    private final URLValidator urlValidator;
 
     @Autowired
     public TelegramBotServiceImpl(@Value("${telegram.bot.username}") String username,
                                   @Value("${telegram.bot.token}") String token,
-                                  ProcurementRepo procurementRepo) {
+                                  ProcurementRepo procurementRepo,
+                                  ProcurementService procurementService,
+                                  URLValidator urlValidator) {
         this.username = username;
         this.token = token;
         this.procurementRepo = procurementRepo;
+        this.procurementService = procurementService;
+        this.urlValidator = urlValidator;
     }
 
     @Override
@@ -84,6 +96,17 @@ public class TelegramBotServiceImpl extends TelegramLongPollingBot implements Te
         if (COMMAND_ALL.equals(text)) {
             this.sendMsg(message, getAllProcurementsToString(procurementRepo));
             return;
+        }
+        ProcurementType procurementType = urlValidator.getProcurementType(text);
+        if (procurementType != null) {
+            if (procurementType == ProcurementType.LAW_615) {
+                procurementService.action(ProcurementAddress.builder().address(text).build());
+                this.sendMsg(message, SENT_FOR_PROCESSING);
+                return;
+            } else {
+                this.sendMsg(message, PROCESSING_IS_NOT_WORKING_YET);
+                return;
+            }
         }
         this.sendMsg(message, SAY_UNKNOWN_COMMAND);
     }
