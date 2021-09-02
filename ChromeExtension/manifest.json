@@ -16,18 +16,14 @@
   },
   "options_page": "options.html",
   "host_permissions": [
-    "https://zakupki.gov.ru/epz/order/notice/ea44/*",
-    "https://zakupki.gov.ru/223/purchase/public/purchase/info/*",
-    "https://zakupki.gov.ru/epz/order/notice/ea615/view/*",
-    "https://zakupki.gov.ru/epz/order/notice/po615/*"
+    "https://zakupki.gov.ru/epz/order/notice/*",
+    "https://zakupki.gov.ru/223/purchase/public/purchase/info/*"
   ],
   "content_scripts": [
     {
       "matches": [
-        "https://zakupki.gov.ru/epz/order/notice/ea44/*",
-        "https://zakupki.gov.ru/223/purchase/public/purchase/info/*",
-        "https://zakupki.gov.ru/epz/order/notice/ea615/view/*",
-        "https://zakupki.gov.ru/epz/order/notice/po615/*"
+        "https://zakupki.gov.ru/epz/order/notice/*",
+        "https://zakupki.gov.ru/223/purchase/public/purchase/info/*"
       ],
       "js": [
         "app.js"
