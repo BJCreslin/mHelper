@@ -9,6 +9,8 @@ import ru.zhelper.zhelper.models.dto.ProcurementDto;
 import ru.zhelper.zhelper.services.ProcurementService;
 import ru.zhelper.zhelper.services.exceptions.BadDataParsingException;
 
+import java.time.ZonedDateTime;
+
 @RestController
 @RequestMapping({"/api"})
 @CrossOrigin
@@ -25,7 +27,7 @@ public class ChromeExtensionController {
 
     @PostMapping(value = "/")
     @ResponseStatus(HttpStatus.OK)
-    public void newProcurement(@ModelAttribute("procurementDto") ProcurementDto procurementDto) {
+    public String newProcurement(@ModelAttribute("procurementDto") ProcurementDto procurementDto) {
         if (logger.isDebugEnabled()) {
             logger.debug(POST_FROM_IP, procurementDto);
         }
@@ -39,6 +41,7 @@ public class ChromeExtensionController {
         if (logger.isDebugEnabled()) {
             logger.debug(POSTED_PROCUREMENT, procurementDto);
         }
+        return ZonedDateTime.now().toString();
     }
 
     @GetMapping("/")
