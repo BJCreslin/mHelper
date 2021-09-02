@@ -1,13 +1,12 @@
 const EA_44 = "https://zakupki.gov.ru/epz/order/notice/ea44/view/common-info.html?regNumber=";
 const OK_504 = "https://zakupki.gov.ru/epz/order/notice/ok504/view/common-info.html?regNumber=";
+const ZK_20 = "https://zakupki.gov.ru/epz/order/notice/zk20/view/common-info.html?regNumber=";
 const EA_615 = "https://zakupki.gov.ru/epz/order/notice/ea615/";
 const EA_615_FULL_WITHOUT_UIN = "https://zakupki.gov.ru/epz/order/notice/ea615/view/common-info.html?regNumber=";
 const FZ_615_NUMBER = "LAW_615";
 const FZ_44_NUMBER = "LAW_44";
 const PO_615 = "https://zakupki.gov.ru/epz/order/notice/po615/";
 const PO_615_FULL_WITHOUT_UIN = "https://zakupki.gov.ru/epz/order/notice/po615/view/common-info.html?regNumber=";
-const PO_615_NUMBER = "po615";
-const ZAKUPKI = "https://zakupki.gov.ru/epz/order/notice/";
 const CLASS_SELECTOR_FZ44 = "tabsNav d-flex align-items-end";
 const BUTTON_NAME = "To zHelper";
 const BUTTON_CLASS = "btn btn-primary";
@@ -71,7 +70,32 @@ if (URL.startsWith(OK_504)) {
     fillProcurementWithOK504()
 }
 
+
+if (URL.startsWith(ZK_20)) {
+    addCss(BOOTSTRAP_LINK)
+    insertButton();
+    fillProcurementWithZK20()
+}
+
 console.log(dataAboutProcurement);
+
+function fillProcurementWithZK20() {
+    dataAboutProcurement.fzNumber = FZ_44_NUMBER;
+    dataAboutProcurement.applicationDeadline = document.querySelector("body > div.cardWrapper.outerWrapper > div > div.cardHeaderBlock > div:nth-child(3) > div.cardMainInfo.row > div.sectionMainInfo.borderRight.col-3.colSpaceBetween > div.date > div.cardMainInfo__section > span.cardMainInfo__content").innerText;
+    dataAboutProcurement.objectOf = document.querySelector("body > div.cardWrapper.outerWrapper > div > div.cardHeaderBlock > div:nth-child(3) > div.cardMainInfo.row > div.sectionMainInfo.borderRight.col-6 > div.sectionMainInfo__body > div:nth-child(1) > span.cardMainInfo__content").innerText;
+    dataAboutProcurement.publisherName = document.querySelector("body > div.cardWrapper.outerWrapper > div > div.cardHeaderBlock > div:nth-child(3) > div.cardMainInfo.row > div.sectionMainInfo.borderRight.col-6 > div.sectionMainInfo__body > div:nth-child(2) > span.cardMainInfo__content > a").innerText;
+    dataAboutProcurement.procedureType = document.querySelector("body > div.cardWrapper.outerWrapper > div > div:nth-child(2) > div > div > section:nth-child(2) > span.section__info").innerText;
+    dataAboutProcurement.stage = document.querySelector("body > div.cardWrapper.outerWrapper > div > div:nth-child(2) > div > div > section:nth-child(7) > span.section__info").innerText;
+    dataAboutProcurement.dateOfPlacement = document.querySelector("body > div.cardWrapper.outerWrapper > div > div.cardHeaderBlock > div:nth-child(3) > div.cardMainInfo.row > div.sectionMainInfo.borderRight.col-3.colSpaceBetween > div.date > div.row > div:nth-child(1) > span.cardMainInfo__content").innerText;
+    dataAboutProcurement.uin = URL.replace(ZK_20, "");
+    dataAboutProcurement.contractPrice = document.body.querySelector(PRICE_SELECTOR_615).innerText.replace(RUBLES, "").replace(NBSP, "").replace(",", ".");
+    dataAboutProcurement.linkOnPlacement = document.querySelector("body > div.cardWrapper.outerWrapper > div > div:nth-child(2) > div > div > section:nth-child(4) > span.section__info > a").innerText;
+    dataAboutProcurement.applicationSecure = null;
+    dataAboutProcurement.contractSecure = null;
+    dataAboutProcurement.restrictions = document.querySelector("body > div.cardWrapper.outerWrapper > div > div:nth-child(14) > div > div > section:nth-child(4) > span.section__info > span").innerText.replace(NBSP, "");
+    dataAboutProcurement.lastUpdatedFromEIS = document.querySelector("body > div.cardWrapper.outerWrapper > div > div.cardHeaderBlock > div:nth-child(3) > div.cardMainInfo.row > div.sectionMainInfo.borderRight.col-3.colSpaceBetween > div.date > div.row > div:nth-child(2) > span.cardMainInfo__content").innerText;
+    dataAboutProcurement.dateOfAuction = null;
+}
 
 function fillProcurementWithOK504() {
     dataAboutProcurement.fzNumber = FZ_44_NUMBER;
