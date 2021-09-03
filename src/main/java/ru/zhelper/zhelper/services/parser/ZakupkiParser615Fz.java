@@ -19,7 +19,7 @@ import java.time.*;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 
-@Service("zakupkiParser615Fz")
+@Service("Law615")
 public class ZakupkiParser615Fz implements ZakupkiParser {
     private static final Logger logger = LoggerFactory.getLogger(ZakupkiParser615Fz.class);
     private static final String UIN_SELECTOR = "span[class=navBreadcrumb__text]";
