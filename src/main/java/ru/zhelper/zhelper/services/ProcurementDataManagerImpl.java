@@ -112,13 +112,15 @@ public class ProcurementDataManagerImpl implements ProcurementDataManager {
 		// 5 = page size, 20 = page number
 		Pageable pageable = PageRequest.of(5, 20);
 		// TODO Auto-generated method stub
-		return null;
+		return pageable;
 	}
 
 	@Override
 	public Pageable getPageableListOfCreatedBeforeDate(LocalDate date) {
+		// 5 = page size, 20 = page number
+		Pageable pageable = PageRequest.of(5, 20);
 		// TODO Auto-generated method stub
-		return null;
+		return pageable;
 	}
 
 	@Override

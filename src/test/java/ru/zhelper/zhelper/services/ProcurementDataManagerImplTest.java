@@ -6,10 +6,11 @@ import java.math.BigDecimal;
 import java.util.List;
 
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mock;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.domain.Page;
 import org.springframework.test.context.ActiveProfiles;
@@ -18,6 +19,7 @@ import org.springframework.test.context.jdbc.Sql;
 import org.springframework.transaction.annotation.Transactional;
 
 import ru.zhelper.zhelper.models.Procurement;
+import ru.zhelper.zhelper.repository.ProcurementRepo;
 import ru.zhelper.zhelper.services.exceptions.DataManagerException;
 
 @ActiveProfiles("test")
@@ -26,8 +28,10 @@ import ru.zhelper.zhelper.services.exceptions.DataManagerException;
 @TestPropertySource(locations="classpath:test.properties")
 class ProcurementDataManagerImplTest  {
 
-	@Autowired
-	private ProcurementDataManagerImpl procurementDataManager;
+	private static ProcurementDataManagerImpl procurementDataManager;
+	
+	@Mock
+	private static ProcurementRepo repository;
 	
 	private static final Logger LOGGER = LoggerFactory.getLogger(ProcurementDataManagerImplTest.class);
 	
@@ -40,6 +44,12 @@ class ProcurementDataManagerImplTest  {
 	
 	private final static String DISPLAY_SAVED_ID = "Saved procurement has natively generated id: {}";
 	private final static String EXCEPTION_NOT_RECEIVED = "Exception not received: ";
+	
+	@BeforeEach
+	void init() {
+		procurementDataManager = new ProcurementDataManagerImpl();
+		procurementDataManager.setRepository(repository);
+	}
 	
 	/**
 	 * 1. Create test data and save it
@@ -118,6 +128,15 @@ class ProcurementDataManagerImplTest  {
 	@Test
 	@Transactional
 	void testDeleteById() {
+		
+		Page<Procurement> allProcurements = procurementDataManager.findAll();
+		
+		Assertions.assertEquals(2, allProcurements.stream().count());
+		
+		System.out.println(" >>>>>>>>>> ALL PROCUREMENTS START");
+		allProcurements.stream().forEach(System.out::println);
+		System.out.println(" >>><<<<<<< ALL PROCUREMENTS END");
+
 		procurementDataManager.deleteById(ID_OF_FIRST_PROCUREMENT);
 		
 		// Assertion - is it really deleted?
@@ -156,5 +175,18 @@ class ProcurementDataManagerImplTest  {
 				fail(EXCEPTION_NOT_RECEIVED+expectedMessage);
 			}
 		}
+	}
+	
+	@Test
+	@Transactional
+	void testFindAll() {
+		
+		Page<Procurement> allProcurements = procurementDataManager.findAll();
+		
+		Assertions.assertEquals(2, allProcurements.stream().count());
+		
+		System.out.println(" >>>>>>>>>> ALL PROCUREMENTS START");
+		allProcurements.stream().forEach(System.out::println);
+		System.out.println(" >>><<<<<<< ALL PROCUREMENTS END");
 	}
 }
