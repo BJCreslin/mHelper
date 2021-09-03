@@ -9,17 +9,23 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import ru.zhelper.zhelper.models.Procurement;
 import ru.zhelper.zhelper.models.ProcurementType;
+import ru.zhelper.zhelper.services.exceptions.BadDataParsingException;
+import ru.zhelper.zhelper.services.exceptions.BadRequest;
 import ru.zhelper.zhelper.services.parsers_dispatcher.parser.ZakupkiParser;
 import ru.zhelper.zhelper.services.validator.URLValidator;
 
 import java.util.HashMap;
 import java.util.Map;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+
 @SpringBootTest
 @ActiveProfiles("ServiceTest")
 class CentralDispatcherTest {
     private static final String LAW_44_PARSER = "Law44";
     private static final String LAW_615_PARSER = "Law615";
+    private static final String TEST_THROW = "Test throw";
     @Mock
     private URLValidator validator;
     @Mock
@@ -73,4 +79,49 @@ class CentralDispatcherTest {
         Mockito.verify(parser).parse(url);
         Assertions.assertEquals(procurement, procurementFromDispatcher);
     }
+
+    @ParameterizedTest
+    @ValueSource(strings = {
+            "https://zakupki.gov.ru/epz/order/notice/ea615/view/common-info.html?regNumber=203950000012101127",
+            "https://zakupki.gov.ru/epz/order/notice/po615/view/common-info.html?regNumber=011020000322100015"
+    })
+    void givenUrlWithBadProcurement_thenGetFromUrl_getException(String url) {
+        Mockito.when(validator.isValidUrl(url)).thenReturn(true);
+        Mockito.when(validator.getProcurementType(url)).thenReturn(ProcurementType.LAW_615);
+        Mockito.when(parser.parse(url)).thenThrow(new BadDataParsingException(TEST_THROW, null));
+        Map<String, ZakupkiParser> parsers = new HashMap<>();
+        parsers.put(LAW_44_PARSER, parser);
+        parsers.put(LAW_615_PARSER, parser);
+        dispatcher = new CentralDispatcher(parsers, validator);
+        Exception exception = assertThrows(BadRequest.class, () -> {
+            dispatcher.getFromUrl(url);
+        });
+        assertEquals(BadRequest.class, exception.getClass());
+        Mockito.verify(validator).isValidUrl(url);
+        Mockito.verify(validator).getProcurementType(url);
+        Mockito.verify(parser).parse(url);
+    }
+
+    @ParameterizedTest
+    @ValueSource(strings = {
+            "https://zakupki.gov.ru/epz/order/notice/ea615/view/common-info.html?regNumber=203950000012101127",
+            "https://zakupki.gov.ru/epz/order/notice/po615/view/common-info.html?regNumber=011020000322100015"
+    })
+    void givenUrlWithBadUrl_thenGetFromUrl_getException(String url) {
+        Mockito.when(validator.isValidUrl(url)).thenReturn(false);
+        Mockito.when(validator.getProcurementType(url)).thenReturn(ProcurementType.LAW_615);
+        Mockito.when(parser.parse(url)).thenThrow(new BadDataParsingException(TEST_THROW, null));
+        Map<String, ZakupkiParser> parsers = new HashMap<>();
+        parsers.put(LAW_44_PARSER, parser);
+        parsers.put(LAW_615_PARSER, parser);
+        dispatcher = new CentralDispatcher(parsers, validator);
+        Exception exception = assertThrows(BadRequest.class, () -> {
+            dispatcher.getFromUrl(url);
+        });
+        assertEquals(BadRequest.class, exception.getClass());
+        Mockito.verify(validator).isValidUrl(url);
+        Mockito.verify(validator, Mockito.times(0)).getProcurementType(url);
+        Mockito.verify(parser, Mockito.times(0)).parse(url);
+    }
+
 }

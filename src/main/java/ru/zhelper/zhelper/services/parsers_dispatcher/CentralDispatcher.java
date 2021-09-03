@@ -51,7 +51,7 @@ public class CentralDispatcher implements Dispatcher {
             }
         } catch (BadDataParsingException exception) {
             logger.error(ERROR_PARSING, law, exception);
-            throw new BadDataParsingException(ERROR_PARSING, exception);
+            throw new BadRequest(ERROR_PARSING, exception);
         }
         logger.error(PARSER_NOT_FOUND);
         throw new BadRequest(PARSER_NOT_FOUND);
