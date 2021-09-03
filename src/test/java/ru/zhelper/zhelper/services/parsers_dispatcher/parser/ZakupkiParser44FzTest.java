@@ -1,4 +1,4 @@
-package ru.zhelper.zhelper.services.parser;
+package ru.zhelper.zhelper.services.parsers_dispatcher.parser;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -9,7 +9,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import ru.zhelper.zhelper.models.ProcedureType;
 import ru.zhelper.zhelper.models.Stage;
 import ru.zhelper.zhelper.services.exceptions.BadDataParsingException;
-import ru.zhelper.zhelper.services.parser.ZakupkiParser44Fz;
 
 import java.io.File;
 import java.io.IOException;

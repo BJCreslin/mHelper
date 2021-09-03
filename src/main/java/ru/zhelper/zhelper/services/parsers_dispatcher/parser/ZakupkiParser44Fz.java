@@ -1,4 +1,4 @@
-package ru.zhelper.zhelper.services.parser;
+package ru.zhelper.zhelper.services.parsers_dispatcher.parser;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -7,7 +7,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import ru.zhelper.zhelper.models.ProcedureType;
 import ru.zhelper.zhelper.models.Procurement;
-import ru.zhelper.zhelper.models.ProcurementType;
 import ru.zhelper.zhelper.models.Stage;
 import ru.zhelper.zhelper.services.exceptions.BadDataParsingException;
 

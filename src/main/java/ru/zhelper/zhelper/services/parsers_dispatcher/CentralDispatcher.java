@@ -7,7 +7,7 @@ import ru.zhelper.zhelper.models.Procurement;
 import ru.zhelper.zhelper.models.ProcurementType;
 import ru.zhelper.zhelper.services.exceptions.BadDataParsingException;
 import ru.zhelper.zhelper.services.exceptions.BadRequest;
-import ru.zhelper.zhelper.services.parser.ZakupkiParser;
+import ru.zhelper.zhelper.services.parsers_dispatcher.parser.ZakupkiParser;
 import ru.zhelper.zhelper.services.validator.URLValidator;
 
 import java.util.Map;

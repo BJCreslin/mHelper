@@ -1,4 +1,4 @@
-package ru.zhelper.zhelper.services.parser;
+package ru.zhelper.zhelper.services.parsers_dispatcher.parser;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
