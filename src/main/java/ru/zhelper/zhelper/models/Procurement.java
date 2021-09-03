@@ -9,7 +9,6 @@ import org.hibernate.annotations.Type;
 
 import javax.persistence.*;
 import java.io.Serializable;
-
 import java.math.BigDecimal;
 import java.net.URL;
 import java.time.LocalDate;
@@ -25,7 +24,7 @@ public class Procurement implements Serializable {
     //Что означает поле
     //Где можно найти по ФЗ №44
     //и по ФЗ №223
-    private static final long serialVersionUID = -3159634854548811691L;
+    private static final long serialVersionUID = 8376509998615282286L;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -104,7 +103,7 @@ public class Procurement implements Serializable {
     //ОБЩАЯ ИНФОРМАЦИЯ О ЗАКУПКЕ -> Наименование объекта закупки
     //ОБЩИЕ СВЕДЕНИЯ О ЗАКУПКЕ -> Наименование закупки
     @Lob
-    @Column( length = 100000)
+    @Column(length = 100000)
     @Type(type = "org.hibernate.type.TextType")
     private String objectOf;
 
@@ -116,4 +115,12 @@ public class Procurement implements Serializable {
     //Поле нужно чтобы отслеживать необходимость обновить данные
     @Column
     private LocalDate dateTimeLastUpdated;
+
+    //Дата размещения процедуры
+    @Column
+    private LocalDate dateOfPlacement;
+
+    //Дата и время аукциона
+    @Column
+    private ZonedDateTime dateOfAuction;
 }
