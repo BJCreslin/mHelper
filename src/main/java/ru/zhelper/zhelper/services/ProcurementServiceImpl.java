@@ -5,22 +5,22 @@ import org.springframework.stereotype.Service;
 import ru.zhelper.zhelper.models.Procurement;
 import ru.zhelper.zhelper.models.dto.ProcurementAddress;
 import ru.zhelper.zhelper.repository.ProcurementRepo;
-import ru.zhelper.zhelper.services.parsers_dispatcher.parser.ZakupkiParser;
+import ru.zhelper.zhelper.services.parsers_dispatcher.Dispatcher;
 
 @Service
 public class ProcurementServiceImpl implements ProcurementService {
-    private final ZakupkiParser parser;
+    private final Dispatcher dispatcher;
     private final ProcurementRepo repository;
 
-    public ProcurementServiceImpl(ZakupkiParser parser, ProcurementRepo repository) {
-        this.parser = parser;
+    public ProcurementServiceImpl(Dispatcher dispatcher, ProcurementRepo repository) {
+        this.dispatcher = dispatcher;
         this.repository = repository;
     }
 
 
     @Override
     public void action(ProcurementAddress procurementAddress) {
-        Procurement procurement = parser.parse(procurementAddress.getAddress());
+        Procurement procurement = dispatcher.getFromUrl(procurementAddress.getAddress());
         Procurement procurementFromDB = repository.getByUin(procurement.getUin());
         if (procurementFromDB == null) {
             repository.save(procurement);
