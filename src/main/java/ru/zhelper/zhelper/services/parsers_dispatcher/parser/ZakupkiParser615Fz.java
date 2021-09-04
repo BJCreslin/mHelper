@@ -1,4 +1,4 @@
-package ru.zhelper.zhelper.services.parser;
+package ru.zhelper.zhelper.services.parsers_dispatcher.parser;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -19,7 +19,7 @@ import java.time.*;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 
-@Service("zakupkiParser615Fz")
+@Service("Law615")
 public class ZakupkiParser615Fz implements ZakupkiParser {
     private static final Logger logger = LoggerFactory.getLogger(ZakupkiParser615Fz.class);
     private static final String UIN_SELECTOR = "span[class=navBreadcrumb__text]";
@@ -34,7 +34,7 @@ public class ZakupkiParser615Fz implements ZakupkiParser {
     private static final String CONTRACT_SECURE_SELECTOR = "span[class=section__title]:contains(Размер обеспечения исполнения обязательств по договору)";
     private static final String OBJECT_OF_SELECTOR = "span[class=section__title]:contains(Наименование закупки)";
     private static final String LAW_SELECTOR = "div[class=cardMainInfo__title d-flex text-truncate]";
-    private static final String TIME_ZONE_SELECTOR = "span[class=timeZoneName]";
+    private static final String TIME_ZONE_SELECTOR = "div[class=time-zone__value]";
     private static final String NUMBER_TO_REPLACE = "№ ";
     private static final String REPLACEMENT = "";
     private static final String START_LAW_TO_REPLACE = "ПП РФ ";
@@ -64,9 +64,8 @@ public class ZakupkiParser615Fz implements ZakupkiParser {
     private static final String DATE_TIME_FORMATTER = "dd.MM.yyyy HH:mm";
     private static final String USER_AGENT = "Mozilla/5.0 (Linux; Android 6.0; Nexus 5 Build/MRA58N) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.88 Mobile Safari/537.36";
     private static final String UTC_ZONE = "UTC";
-    private static final String MSK_WITH_BKT="(МСК" ;
-    private static final String BKT=")" ;
-    private static final int MOSCOW_OFFSET_FROM_UTC = 3;
+    private static final String TIME_SEPARATOR = "\\(UTC";
+    private static final String BKT = ")";
 
     @Override
     public Procurement parse(String url) {
@@ -80,19 +79,19 @@ public class ZakupkiParser615Fz implements ZakupkiParser {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        Procurement procurement = new Procurement();
-        procurement.setUin(getUin(body));
-        procurement.setStage(getStage(body));
-        procurement.setFzNumber(getFzNumber(body));
-        procurement.setApplicationDeadline(getApplicationDeadline(body));
-        procurement.setContractPrice(getContractPrice(body));
-        procurement.setProcedureType(getProcedureType(body));
-        procurement.setPublisherName(getPublisherName(body));
-        procurement.setRestrictions(getRestrictions(body));
-        procurement.setLinkOnPlacement(getLinkOnPlacement(body));
-        procurement.setApplicationSecure(getApplicationSecure(body));
-        procurement.setContractSecure(getContractSecure(body));
-        procurement.setObjectOf(getObjectOf(body));
+        Procurement procurement = Procurement.builder().
+                uin(getUin(body)).
+                stage(getStage(body)).
+                fzNumber(getFzNumber(body)).
+                applicationDeadline(getApplicationDeadline(body)).
+                contractPrice(getContractPrice(body)).
+                procedureType(getProcedureType(body)).
+                publisherName(getPublisherName(body)).
+                restrictions(getRestrictions(body)).
+                linkOnPlacement(getLinkOnPlacement(body)).
+                applicationSecure(getApplicationSecure(body)).
+                contractSecure(getContractSecure(body)).
+                objectOf(getObjectOf(body)).build();
         // Нет на странице даты последнего обновления, берем текущюю
         procurement.setLastUpdatedFromEIS(LocalDate.now());
         procurement.setDateTimeLastUpdated(LocalDate.now());
@@ -182,7 +181,7 @@ public class ZakupkiParser615Fz implements ZakupkiParser {
         try {
             String textDate = body.select(DEADLINE_SELECTOR).
                     first().siblingElements().first().html().split(SPAN_SEPARATOR)[0];
-            ZoneId zoneId = ZoneId.ofOffset(UTC_ZONE, getTimeZone(getOffsetTimeZoneFromUTC(body)));
+            ZoneId zoneId = ZoneId.ofOffset(UTC_ZONE, getTimeZone(body));
             ZonedDateTime zonedDateTime = ZonedDateTime.of(LocalDateTime.parse(textDate, formatter), zoneId);
             return zonedDateTime;
         } catch (NullPointerException | DateTimeParseException exception) {
@@ -224,11 +223,11 @@ public class ZakupkiParser615Fz implements ZakupkiParser {
                 replace(SPACE, REPLACEMENT).replace(COMMA, DOT).replace(RUSSIAN_ROUBLE, REPLACEMENT);
     }
 
-    protected String getOffsetTimeZoneFromUTC(Element body) {
-        return body.select(TIME_ZONE_SELECTOR).first().text().replace(MSK_WITH_BKT, REPLACEMENT).replace(BKT, REPLACEMENT);
-    }
-
-    protected ZoneOffset getTimeZone(String offSet) {
-        return ZoneOffset.ofHours(MOSCOW_OFFSET_FROM_UTC + Integer.parseInt(offSet));
+    protected ZoneOffset getTimeZone(Element body) {
+        String offSet = body.select(TIME_ZONE_SELECTOR).
+                first().text().
+                split(TIME_SEPARATOR)[1].
+                replace(BKT, REPLACEMENT);
+        return ZoneOffset.ofHours(Integer.parseInt(offSet));
     }
 }
