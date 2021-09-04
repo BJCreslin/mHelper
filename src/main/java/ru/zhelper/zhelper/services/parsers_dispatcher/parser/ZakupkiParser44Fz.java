@@ -1,9 +1,10 @@
-package ru.zhelper.zhelper.services.parser;
+package ru.zhelper.zhelper.services.parsers_dispatcher.parser;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Service;
 import ru.zhelper.zhelper.models.ProcedureType;
 import ru.zhelper.zhelper.models.Procurement;
 import ru.zhelper.zhelper.models.Stage;
@@ -20,6 +21,7 @@ import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 
+@Service("Law44")
 public class ZakupkiParser44Fz implements ZakupkiParser {
     private static final Logger LOGGER = LoggerFactory.getLogger(ZakupkiParser44Fz.class);
     private static final String STAGE_SELECTOR = "span[class=cardMainInfo__state distancedText]";
