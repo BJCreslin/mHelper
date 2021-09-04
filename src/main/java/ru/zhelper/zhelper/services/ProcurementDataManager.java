@@ -9,7 +9,6 @@ import org.springframework.stereotype.Repository;
 
 import ru.zhelper.zhelper.models.Procurement;
 
-@Repository
 public interface ProcurementDataManager {
     
     Procurement loadById(Long id);
