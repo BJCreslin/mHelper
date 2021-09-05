@@ -1,8 +1,8 @@
 package ru.zhelper.zhelper.services.TelegramBotService;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Component;
+import org.springframework.context.annotation.Lazy;
+import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
@@ -23,7 +23,7 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 
-@Component
+@Service
 public class TelegramBotServiceImpl extends TelegramLongPollingBot implements TelegramBotService {
 
     private static final String TEMP_ACTIVATE_KEY = "a12345a";
@@ -43,7 +43,7 @@ public class TelegramBotServiceImpl extends TelegramLongPollingBot implements Te
     private static final String PROCESSING_IS_NOT_WORKING_YET = "Обработка этого типа закупок пока не работает!";
     private static final String SENT_FOR_PROCESSING = "Закупка отправлена в обработку";
 
-    private final HashSet<Long> verifiedUsers = new HashSet<>();
+    private final HashSet<Long> verifiedChatId = new HashSet<>();
 
     private final String username;
     private final String token;
@@ -51,11 +51,10 @@ public class TelegramBotServiceImpl extends TelegramLongPollingBot implements Te
     private final ProcurementService  procurementService;
     private final URLValidator urlValidator;
 
-    @Autowired
     public TelegramBotServiceImpl(@Value("${telegram.bot.username}") String username,
                                   @Value("${telegram.bot.token}") String token,
                                   ProcurementRepo procurementRepo,
-                                  ProcurementService procurementService,
+                                  @Lazy ProcurementService procurementService,
                                   URLValidator urlValidator) {
         this.username = username;
         this.token = token;
@@ -77,38 +76,51 @@ public class TelegramBotServiceImpl extends TelegramLongPollingBot implements Te
     @Override
     public void onUpdateReceived(Update update) {
         Message message = update.getMessage();
-        if (!this.checkTempActivateKey(message)) return;
-        this.commandProcessing(message);
+        if (this.commandProcessing(message)) return;
+        if (this.textProcessing(message)) return;
+        this.sendMsg(message, PROCESSING_IS_NOT_WORKING_YET);
     }
 
-    private void commandProcessing(final Message message) {
+    private boolean commandProcessing(final Message message) {
         if (message == null || !message.hasText()) {
-            return; //todo telegram exception
+            return false; //todo telegram exception
         }
         String text = message.getText().trim();
         if (text.startsWith(COMMAND_KEY)) {
-            return;
+            this.checkTempActivateKey(message);
+            return true;
+        }
+        if (!this.isVerifiedChatId(message.getChatId())) {
+            this.sendMsg(message, SAY_ENTER_ACTIVATION_KEY);
+            return true;
         }
         if (COMMAND_HELP.equals(text)) {
             this.sendMsg(message, SAY_HELP);
-            return;
+            return true;
         }
         if (COMMAND_ALL.equals(text)) {
             this.sendMsg(message, getAllProcurementsToString(procurementRepo));
-            return;
+            return true;
         }
+        return false;
+    }
+
+    private boolean textProcessing(Message message) {
+        if (message == null || !message.hasText()) {
+            return false; //todo telegram exception
+        }
+        String text = message.getText().trim();
         ProcurementType procurementType = urlValidator.getProcurementType(text);
-        if (procurementType != null) {
-            if (procurementType == ProcurementType.LAW_615) {
-                procurementService.action(ProcurementAddress.builder().address(text).build());
-                this.sendMsg(message, SENT_FOR_PROCESSING);
-                return;
-            } else {
-                this.sendMsg(message, PROCESSING_IS_NOT_WORKING_YET);
-                return;
-            }
+        if (procurementType == null) {
+            this.sendMsg(message, SAY_UNKNOWN_COMMAND);
+            return false;
         }
-        this.sendMsg(message, SAY_UNKNOWN_COMMAND);
+        if (procurementType == ProcurementType.LAW_615) {
+            procurementService.action(ProcurementAddress.builder().address(text).build());
+            this.sendMsg(message, SENT_FOR_PROCESSING);
+            return true;
+        }
+        return false;
     }
 
     private String getAllProcurementsToString(final ProcurementRepo repo) {
@@ -125,31 +137,66 @@ public class TelegramBotServiceImpl extends TelegramLongPollingBot implements Te
         return result.toString();
     }
 
-    private boolean checkTempActivateKey(final Message message) {
+    private void checkTempActivateKey(final Message message) {
         if (message == null || !message.hasText()) {
-            return false; //todo telegram exception
+            return; //todo telegram exception
         }
         String text = message.getText().trim();
         if (text.startsWith(COMMAND_KEY) && text.length() < 20) {
             String [] words = text.split(SPLIT_SYMBOL_FOR_COMMAND);
             if (words.length > 1 && words[1].equals(TEMP_ACTIVATE_KEY)) {
-                verifiedUsers.add(message.getFrom().getId());
+                verifiedChatId.add(message.getChatId());
                 this.sendMsg(message, SAY_SUCCESSFUL_ACTIVATION);
-                return true;
             } else {
                 this.sendMsg(message, SAY_ERROR_ACTIVATION);
-                return false;
             }
         }
-        if (!this.checkUsers(message.getFrom().getId())) {
-            this.sendMsg(message, SAY_ENTER_ACTIVATION_KEY);
-            return false;
-        }
-        return true;
     }
 
-    private boolean checkUsers(final Long userId) {
-        return verifiedUsers.contains(userId);
+    private boolean isVerifiedChatId(final long chatId) {
+        return verifiedChatId.contains(chatId);
+    }
+
+    public void sendMessageToAll(String text) {
+        if (!StringUtils.hasText(text)) {
+            return;//todo telegram exception
+        }
+        for (Long chatId : verifiedChatId) {
+            if (chatId == null) continue;
+            SendMessage sendMessage = SendMessage.builder()
+                    .chatId(String.valueOf(chatId))
+                    .text(text)
+                    .build();
+            sendMessage.enableMarkdown(true);
+            try {
+                this.setDefaultButtons(sendMessage);
+                this.execute(sendMessage);
+            } catch (TelegramApiException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    @Override
+    public boolean sendMessageToChatId(String text, long chatId) {
+        if (!StringUtils.hasText(text) || chatId < 1) {
+            return false;//todo telegram exception
+        }
+        if (!this.isVerifiedChatId(chatId)) return false;
+
+        SendMessage sendMessage = SendMessage.builder()
+                .chatId(String.valueOf(chatId))
+                .text(text)
+                .build();
+        sendMessage.enableMarkdown(true);
+        try {
+            this.setDefaultButtons(sendMessage);
+            this.execute(sendMessage);
+            return true;
+        } catch (TelegramApiException e) {
+            e.printStackTrace();
+        }
+        return false;
     }
 
     private void sendMsg(final Message message, final String text) {
@@ -165,14 +212,14 @@ public class TelegramBotServiceImpl extends TelegramLongPollingBot implements Te
         sendMessage.enableMarkdown(true);
 
         try {
-            this.setButtons(sendMessage);
+            this.setDefaultButtons(sendMessage);
             this.execute(sendMessage);
         } catch (TelegramApiException e) {
             e.printStackTrace();
         }
     }
 
-    private void setButtons(final SendMessage sendMessage) {
+    private void setDefaultButtons(final SendMessage sendMessage) {
         ReplyKeyboardMarkup replyKeyboardMarkup = ReplyKeyboardMarkup.builder()
                 .selective(true)
                 .resizeKeyboard(true)
