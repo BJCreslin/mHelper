@@ -5,7 +5,6 @@ import java.util.List;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.stereotype.Repository;
 
 import ru.zhelper.zhelper.models.Procurement;
 
@@ -21,9 +20,12 @@ public interface ProcurementDataManager {
 
 	List<Procurement> getListByFzNumber(Integer fzNumber);
 	
-	Page<Procurement> findAll();
-	
-	Pageable getPageableListByIdList(List<Integer> idList);
-	
-	Pageable getPageableListOfCreatedBeforeDate(LocalDate date);
+	Page<Procurement> findAll(Pageable pageable);
+
+	Page<Procurement> loadByIdList(List<Long> idsToLoad, Pageable pageable);
+
+	/**
+	 * https://stackoverflow.com/questions/45430202/spring-jpa-method-to-find-entities-with-beforeandequal-a-date-and-afterandequal/45430556
+	 */
+	Page<Procurement> loadCreatedBeforeDate(LocalDate date, Pageable pageable);
 }

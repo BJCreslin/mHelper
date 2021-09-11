@@ -1,5 +1,6 @@
 package ru.zhelper.zhelper.services;
 
+import java.time.LocalDate;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -9,9 +10,12 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.orm.jpa.JpaObjectRetrievalFailureException;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.jdbc.Sql;
+
 import ru.zhelper.zhelper.models.Procurement;
 import ru.zhelper.zhelper.repository.ProcurementRepo;
 import ru.zhelper.zhelper.services.exceptions.DataManagerException;
@@ -30,9 +34,9 @@ class ProcurementDataManagerImplTest {
 
     private ProcurementDataManagerImpl procurementDataManager;
 
-
     @Autowired
     private ProcurementRepo repository;
+
     private static final Logger LOGGER = LoggerFactory.getLogger(ProcurementDataManagerImplTest.class);
 
     private final static String MY_UIN = "202320000012100777";
@@ -41,6 +45,10 @@ class ProcurementDataManagerImplTest {
     private final static int FZ_NUMBER_OF_SAVED_PROCUREMENT = 615;
     private final static String DISPLAY_SAVED_ID = "Saved procurement has natively generated id: {}";
     private final static String EXCEPTION_NOT_RECEIVED = "Exception not received: ";
+
+	Pageable firstPageWithFiveElements = PageRequest.of(0, 5);
+	// 5 = page size, 20 = page number
+	Pageable secondPageWithFiveElements = PageRequest.of(5, 20);
 
     @BeforeAll
     void init() {
@@ -60,9 +68,7 @@ class ProcurementDataManagerImplTest {
         procurement.setUin("ABC124z34");
         procurement.setFzNumber(FZ_NUMBER_OF_SAVED_PROCUREMENT);
 
-        Procurement saved =
-                procurementDataManager.
-                        save(procurement);
+        Procurement saved = procurementDataManager.save(procurement);
 
         // Check the saved data
         Assertions.assertEquals(saved.getContractPrice(), procurement.getContractPrice());
@@ -80,11 +86,7 @@ class ProcurementDataManagerImplTest {
     @Transactional
     void testGetOfUpdate() {
 
-        Page<Procurement> allProcurements = procurementDataManager.findAll();
-
-        System.out.println(" >>>>>>>>>> ALL PROCUREMENTS START");
-        allProcurements.stream().forEach(System.out::println);
-        System.out.println(" >>><<<<<<< ALL PROCUREMENTS END");
+        Page<Procurement> allProcurements = procurementDataManager.findAll(firstPageWithFiveElements);
 
         Procurement second = procurementDataManager.loadById(allProcurements.get().findAny().get().getId());
         Assertions.assertEquals(FZ_NUMBER_OF_SAVED_PROCUREMENT, second.getFzNumber());
@@ -129,7 +131,7 @@ class ProcurementDataManagerImplTest {
     @Transactional
     void testDeleteById() {
 
-        Page<Procurement> allProcurements = procurementDataManager.findAll();
+        Page<Procurement> allProcurements = procurementDataManager.findAll(firstPageWithFiveElements);
 
         Assertions.assertEquals(2, allProcurements.stream().count());
 
@@ -174,12 +176,30 @@ class ProcurementDataManagerImplTest {
     @Transactional
     void testFindAll() {
 
-        Page<Procurement> allProcurements = procurementDataManager.findAll();
+        Page<Procurement> allProcurements = procurementDataManager.findAll(firstPageWithFiveElements);
 
         Assertions.assertEquals(2, allProcurements.stream().count());
 
         System.out.println(" >>>>>>>>>> ALL PROCUREMENTS START");
         allProcurements.stream().forEach(System.out::println);
         System.out.println(" >>><<<<<<< ALL PROCUREMENTS END");
+    }
+    
+    @Test
+    @Transactional
+    void testLoadByIdList() {
+    	Page<Procurement> result = procurementDataManager.loadByIdList(
+    			List.of(1L,2L,14L,15L,16L,17L), firstPageWithFiveElements);
+        Assertions.assertEquals(2, result.stream().count());
+    }
+    
+    @Test
+    @Transactional
+    void testLoadCreatedBeforeDate() {
+    	Page<Procurement> result = procurementDataManager.loadCreatedBeforeDate(
+    			LocalDate.of(2021, 2, 1), firstPageWithFiveElements);
+        Assertions.assertEquals(1, result.stream().count());
+        System.out.println(" >>>>>>>>>> PROCUREMENTS CREATED BEFORE 01.02.2021:");
+        result.stream().forEach(System.out::println);
     }
 }

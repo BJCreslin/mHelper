@@ -12,7 +12,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
@@ -24,10 +23,6 @@ import ru.zhelper.zhelper.services.exceptions.DataManagerException;
 public class ProcurementDataManagerImpl implements ProcurementDataManager {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(ProcurementDataManagerImpl.class);
-
-	Pageable firstPageWithFiveElements = PageRequest.of(0, 5);
-
-	Pageable secondPageWithFiveElements = PageRequest.of(1, 5);
 	
 	private ProcurementRepo repository;
     
@@ -53,6 +48,11 @@ public class ProcurementDataManagerImpl implements ProcurementDataManager {
 			throw new DataManagerException(msg, e);
 		}
 		return procurement;
+	}
+	
+	@Override
+	public Page<Procurement> loadByIdList(List<Long> idsToLoad, Pageable pageable) {
+		return repository.findByIdIn(idsToLoad, pageable);
 	}
 
 	@Override
@@ -107,25 +107,16 @@ public class ProcurementDataManagerImpl implements ProcurementDataManager {
 				.collect(Collectors.toList());
 	}
 
+	/**
+	 * https://stackoverflow.com/questions/45430202/spring-jpa-method-to-find-entities-with-beforeandequal-a-date-and-afterandequal/45430556
+	 */
 	@Override
-	public Pageable getPageableListByIdList(List<Integer> idList) {
-		// 5 = page size, 20 = page number
-		Pageable pageable = PageRequest.of(5, 20);
-		// TODO Auto-generated method stub
-		return pageable;
+	public Page<Procurement> loadCreatedBeforeDate(LocalDate date, Pageable pageable) {
+		return repository.findByLessThanDate(date, pageable);
 	}
 
 	@Override
-	public Pageable getPageableListOfCreatedBeforeDate(LocalDate date) {
-		// 5 = page size, 20 = page number
-		Pageable pageable = PageRequest.of(5, 20);
-		// TODO Auto-generated method stub
-		return pageable;
-	}
-
-	@Override
-	public Page<Procurement> findAll() {
-		Page<Procurement> allProcurementsSortedByName = repository.findAll(firstPageWithFiveElements);
-		return allProcurementsSortedByName;
+	public Page<Procurement> findAll(Pageable pageable) {
+		return repository.findAll(pageable);
 	}
 }
