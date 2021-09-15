@@ -1,6 +1,14 @@
 package ru.zhelper.zhelper.services;
 
+import static org.junit.jupiter.api.Assertions.fail;
+
+import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.List;
+import java.util.stream.Collectors;
+
+import javax.transaction.Transactional;
+
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -19,12 +27,6 @@ import org.springframework.test.context.jdbc.Sql;
 import ru.zhelper.zhelper.models.Procurement;
 import ru.zhelper.zhelper.repository.ProcurementRepo;
 import ru.zhelper.zhelper.services.exceptions.DataManagerException;
-
-import javax.transaction.Transactional;
-import java.math.BigDecimal;
-import java.util.List;
-
-import static org.junit.jupiter.api.Assertions.fail;
 
 @ActiveProfiles("test")
 @SpringBootTest
@@ -75,7 +77,9 @@ class ProcurementDataManagerImplTest {
         Assertions.assertEquals(saved.getUin(), procurement.getUin());
         Assertions.assertEquals(saved.getFzNumber(), procurement.getFzNumber());
 
-        LOGGER.info(DISPLAY_SAVED_ID, saved.getId());
+        if (LOGGER.isDebugEnabled()) {
+        	LOGGER.debug(DISPLAY_SAVED_ID, saved.getId());
+        }
     }
 
     /**
@@ -86,7 +90,7 @@ class ProcurementDataManagerImplTest {
     @Transactional
     void testGetOfUpdate() {
 
-        Page<Procurement> allProcurements = procurementDataManager.findAll(firstPageWithFiveElements);
+        Page<Procurement> allProcurements = procurementDataManager.loadAll(firstPageWithFiveElements);
 
         Procurement second = procurementDataManager.loadById(allProcurements.get().findAny().get().getId());
         Assertions.assertEquals(FZ_NUMBER_OF_SAVED_PROCUREMENT, second.getFzNumber());
@@ -99,13 +103,13 @@ class ProcurementDataManagerImplTest {
     }
 
     /**
-     * 4. Test getProcurementsByFzNumber()
+     * 4. Test loadProcurementsByFzNumber()
      */
     @Test
     @Transactional
-    void testGetProcurementsByFzNumber() {
+    void testLoadProcurementsByFzNumber() {
         Assertions.assertEquals(1,
-                procurementDataManager.getListByFzNumber(FZ_NUMBER_OF_SECOND_PROCUREMENT).size());
+                procurementDataManager.loadListByFzNumber(FZ_NUMBER_OF_SECOND_PROCUREMENT).size());
     }
 
     /**
@@ -116,12 +120,12 @@ class ProcurementDataManagerImplTest {
     @Test
     @Transactional
     void testDeleteAndCountRemaining() {
-        List<Procurement> foundList = procurementDataManager.getListByFzNumber(FZ_NUMBER_OF_SECOND_PROCUREMENT);
+        List<Procurement> foundList = procurementDataManager.loadListByFzNumber(FZ_NUMBER_OF_SECOND_PROCUREMENT);
         Assertions.assertEquals(1, foundList.size());
 
         procurementDataManager.delete(foundList.get(0));
         Assertions.assertEquals(0,
-                procurementDataManager.getListByFzNumber(FZ_NUMBER_OF_SECOND_PROCUREMENT).size());
+                procurementDataManager.loadListByFzNumber(FZ_NUMBER_OF_SECOND_PROCUREMENT).size());
     }
 
     /**
@@ -130,14 +134,9 @@ class ProcurementDataManagerImplTest {
     @Test
     @Transactional
     void testDeleteById() {
-
-        Page<Procurement> allProcurements = procurementDataManager.findAll(firstPageWithFiveElements);
-
+        Page<Procurement> allProcurements = procurementDataManager.loadAll(firstPageWithFiveElements);
         Assertions.assertEquals(2, allProcurements.stream().count());
-
-        System.out.println(" >>>>>>>>>> ALL PROCUREMENTS START");
         allProcurements.stream().forEach(System.out::println);
-        System.out.println(" >>><<<<<<< ALL PROCUREMENTS END");
 
         procurementDataManager.deleteById(allProcurements.get().findAny().get().getId());
 
@@ -174,22 +173,31 @@ class ProcurementDataManagerImplTest {
 
     @Test
     @Transactional
-    void testFindAll() {
-
-        Page<Procurement> allProcurements = procurementDataManager.findAll(firstPageWithFiveElements);
-
+    void testLoadAll() {
+        Page<Procurement> allProcurements = procurementDataManager.loadAll(firstPageWithFiveElements);
         Assertions.assertEquals(2, allProcurements.stream().count());
 
-        System.out.println(" >>>>>>>>>> ALL PROCUREMENTS START");
-        allProcurements.stream().forEach(System.out::println);
-        System.out.println(" >>><<<<<<< ALL PROCUREMENTS END");
+        if (LOGGER.isDebugEnabled()) {
+        	LOGGER.debug(" >>>>>>>>>> ALL PROCUREMENTS START");
+        	allProcurements.stream().forEach(System.out::println);
+        	LOGGER.debug(" >>>>>>>>>> ALL PROCUREMENTS START");
+        }
     }
     
     @Test
     @Transactional
     void testLoadByIdList() {
-    	Page<Procurement> result = procurementDataManager.loadByIdList(
-    			List.of(1L,2L,14L,15L,16L,17L), firstPageWithFiveElements);
+    	Page<Procurement> allProcurements = procurementDataManager.loadAll(firstPageWithFiveElements);
+        Assertions.assertEquals(2, allProcurements.stream().count());
+        // Get a collection of all the ids
+        List<Long> ids = allProcurements.stream()
+                                 .map(Procurement::getId).collect(Collectors.toList());
+        if (LOGGER.isInfoEnabled()) {
+        	LOGGER.info("----> ids: {}", ids);
+        }
+
+        Page<Procurement> result = procurementDataManager.loadByIdList(ids,
+        		firstPageWithFiveElements);
         Assertions.assertEquals(2, result.stream().count());
     }
     
@@ -199,7 +207,10 @@ class ProcurementDataManagerImplTest {
     	Page<Procurement> result = procurementDataManager.loadCreatedBeforeDate(
     			LocalDate.of(2021, 2, 1), firstPageWithFiveElements);
         Assertions.assertEquals(1, result.stream().count());
-        System.out.println(" >>>>>>>>>> PROCUREMENTS CREATED BEFORE 01.02.2021:");
+        
+        if (LOGGER.isDebugEnabled()) {
+        	LOGGER.debug(" >>>>>>>>>> PROCUREMENTS CREATED BEFORE 01.02.2021:");
+        }
         result.stream().forEach(System.out::println);
     }
 }

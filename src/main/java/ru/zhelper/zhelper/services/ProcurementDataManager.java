@@ -18,14 +18,11 @@ public interface ProcurementDataManager {
     
     void deleteById(Long idToDelete);
 
-	List<Procurement> getListByFzNumber(Integer fzNumber);
+	List<Procurement> loadListByFzNumber(Integer fzNumber);
 	
-	Page<Procurement> findAll(Pageable pageable);
+	Page<Procurement> loadAll(Pageable pageable);
 
 	Page<Procurement> loadByIdList(List<Long> idsToLoad, Pageable pageable);
 
-	/**
-	 * https://stackoverflow.com/questions/45430202/spring-jpa-method-to-find-entities-with-beforeandequal-a-date-and-afterandequal/45430556
-	 */
 	Page<Procurement> loadCreatedBeforeDate(LocalDate date, Pageable pageable);
 }
