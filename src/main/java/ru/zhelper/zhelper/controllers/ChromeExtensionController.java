@@ -12,7 +12,7 @@ import ru.zhelper.zhelper.services.exceptions.BadDataParsingException;
 import java.time.ZonedDateTime;
 
 @RestController
-@RequestMapping({"/api"})
+@RequestMapping({"/chrome"})
 @CrossOrigin
 public class ChromeExtensionController {
     private static final Logger logger = LoggerFactory.getLogger(ChromeExtensionController.class);
@@ -44,9 +44,10 @@ public class ChromeExtensionController {
         return ZonedDateTime.now().toString();
     }
 
-    @GetMapping("/")
+    @GetMapping("/code/")
     @ResponseStatus(HttpStatus.OK)
-    public String gProcurement() {
+    public String code(@RequestParam("code") Integer code) {
+
         return "dsdsds";
     }
 }
