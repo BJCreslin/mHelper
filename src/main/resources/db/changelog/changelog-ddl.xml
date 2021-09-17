@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                      http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.3.xsd">
+
+    <changeSet id="17092021-01" author="Alexander Kamyhin">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists tableName="users"/>
+            </not>
+        </preConditions>
+        <comment>Создание таблицы USERS</comment>
+        <sql>
+            CREATE TABLE users
+            (
+                id                                     SERIAL PRIMARY KEY,
+                username                               VARCHAR(30)  NOT NULL,
+                email                                  VARCHAR(50)  NOT NULL,
+                password                               VARCHAR(60)  NOT NULL,
+                telegramId                             VARCHAR(60)  NOT NULL,
+                is_activate                            BOOL         NOT NULL DEFAULT false,
+                is_subscription_email_notifications    BOOL         NOT NULL DEFAULT true,
+                is_subscription_telegram_notifications BOOL         NOT NULL DEFAULT true,
+                created_at                             TIMESTAMP(0) NOT NULL,
+                created_by                             INT          NOT NULL,
+                updated_at                             TIMESTAMP(0)
+            );
+
+            CREATE UNIQUE INDEX users_username_u_idx ON users (username);
+            CREATE UNIQUE INDEX users_email_u_idx ON users (email);
+            CREATE UNIQUE INDEX users_telegramId_u_idx ON users (telegramId);
+
+            COMMENT ON TABLE users IS 'Список пользователей';
+
+            COMMENT ON COLUMN users.id IS 'Уникальный идентификатор';
+            COMMENT ON COLUMN users.username IS 'Имя пользователя';
+            COMMENT ON COLUMN users.email IS 'Email пользователя';
+            COMMENT ON COLUMN users.password IS 'Пароль';
+            COMMENT ON COLUMN users.telegramId IS 'Telegram user id';
+            COMMENT ON COLUMN users.is_activate IS 'Активация учетной записи пользователя';
+            COMMENT ON COLUMN users.is_subscription_email_notifications IS 'Подписка на уведомления через email';
+            COMMENT ON COLUMN users.is_subscription_telegram_notifications IS 'Подписка на уведомления через telegram';
+            COMMENT ON COLUMN users.created_at IS 'Дата создания записи';
+            COMMENT ON COLUMN users.created_by IS 'ID пользователя создавшего запись';
+            COMMENT ON COLUMN users.updated_at IS 'Дата изменения записи';
+        </sql>
+    </changeSet>
+
+    <changeSet id="17092021-02" author="Alexander Kamyhin">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists tableName="roles"/>
+            </not>
+        </preConditions>
+        <comment>Создание таблицы ROLES</comment>
+        <sql>
+            CREATE TABLE roles
+            (
+                user_id INT REFERENCES users (id),
+                role    VARCHAR(50) NOT NULL
+            );
+
+            COMMENT ON TABLE roles IS 'Список ролей пользователей';
+
+            COMMENT ON COLUMN roles.user_id IS 'ID пользователя';
+            COMMENT ON COLUMN roles.role IS 'Имя роли';
+        </sql>
+    </changeSet>
+
+    <changeSet id="17092021-03" author="Alexander Kamyhin">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists tableName="procurements"/>
+            </not>
+        </preConditions>
+        <comment>Создание таблицы PROCUREMENTS</comment>
+        <sql>
+            CREATE TABLE procurements
+            (
+                id                     SERIAL PRIMARY KEY,
+                stage                  VARCHAR(50)    NOT NULL,
+                uin                    VARCHAR(30)    NOT NULL,
+                fz_number              INT            NOT NULL,
+                application_deadline   TIMESTAMP(0)   NOT NULL,
+                contract_price         NUMERIC(19, 2) NOT NULL,
+                procedure_type         VARCHAR(50)    NOT NULL,
+                publisher_name         VARCHAR(500)   NOT NULL,
+                restrictions           VARCHAR(4000)  NOT NULL,
+                link_on_placement      VARCHAR(254)   NOT NULL,
+                application_secure     VARCHAR(50)    NOT NULL,
+                contract_secure        VARCHAR(50)    NOT NULL,
+                object_of              VARCHAR(10000) NOT NULL,
+                last_updated_from_eis  TIMESTAMP(0),
+                date_time_last_updated TIMESTAMP(0),
+                date_of_placement      TIMESTAMP(0),
+                date_of_auction        TIMESTAMP(0)
+            );
+
+            CREATE UNIQUE INDEX users_uin_u_idx ON procurements (uin);
+
+            COMMENT ON TABLE procurements IS 'Список закупок';
+
+            COMMENT ON COLUMN procurements.id IS 'Уникальный идентификатор';
+            COMMENT ON COLUMN procurements.stage IS 'Этап закупки';
+            COMMENT ON COLUMN procurements.uin IS 'Уникальный идентификатор закупки';
+            COMMENT ON COLUMN procurements.fz_number IS 'Номер федерального закона';
+            COMMENT ON COLUMN procurements.application_deadline IS 'Дата и время окончания срока подачи заявок';
+            COMMENT ON COLUMN procurements.contract_price IS 'Начальная (максимальная) цена договора';
+            COMMENT ON COLUMN procurements.procedure_type IS 'Тип закупки';
+            COMMENT ON COLUMN procurements.publisher_name IS 'Наименование организации, осуществляющей размещение заявки';
+            COMMENT ON COLUMN procurements.restrictions IS 'Ограничения и запреты';
+            COMMENT ON COLUMN procurements.link_on_placement IS 'Ссылка на закупку на площадке размещения';
+            COMMENT ON COLUMN procurements.application_secure IS 'Обеспечение заявки';
+            COMMENT ON COLUMN procurements.contract_secure IS 'Обеспечение контракта';
+            COMMENT ON COLUMN procurements.object_of IS 'Наименование закупки';
+            COMMENT ON COLUMN procurements.last_updated_from_eis IS 'Дата размещения текущей редакции извещения';
+            COMMENT ON COLUMN procurements.date_time_last_updated IS '';
+            COMMENT ON COLUMN procurements.date_of_placement IS 'Дата размещения процедуры';
+            COMMENT ON COLUMN procurements.date_of_auction IS 'Дата и время аукциона';
+        </sql>
+    </changeSet>
+
+</databaseChangeLog>
