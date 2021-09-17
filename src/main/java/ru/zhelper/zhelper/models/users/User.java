@@ -2,7 +2,6 @@ package ru.zhelper.zhelper.models.users;
 
 import lombok.Data;
 import org.hibernate.annotations.Type;
-import org.hibernate.validator.constraints.UniqueElements;
 
 import javax.persistence.*;
 import javax.validation.constraints.Email;
@@ -27,7 +26,6 @@ public class User {
 
     @NotBlank(message = "Name is mandatory")
     @Size(max = 30)
-    @UniqueElements
     private String username;
 
     @Size(max = 50)
