@@ -45,7 +45,6 @@ class ProcurementDataManagerImplTest {
     private final static Long ID_NON_EXISTING_PROCUREMENT = 8765L;
     private final static int FZ_NUMBER_OF_SECOND_PROCUREMENT = 44;
     private final static int FZ_NUMBER_OF_SAVED_PROCUREMENT = 615;
-    private final static String DISPLAY_SAVED_ID = "Saved procurement has natively generated id: {}";
     private final static String EXCEPTION_NOT_RECEIVED = "Exception not received: ";
 
 	Pageable firstPageWithFiveElements = PageRequest.of(0, 5);
@@ -59,9 +58,6 @@ class ProcurementDataManagerImplTest {
 
     }
 
-    /**
-     * 1. Create test data and save it
-     */
     @Test
     @Transactional
     void testSave() {
@@ -76,20 +72,11 @@ class ProcurementDataManagerImplTest {
         Assertions.assertEquals(saved.getContractPrice(), procurement.getContractPrice());
         Assertions.assertEquals(saved.getUin(), procurement.getUin());
         Assertions.assertEquals(saved.getFzNumber(), procurement.getFzNumber());
-
-        if (LOGGER.isDebugEnabled()) {
-        	LOGGER.debug(DISPLAY_SAVED_ID, saved.getId());
-        }
     }
 
-    /**
-     * 2. Get procurement with ID 2
-     * 3. Update some data of second procurement
-     */
     @Test
     @Transactional
     void testGetOfUpdate() {
-
         Page<Procurement> allProcurements = procurementDataManager.loadAll(firstPageWithFiveElements);
 
         Procurement second = procurementDataManager.loadById(allProcurements.get().findAny().get().getId());
@@ -102,9 +89,6 @@ class ProcurementDataManagerImplTest {
         Assertions.assertEquals(FZ_NUMBER_OF_SAVED_PROCUREMENT, updated.getFzNumber());
     }
 
-    /**
-     * 4. Test loadProcurementsByFzNumber()
-     */
     @Test
     @Transactional
     void testLoadProcurementsByFzNumber() {
@@ -113,24 +97,21 @@ class ProcurementDataManagerImplTest {
     }
 
     /**
-     * 5. Test deletion of object (not by id)
-     * 6. After deletion test getProcurementsByFzNumber() again.
-     * Search by previous ID should not return a result since object was deleted.
+     * First call loadProcurementsByFzNumber() to receive 1 result.
+     * Then test deletion of object (not by id).
+     * After deletion call loadProcurementsByFzNumber() again.
+     * Search should deliver 0 results since object was deleted.
      */
     @Test
     @Transactional
     void testDeleteAndCountRemaining() {
         List<Procurement> foundList = procurementDataManager.loadListByFzNumber(FZ_NUMBER_OF_SECOND_PROCUREMENT);
         Assertions.assertEquals(1, foundList.size());
-
         procurementDataManager.delete(foundList.get(0));
         Assertions.assertEquals(0,
                 procurementDataManager.loadListByFzNumber(FZ_NUMBER_OF_SECOND_PROCUREMENT).size());
     }
 
-    /**
-     * 7. Delete a procurement by id and try to load it (-> Exception)
-     */
     @Test
     @Transactional
     void testDeleteById() {
@@ -176,12 +157,6 @@ class ProcurementDataManagerImplTest {
     void testLoadAll() {
         Page<Procurement> allProcurements = procurementDataManager.loadAll(firstPageWithFiveElements);
         Assertions.assertEquals(2, allProcurements.stream().count());
-
-        if (LOGGER.isDebugEnabled()) {
-        	LOGGER.debug(" >>>>>>>>>> ALL PROCUREMENTS START");
-        	allProcurements.stream().forEach(System.out::println);
-        	LOGGER.debug(" >>>>>>>>>> ALL PROCUREMENTS START");
-        }
     }
     
     @Test
@@ -207,10 +182,5 @@ class ProcurementDataManagerImplTest {
     	Page<Procurement> result = procurementDataManager.loadCreatedBeforeDate(
     			LocalDate.of(2021, 2, 1), firstPageWithFiveElements);
         Assertions.assertEquals(1, result.stream().count());
-        
-        if (LOGGER.isDebugEnabled()) {
-        	LOGGER.debug(" >>>>>>>>>> PROCUREMENTS CREATED BEFORE 01.02.2021:");
-        }
-        result.stream().forEach(System.out::println);
     }
 }
