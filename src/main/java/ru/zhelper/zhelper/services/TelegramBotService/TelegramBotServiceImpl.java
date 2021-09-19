@@ -16,6 +16,7 @@ import ru.zhelper.zhelper.models.ProcurementType;
 import ru.zhelper.zhelper.models.dto.ProcurementAddress;
 import ru.zhelper.zhelper.repository.ProcurementRepo;
 import ru.zhelper.zhelper.services.ProcurementService;
+import ru.zhelper.zhelper.services.exceptions.TelegramBotException;
 import ru.zhelper.zhelper.services.validator.URLValidator;
 
 import java.util.ArrayList;
@@ -30,8 +31,8 @@ public class TelegramBotServiceImpl extends TelegramLongPollingBot implements Te
     private static final String TEMP_ACTIVATE_KEY = "a12345a";
     private static final String SAY_HELP = "Я ваш помощник в закупках, всегда рад напомнить о ближайщих " +
             "закрывающихся позициях!";
-    private static final String SAY_UNKNOWN_COMMAND = "Неизвестная команда или ошибка в ссылке на закупку! Введите " + HELP +
-            " для получения справки.";
+    private static final String SAY_UNKNOWN_COMMAND = "Неизвестная команда или ошибка в ссылке на закупку! Введите "
+            + HELP + " для получения справки.";
     private static final String SAY_SUCCESSFUL_ACTIVATION = "Успешная активация!";
     private static final String SAY_ERROR_ACTIVATION = "Ошибка ввода ключа активации, введите ещё раз!";
     private static final String SAY_ENTER_ACTIVATION_KEY = "Введите ключ активации: " + KEY + " <ключ>";
@@ -78,27 +79,28 @@ public class TelegramBotServiceImpl extends TelegramLongPollingBot implements Te
         if (message == null || !message.hasText()) {
             return;
         }
-        if (message.getText().startsWith(START_SYMBOL_FOR_COMMAND) && this.commandProcessing(message)) return;
-        if (this.textProcessing(message)) return;
-        this.sendMsg(message, PROCESSING_IS_NOT_WORKING_YET);
+        if (message.getText().startsWith(START_SYMBOL_FOR_COMMAND) && commandProcessing(message))
+            return;
+        if (textProcessing(message)) return;
+        sendMsg(message, PROCESSING_IS_NOT_WORKING_YET);
     }
 
     private boolean commandProcessing(final Message message) {
         String text = message.getText().trim();
-        if (text.startsWith(KEY.toString())) {
-            this.checkTempActivateKey(message);
+        if (text.startsWith(KEY.getTitle())) {
+            checkTempActivateKey(message);
             return true;
         }
-        if (!this.isVerifiedChatId(message.getChatId())) {
-            this.sendMsg(message, SAY_ENTER_ACTIVATION_KEY);
+        if (!isVerifiedChatId(message.getChatId())) {
+            sendMsg(message, SAY_ENTER_ACTIVATION_KEY);
             return true;
         }
-        if (text.equals(HELP)) {
-            this.sendMsg(message, SAY_HELP);
+        if (text.equals(HELP.getTitle())) {
+            sendMsg(message, SAY_HELP);
             return true;
         }
-        if (text.equals(ALL)) {
-            this.sendMsg(message, getAllProcurementsToString());
+        if (text.equals(ALL.getTitle())) {
+            sendMsg(message, getAllProcurementsToString());
             return true;
         }
         return false;
@@ -108,12 +110,12 @@ public class TelegramBotServiceImpl extends TelegramLongPollingBot implements Te
         String text = message.getText().trim();
         ProcurementType procurementType = urlValidator.getProcurementType(text);
         if (procurementType == null) {
-            this.sendMsg(message, SAY_UNKNOWN_COMMAND);
+            sendMsg(message, SAY_UNKNOWN_COMMAND);
             return false;
         }
         if (procurementType == ProcurementType.LAW_615) {
-            this.procurementService.action(ProcurementAddress.builder().address(text).build());
-            this.sendMsg(message, SENT_FOR_PROCESSING);
+            procurementService.action(ProcurementAddress.builder().address(text).build());
+            sendMsg(message, SENT_FOR_PROCESSING);
             return true;
         }
         return false;
@@ -121,7 +123,7 @@ public class TelegramBotServiceImpl extends TelegramLongPollingBot implements Te
 
     private String getAllProcurementsToString() {
         StringBuilder result = new StringBuilder();
-        List<Procurement> procurements = this.procurementRepo.findAll();
+        List<Procurement> procurements = procurementRepo.findAll();
         if (!procurements.isEmpty()) {
             procurements.forEach(p -> result.append(String.format(
                     STRING_FORMAT_FOR_PROCUREMENTS,
@@ -134,17 +136,14 @@ public class TelegramBotServiceImpl extends TelegramLongPollingBot implements Te
     }
 
     private void checkTempActivateKey(final Message message) {
-        if (message == null || !message.hasText()) {
-            return; //todo telegram exception
-        }
         String text = message.getText().trim();
-        if (text.startsWith(KEY.toString()) && text.length() < 20) {
+        if (text.startsWith(KEY.getTitle()) && text.length() < 20) {
             String[] words = text.split(SPLIT_SYMBOL_FOR_COMMAND);
             if (words.length > 1 && words[1].equals(TEMP_ACTIVATE_KEY)) {
-                this.verifiedChatId.add(message.getChatId());
-                this.sendMsg(message, SAY_SUCCESSFUL_ACTIVATION);
+                verifiedChatId.add(message.getChatId());
+                sendMsg(message, SAY_SUCCESSFUL_ACTIVATION);
             } else {
-                this.sendMsg(message, SAY_ERROR_ACTIVATION);
+                sendMsg(message, SAY_ERROR_ACTIVATION);
             }
         }
     }
@@ -155,7 +154,7 @@ public class TelegramBotServiceImpl extends TelegramLongPollingBot implements Te
 
     public void sendMessageToAll(String text) {
         if (!StringUtils.hasText(text)) {
-            return;//todo telegram exception
+            throw new TelegramBotException("Error in sendMessageToAll method!");
         }
         for (Long chatId : verifiedChatId) {
             if (chatId == null) continue;
@@ -165,8 +164,8 @@ public class TelegramBotServiceImpl extends TelegramLongPollingBot implements Te
                     .build();
             sendMessage.enableMarkdown(true);
             try {
-                this.setDefaultButtons(sendMessage);
-                this.execute(sendMessage);
+                setDefaultButtons(sendMessage);
+                execute(sendMessage);
             } catch (TelegramApiException e) {
                 e.printStackTrace();
             }
@@ -176,9 +175,9 @@ public class TelegramBotServiceImpl extends TelegramLongPollingBot implements Te
     @Override
     public boolean sendMessageToChatId(String text, long chatId) {
         if (!StringUtils.hasText(text) || chatId < 1) {
-            return false;//todo telegram exception
+            throw new TelegramBotException("Error in sendMessageToChatId method!");
         }
-        if (!this.isVerifiedChatId(chatId)) return false;
+        if (!isVerifiedChatId(chatId)) return false;
 
         SendMessage sendMessage = SendMessage.builder()
                 .chatId(String.valueOf(chatId))
@@ -186,8 +185,8 @@ public class TelegramBotServiceImpl extends TelegramLongPollingBot implements Te
                 .build();
         sendMessage.enableMarkdown(true);
         try {
-            this.setDefaultButtons(sendMessage);
-            this.execute(sendMessage);
+            setDefaultButtons(sendMessage);
+            execute(sendMessage);
             return true;
         } catch (TelegramApiException e) {
             e.printStackTrace();
@@ -206,8 +205,8 @@ public class TelegramBotServiceImpl extends TelegramLongPollingBot implements Te
                 .build();
         sendMessage.enableMarkdown(true);
         try {
-            this.setDefaultButtons(sendMessage);
-            this.execute(sendMessage);
+            setDefaultButtons(sendMessage);
+            execute(sendMessage);
         } catch (TelegramApiException e) {
             e.printStackTrace();
         }
@@ -223,8 +222,8 @@ public class TelegramBotServiceImpl extends TelegramLongPollingBot implements Te
         List<KeyboardRow> keyboardRowList = new ArrayList<>();
         KeyboardRow keyboardFirstRow = new KeyboardRow();
 
-        keyboardFirstRow.add(new KeyboardButton(HELP.toString()));
-        keyboardFirstRow.add(new KeyboardButton(ALL.toString()));
+        keyboardFirstRow.add(new KeyboardButton(HELP.getTitle()));
+        keyboardFirstRow.add(new KeyboardButton(ALL.getTitle()));
 
         keyboardRowList.add(keyboardFirstRow);
         replyKeyboardMarkup.setKeyboard(keyboardRowList);
