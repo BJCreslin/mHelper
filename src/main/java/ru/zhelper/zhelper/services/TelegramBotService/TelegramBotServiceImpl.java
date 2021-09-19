@@ -1,5 +1,7 @@
 package ru.zhelper.zhelper.services.TelegramBotService;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
@@ -28,6 +30,7 @@ import static ru.zhelper.zhelper.services.TelegramBotService.TelegramCommandsEnu
 @Service
 public class TelegramBotServiceImpl extends TelegramLongPollingBot implements TelegramBotService {
 
+    private static final Logger logger = LoggerFactory.getLogger(TelegramBotServiceImpl.class);
     private static final String TEMP_ACTIVATE_KEY = "a12345a";
     private static final String SAY_HELP = "Я ваш помощник в закупках, всегда рад напомнить о ближайщих " +
             "закрывающихся позициях!";
@@ -42,6 +45,9 @@ public class TelegramBotServiceImpl extends TelegramLongPollingBot implements Te
     private static final String SAY_NO_PROCUREMENTS = "Нет закупок!";
     private static final String PROCESSING_IS_NOT_WORKING_YET = "Обработка этого типа закупок пока не работает!";
     private static final String SENT_FOR_PROCESSING = "Закупка отправлена в обработку";
+    private static final String ERROR_IN_SEND_MESSAGE_TO_ALL = "Error in sendMessageToAll method!";
+    private static final String ERROR_IN_SEND_MESSAGE_TO_CHAT_ID = "Error in sendMessageToChatId method!";
+    private static final String TELEGRAM_BOT_SERVICE = "TelegramBotService, message from userid = {}";
 
     private final HashSet<Long> verifiedChatId = new HashSet<>();
 
@@ -75,6 +81,9 @@ public class TelegramBotServiceImpl extends TelegramLongPollingBot implements Te
 
     @Override
     public void onUpdateReceived(Update update) {
+        if (logger.isDebugEnabled()) {
+            logger.debug(TELEGRAM_BOT_SERVICE, update.getMessage().getChatId());
+        }
         Message message = update.getMessage();
         if (message == null || !message.hasText()) {
             return;
@@ -154,7 +163,8 @@ public class TelegramBotServiceImpl extends TelegramLongPollingBot implements Te
 
     public void sendMessageToAll(String text) {
         if (!StringUtils.hasText(text)) {
-            throw new TelegramBotException("Error in sendMessageToAll method!");
+            logger.error(ERROR_IN_SEND_MESSAGE_TO_ALL);
+            throw new TelegramBotException(ERROR_IN_SEND_MESSAGE_TO_ALL);
         }
         for (Long chatId : verifiedChatId) {
             if (chatId == null) continue;
@@ -175,7 +185,8 @@ public class TelegramBotServiceImpl extends TelegramLongPollingBot implements Te
     @Override
     public boolean sendMessageToChatId(String text, long chatId) {
         if (!StringUtils.hasText(text) || chatId < 1) {
-            throw new TelegramBotException("Error in sendMessageToChatId method!");
+            logger.error(ERROR_IN_SEND_MESSAGE_TO_CHAT_ID);
+            throw new TelegramBotException(ERROR_IN_SEND_MESSAGE_TO_CHAT_ID);
         }
         if (!isVerifiedChatId(chatId)) return false;
 
