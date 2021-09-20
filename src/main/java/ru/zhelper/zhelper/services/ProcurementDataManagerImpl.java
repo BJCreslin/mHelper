@@ -119,7 +119,7 @@ public class ProcurementDataManagerImpl implements ProcurementDataManager {
 				.collect(Collectors.toList());
         if (LOGGER.isInfoEnabled()) {
         	LOGGER.info(" >>>>>>>>>> PROCUREMENTS WITH fzNumber {}:", fzNumber);
-        	filtered.stream().forEach(procurement -> LOGGER.info(procurement.toString()));
+        	filtered.forEach(procurement -> LOGGER.info(procurement.toString()));
         }
 		return filtered;
 	}
