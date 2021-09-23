@@ -1,14 +1,5 @@
 package ru.zhelper.zhelper.services;
 
-import static org.junit.jupiter.api.Assertions.fail;
-
-import java.math.BigDecimal;
-import java.time.LocalDate;
-import java.util.List;
-import java.util.stream.Collectors;
-
-import javax.transaction.Transactional;
-
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -23,10 +14,24 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.orm.jpa.JpaObjectRetrievalFailureException;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.jdbc.Sql;
-
+import ru.zhelper.zhelper.models.ProcedureType;
 import ru.zhelper.zhelper.models.Procurement;
+import ru.zhelper.zhelper.models.Stage;
 import ru.zhelper.zhelper.repository.ProcurementRepo;
 import ru.zhelper.zhelper.services.exceptions.DataManagerException;
+
+import javax.transaction.Transactional;
+import java.math.BigDecimal;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.time.LocalDate;
+import java.time.LocalTime;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
+import java.util.List;
+import java.util.stream.Collectors;
+
+import static org.junit.jupiter.api.Assertions.fail;
 
 @ActiveProfiles("test")
 @SpringBootTest
@@ -47,9 +52,9 @@ class ProcurementDataManagerImplTest {
     private final static int FZ_NUMBER_OF_SAVED_PROCUREMENT = 615;
     private final static String EXCEPTION_NOT_RECEIVED = "Exception not received: ";
 
-	Pageable firstPageWithFiveElements = PageRequest.of(0, 5);
-	// 5 = page size, 20 = page number
-	Pageable secondPageWithFiveElements = PageRequest.of(5, 20);
+    Pageable firstPageWithFiveElements = PageRequest.of(0, 5);
+    // 5 = page size, 20 = page number
+    Pageable secondPageWithFiveElements = PageRequest.of(5, 20);
 
     @BeforeAll
     void init() {
@@ -60,11 +65,24 @@ class ProcurementDataManagerImplTest {
 
     @Test
     @Transactional
-    void testSave() {
+    void testSave() throws MalformedURLException {
+        LocalDate localDate = LocalDate.of(2019, 03, 12);
+        LocalTime localTime = LocalTime.of(12,  44);
+        ZoneId zoneId = ZoneId.of("GMT+03:00");
+
         Procurement procurement = new Procurement();
+        procurement.setApplicationDeadline(ZonedDateTime.of( localDate, localTime, zoneId ));
         procurement.setContractPrice(BigDecimal.TEN);
         procurement.setUin("ABC124z34");
         procurement.setFzNumber(FZ_NUMBER_OF_SAVED_PROCUREMENT);
+        procurement.setStage(Stage.SUBMISSION_OF_APPLICATION);
+        procurement.setProcedureType(ProcedureType.ELECTRONIC_AUCTION_615FZ);
+        procurement.setPublisherName("ФОНД КАПИТАЛЬНОГО РЕМОНТА");
+        procurement.setRestrictions("Restrictions");
+        procurement.setLinkOnPlacement(new URL("http://LinkOnPlacement.ru"));
+        procurement.setApplicationSecure("1999-01-08 04:05:06");
+        procurement.setContractSecure("1999-01-08 04:05:06");
+        procurement.setObjectOf("Выполнение работ по капитальному ремонту");
 
         Procurement saved = procurementDataManager.save(procurement);
 
@@ -72,6 +90,14 @@ class ProcurementDataManagerImplTest {
         Assertions.assertEquals(saved.getContractPrice(), procurement.getContractPrice());
         Assertions.assertEquals(saved.getUin(), procurement.getUin());
         Assertions.assertEquals(saved.getFzNumber(), procurement.getFzNumber());
+        Assertions.assertEquals(saved.getStage(), procurement.getStage());
+        Assertions.assertEquals(saved.getProcedureType(), procurement.getProcedureType());
+        Assertions.assertEquals(saved.getPublisherName(), procurement.getPublisherName());
+        Assertions.assertEquals(saved.getRestrictions(), procurement.getRestrictions());
+        Assertions.assertEquals(saved.getLinkOnPlacement(), procurement.getLinkOnPlacement());
+        Assertions.assertEquals(saved.getApplicationSecure(), procurement.getApplicationSecure());
+        Assertions.assertEquals(saved.getContractSecure(), procurement.getContractSecure());
+        Assertions.assertEquals(saved.getObjectOf(), procurement.getObjectOf());
     }
 
     @Test
@@ -158,29 +184,29 @@ class ProcurementDataManagerImplTest {
         Page<Procurement> allProcurements = procurementDataManager.loadAll(firstPageWithFiveElements);
         Assertions.assertEquals(2, allProcurements.stream().count());
     }
-    
+
     @Test
     @Transactional
     void testLoadByIdList() {
-    	Page<Procurement> allProcurements = procurementDataManager.loadAll(firstPageWithFiveElements);
+        Page<Procurement> allProcurements = procurementDataManager.loadAll(firstPageWithFiveElements);
         Assertions.assertEquals(2, allProcurements.stream().count());
         // Get a collection of all the ids
         List<Long> ids = allProcurements.stream()
-                                 .map(Procurement::getId).collect(Collectors.toList());
+                .map(Procurement::getId).collect(Collectors.toList());
         if (LOGGER.isInfoEnabled()) {
-        	LOGGER.info("----> ids: {}", ids);
+            LOGGER.info("----> ids: {}", ids);
         }
 
         Page<Procurement> result = procurementDataManager.loadByIdList(ids,
-        		firstPageWithFiveElements);
+                firstPageWithFiveElements);
         Assertions.assertEquals(2, result.stream().count());
     }
-    
+
     @Test
     @Transactional
     void testLoadCreatedBeforeDate() {
-    	Page<Procurement> result = procurementDataManager.loadCreatedBeforeDate(
-    			LocalDate.of(2021, 2, 1), firstPageWithFiveElements);
+        Page<Procurement> result = procurementDataManager.loadCreatedBeforeDate(
+                LocalDate.of(2021, 2, 1), firstPageWithFiveElements);
         Assertions.assertEquals(1, result.stream().count());
     }
 }

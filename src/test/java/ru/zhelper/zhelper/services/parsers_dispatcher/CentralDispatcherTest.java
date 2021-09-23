@@ -21,7 +21,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 @SpringBootTest
-@ActiveProfiles("ServiceTest")
+@ActiveProfiles("test")
 class CentralDispatcherTest {
     private static final String LAW_44_PARSER = "Law44";
     private static final String LAW_615_PARSER = "Law615";
