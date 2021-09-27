@@ -7,8 +7,8 @@ import java.util.concurrent.ConcurrentHashMap;
 public enum Stage {
     SUBMISSION_OF_APPLICATION("Подача заявок"),
     WORK_OF_THE_COMMISSION("Работа комиссии"),
-    PROCUREMENT_ENDED("Закупка завершена"),
-    PROCUREMENT_CANCELED("Закупка отменена");
+    PROCUREMENT_ENDED("Процедура завершена"),
+    PROCUREMENT_CANCELED("Процедура отменена");
 
     private final String title;
     private static final Map<String, Stage> ENUM_MAP;
