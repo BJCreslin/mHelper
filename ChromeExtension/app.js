@@ -3,7 +3,6 @@ const BUTTON_CLASS = "btn btn-primary";
 const BOOTSTRAP_LINK = "https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/css/bootstrap.min.css";
 const BOOTSTRAP_INTEGRITY = "sha384-KyZXEAg3QhqLMpG8r+8fhAXLRk2vvoC2f3B09zVXn8CA5QIVfZOJ3BCsw2P0p/We"
 
-
 const URL = document.documentURI;
 const dataAboutProcurement = {
     fzNumber: "",
@@ -34,7 +33,7 @@ if (URL.startsWith("https://zakupki.gov.ru/epz/order/notice/")) {
     fillProcurementWith615();
 }
 
-if (URL.startsWith("https://zakupki.gov.ru/223/purchase/")) {
+if (URL.startsWith("https://zakupki.gov.ru/223/purchase/public/purchase/info/common-info")) {
     addCss(BOOTSTRAP_LINK)
     insertButton("contentTabsWrapper");
     fillProcurementWith44()
@@ -44,9 +43,44 @@ console.log(dataAboutProcurement);
 
 function fillProcurementWith44() {
     dataAboutProcurement.linkOnPlacement = URL;
+    dataAboutProcurement.fzNumber = "223";
+    Array.from(document.body.getElementsByClassName("padBtm20")[0].getElementsByTagName("tr")).forEach(x => {
+        switch (x.getElementsByTagName("td")[0].innerText) {
+            case 'Реестровый номер извещения':
+                dataAboutProcurement.uin = x.getElementsByTagName("td")[1].innerText;
+                break;
+            case 'Способ размещения закупки':
+                dataAboutProcurement.procedureType = x.getElementsByTagName("td")[1].innerText;
+                break;
+            case 'Наименование закупки':
+                dataAboutProcurement.objectOf = x.getElementsByTagName("td")[1].innerText;
+                break;
+            case 'Дата размещения извещения':
+                dataAboutProcurement.dateOfPlacement = x.getElementsByTagName("td")[1].innerText;
+                break;
+            case 'Дата размещения текущей редакции извещения':
+                dataAboutProcurement.lastUpdatedFromEIS = x.getElementsByTagName("td")[1].innerText;
+                break;
+            case 'Наименование электронной площадки в информационно-телекоммуникационной сети «Интернет»':
+                dataAboutProcurement.etpName = x.getElementsByTagName("td")[1].innerText;
+                break;
+            case 'Адрес электронной площадки в информационно-телекоммуникационной сети «Интернет»':
+                dataAboutProcurement.etpUrl = x.getElementsByTagName("td")[1].innerText;
+                break;
+            case 'Наименование организации':
+                dataAboutProcurement.publisherName = x.getElementsByTagName("td")[1].innerText;
+                break;
+            case 'Дата и время окончания подачи заявок\n' +
+            '(по местному времени заказчика)':
+                dataAboutProcurement.applicationDeadline = x.getElementsByTagName("td")[1].innerText;
+                break;
+            case 'Дата подведения итогов':
+                dataAboutProcurement.summingUpDate = x.getElementsByTagName("td")[1].innerText;
+                break;
+        }
 
+    })
 }
-
 
 function fillProcurementWith615() {
     dataAboutProcurement.linkOnPlacement = URL;
