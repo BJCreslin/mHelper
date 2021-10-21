@@ -23,7 +23,6 @@ public class ProcurementDto {
     private String contractPrice;
     @NotNull
     private String procedureType;
-    @NotNull
     private String stage;
     private String linkOnPlacement;
     private String applicationDeadline;
