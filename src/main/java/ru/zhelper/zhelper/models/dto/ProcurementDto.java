@@ -1,27 +1,31 @@
 package ru.zhelper.zhelper.models.dto;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
+import lombok.*;
 
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
 @ToString
+@Builder
 public class ProcurementDto {
     @NotNull
+    @NotBlank
     private String fzNumber;
     @NotNull
+    @NotBlank
     private String uin;
     @NotNull
+    @NotBlank
     private String objectOf;
     @NotNull
+    @NotBlank
     private String publisherName;
     private String contractPrice;
     @NotNull
+    @NotBlank
     private String procedureType;
     private String stage;
     private String linkOnPlacement;
