@@ -2,6 +2,8 @@ package ru.zhelper.zhelper.controllers;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.NullAndEmptySource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -44,6 +46,86 @@ class ChromeExtensionControllerTest {
                         .content(mapper.writeValueAsString(procurement));
         this.mockMvc.perform(builder)
                 .andExpect(status().isCreated());
+    }
+
+    @ParameterizedTest
+    @NullAndEmptySource
+    void addNewOneWithBadFz_Post_ShouldReturnBadRequest(String badItem) throws Exception {
+        ProcurementDto procurement = getOneProcurementDto();
+        procurement.setFzNumber(badItem);
+        System.out.println(mapper.writeValueAsString(procurement));
+        MockHttpServletRequestBuilder builder =
+                MockMvcRequestBuilders.post(PATH)
+                        .contentType(MediaType.APPLICATION_JSON_VALUE)
+                        .accept(MediaType.APPLICATION_JSON)
+                        .characterEncoding("UTF-8")
+                        .content(mapper.writeValueAsString(procurement));
+        this.mockMvc.perform(builder)
+                .andExpect(status().isBadRequest());
+    }
+
+    @ParameterizedTest
+    @NullAndEmptySource
+    void addNewOneWithBadUin_Post_ShouldReturnBadRequest(String badItem) throws Exception {
+        ProcurementDto procurement = getOneProcurementDto();
+        procurement.setUin(badItem);
+        System.out.println(mapper.writeValueAsString(procurement));
+        MockHttpServletRequestBuilder builder =
+                MockMvcRequestBuilders.post(PATH)
+                        .contentType(MediaType.APPLICATION_JSON_VALUE)
+                        .accept(MediaType.APPLICATION_JSON)
+                        .characterEncoding("UTF-8")
+                        .content(mapper.writeValueAsString(procurement));
+        this.mockMvc.perform(builder)
+                .andExpect(status().isBadRequest());
+    }
+
+    @ParameterizedTest
+    @NullAndEmptySource
+    void addNewOneWithBadObjectOf_Post_ShouldReturnBadRequest(String badItem) throws Exception {
+        ProcurementDto procurement = getOneProcurementDto();
+        procurement.setObjectOf(badItem);
+        System.out.println(mapper.writeValueAsString(procurement));
+        MockHttpServletRequestBuilder builder =
+                MockMvcRequestBuilders.post(PATH)
+                        .contentType(MediaType.APPLICATION_JSON_VALUE)
+                        .accept(MediaType.APPLICATION_JSON)
+                        .characterEncoding("UTF-8")
+                        .content(mapper.writeValueAsString(procurement));
+        this.mockMvc.perform(builder)
+                .andExpect(status().isBadRequest());
+    }
+
+    @ParameterizedTest
+    @NullAndEmptySource
+    void addNewOneWithBadPublisherName_Post_ShouldReturnBadRequest(String badItem) throws Exception {
+        ProcurementDto procurement = getOneProcurementDto();
+        procurement.setPublisherName(badItem);
+        System.out.println(mapper.writeValueAsString(procurement));
+        MockHttpServletRequestBuilder builder =
+                MockMvcRequestBuilders.post(PATH)
+                        .contentType(MediaType.APPLICATION_JSON_VALUE)
+                        .accept(MediaType.APPLICATION_JSON)
+                        .characterEncoding("UTF-8")
+                        .content(mapper.writeValueAsString(procurement));
+        this.mockMvc.perform(builder)
+                .andExpect(status().isBadRequest());
+    }
+
+    @ParameterizedTest
+    @NullAndEmptySource
+    void addNewOneWithBadProcedureType_Post_ShouldReturnBadRequest(String badItem) throws Exception {
+        ProcurementDto procurement = getOneProcurementDto();
+        procurement.setPublisherName(badItem);
+        System.out.println(mapper.writeValueAsString(procurement));
+        MockHttpServletRequestBuilder builder =
+                MockMvcRequestBuilders.post(PATH)
+                        .contentType(MediaType.APPLICATION_JSON_VALUE)
+                        .accept(MediaType.APPLICATION_JSON)
+                        .characterEncoding("UTF-8")
+                        .content(mapper.writeValueAsString(procurement));
+        this.mockMvc.perform(builder)
+                .andExpect(status().isBadRequest());
     }
 
     private ProcurementDto getOneProcurementDto() {
