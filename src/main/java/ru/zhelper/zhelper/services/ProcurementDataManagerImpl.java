@@ -132,8 +132,8 @@ public class ProcurementDataManagerImpl implements ProcurementDataManager {
     }
 
     @Override
-    public Optional<Procurement> findByUin(String uin) {
-        if (uin.isEmpty() || uin.isBlank()) {
+    public Optional<Procurement> loadByUin(String uin) {
+        if (uin == null || uin.isEmpty() || uin.isBlank()) {
             LOGGER.error(DataManagerException.UIN_IS_EMPTY);
             throw new DataManagerException(DataManagerException.UIN_IS_EMPTY);
         }

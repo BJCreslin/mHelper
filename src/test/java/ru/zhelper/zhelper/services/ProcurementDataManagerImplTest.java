@@ -4,6 +4,9 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.NullAndEmptySource;
+import org.junit.jupiter.params.provider.ValueSource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,7 +34,7 @@ import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static org.junit.jupiter.api.Assertions.fail;
+import static org.junit.jupiter.api.Assertions.*;
 
 @ActiveProfiles("test")
 @SpringBootTest
@@ -67,11 +70,11 @@ class ProcurementDataManagerImplTest {
     @Transactional
     void testSave() throws MalformedURLException {
         LocalDate localDate = LocalDate.of(2019, 03, 12);
-        LocalTime localTime = LocalTime.of(12,  44);
+        LocalTime localTime = LocalTime.of(12, 44);
         ZoneId zoneId = ZoneId.of("GMT+03:00");
 
         Procurement procurement = new Procurement();
-        procurement.setApplicationDeadline(ZonedDateTime.of( localDate, localTime, zoneId ));
+        procurement.setApplicationDeadline(ZonedDateTime.of(localDate, localTime, zoneId));
         procurement.setContractPrice(BigDecimal.TEN);
         procurement.setUin("ABC124z34");
         procurement.setFzNumber(FZ_NUMBER_OF_SAVED_PROCUREMENT);
@@ -208,5 +211,25 @@ class ProcurementDataManagerImplTest {
         Page<Procurement> result = procurementDataManager.loadCreatedBeforeDate(
                 LocalDate.of(2021, 2, 1), firstPageWithFiveElements);
         Assertions.assertEquals(1, result.stream().count());
+    }
+
+    @ParameterizedTest
+    @NullAndEmptySource
+    @ValueSource(strings = {"  ", "\t", "\n"})
+    @Transactional
+    void givenEmptyUin_thenFindByUin_getException(String uin) {
+        Exception exception = assertThrows(DataManagerException.class, () -> {
+            procurementDataManager.loadByUin(uin);
+        });
+        assertEquals(DataManagerException.class, exception.getClass());
+    }
+
+    @Transactional
+    @Test
+    void givenUin_thenFindByUin_getProcurement() {
+        List<Procurement> procurements = repository.findAll();
+        var procurementFromDb = procurements.get(0);
+        Procurement procurement = procurementDataManager.loadByUin(procurementFromDb.getUin()).get();
+        assertEquals(procurementFromDb, procurement);
     }
 }

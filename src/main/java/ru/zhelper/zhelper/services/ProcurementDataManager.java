@@ -26,5 +26,5 @@ public interface ProcurementDataManager {
 
     Page<Procurement> loadCreatedBeforeDate(LocalDate date, Pageable pageable);
 
-    Optional<Procurement> findByUin(String uin);
+    Optional<Procurement> loadByUin(String uin);
 }
