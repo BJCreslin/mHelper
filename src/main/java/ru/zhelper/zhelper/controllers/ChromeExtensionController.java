@@ -44,6 +44,7 @@ public class ChromeExtensionController {
             logger.debug(POST_FROM_IP, procurementDto);
         }
         try {
+
             /* Todo: добавить сервис сохраняющий ДТО в базу */
 
             var success = new Success();
