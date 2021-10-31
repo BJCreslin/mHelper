@@ -1,4 +1,4 @@
-package ru.zhelper.zhelper.services;
+package ru.zhelper.zhelper.services.dao;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

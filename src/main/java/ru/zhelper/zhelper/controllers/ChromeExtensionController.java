@@ -28,6 +28,7 @@ public class ChromeExtensionController {
     public static final String PROCUREMENT_IS_INVALID = "Procurement is invalid.";
     public static final String PROCUREMENT_WAS_SAVED = "Procurement was saved";
 
+
     @PostMapping(value = "/")
     @Validated
     public ResponseEntity newProcurement(@Valid @RequestBody ProcurementDto procurementDto, BindingResult bindingResult) {
