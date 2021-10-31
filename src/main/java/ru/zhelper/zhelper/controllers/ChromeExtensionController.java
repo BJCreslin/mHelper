@@ -14,6 +14,7 @@ import ru.zhelper.zhelper.controllers.exeptions.BadRequestException;
 import ru.zhelper.zhelper.models.dto.Error;
 import ru.zhelper.zhelper.models.dto.ProcurementDto;
 import ru.zhelper.zhelper.models.dto.Success;
+import ru.zhelper.zhelper.services.chrome.ProcurementDtoService;
 import ru.zhelper.zhelper.services.exceptions.BadDataParsingException;
 
 import javax.validation.Valid;
@@ -25,9 +26,14 @@ public class ChromeExtensionController {
     private static final Logger logger = LoggerFactory.getLogger(ChromeExtensionController.class);
     private static final String POST_FROM_IP = "Post from, procurement {}";
     private static final String ERROR_FROM_PARSING = "Error parsing";
-    public static final String PROCUREMENT_IS_INVALID = "Procurement is invalid.";
-    public static final String PROCUREMENT_WAS_SAVED = "Procurement was saved";
+    private static final String PROCUREMENT_IS_INVALID = "Procurement is invalid.";
+    private static final String PROCUREMENT_WAS_SAVED = "Procurement was saved";
 
+    private final ProcurementDtoService service;
+
+    public ChromeExtensionController(ProcurementDtoService service) {
+        this.service = service;
+    }
 
     @PostMapping(value = "/")
     @Validated
@@ -45,9 +51,7 @@ public class ChromeExtensionController {
             logger.debug(POST_FROM_IP, procurementDto);
         }
         try {
-
-            /* Todo: добавить сервис сохраняющий ДТО в базу */
-
+            service.save(procurementDto);
             var success = new Success();
             success.setMessage(PROCUREMENT_WAS_SAVED);
             success.setCode(1);
