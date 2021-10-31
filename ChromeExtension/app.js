@@ -30,18 +30,18 @@ const dataAboutProcurement = {
 if (URL.startsWith("https://zakupki.gov.ru/epz/order/notice/")) {
     addCss(BOOTSTRAP_LINK)
     insertButton("tabsNav d-flex align-items-end");
-    fillProcurementWith615();
+    fillProcurementWith615And44();
 }
 
 if (URL.startsWith("https://zakupki.gov.ru/223/purchase/public/purchase/info/common-info")) {
     addCss(BOOTSTRAP_LINK)
     insertButton("contentTabsWrapper");
-    fillProcurementWith44()
+    fillProcurementWith223()
 }
 
 console.log(dataAboutProcurement);
 
-function fillProcurementWith44() {
+function fillProcurementWith223() {
     dataAboutProcurement.linkOnPlacement = URL;
     dataAboutProcurement.fzNumber = "223";
     Array.from(document.body.getElementsByClassName("padBtm20")[0].getElementsByTagName("tr")).forEach(x => {
@@ -82,7 +82,7 @@ function fillProcurementWith44() {
     })
 }
 
-function fillProcurementWith615() {
+function fillProcurementWith615And44() {
     dataAboutProcurement.linkOnPlacement = URL;
     dataAboutProcurement.stage = document.body.getElementsByClassName("cardMainInfo__state")[0].innerText;
     dataAboutProcurement.uin = document.body.getElementsByClassName("cardMainInfo__purchaseLink")[0].innerText.replace("№ ", "");

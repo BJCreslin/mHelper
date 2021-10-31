@@ -21,6 +21,10 @@ public class ProcurementDtoServiceImpl implements ProcurementDtoService {
     private static final Logger logger = LoggerFactory.getLogger(ProcurementDtoServiceImpl.class);
     public static final String REMODEL_DTO_TO_PROCUREMENT = "Remodel Dto to Procurement {}";
     public static final String DTO_WAS_REMODELED = "Dto was remodeled {}";
+    public static final String ERROR_URL = "Error URL %s";
+    public static final int FZ_615 = 615;
+    public static final int FZ_44 = 44;
+    public static final int FZ_223 = 223;
     private final ProcurementDataManager procurementDataManager;
 
     public ProcurementDtoServiceImpl(ProcurementDataManager procurementDataManager) {
@@ -50,7 +54,7 @@ public class ProcurementDtoServiceImpl implements ProcurementDtoService {
                 .dateOfPlacement(remodelDateOfPlacementToLocalDate(procurementDto.getDateOfPlacement()))
                 .lastUpdatedFromEIS(remodelDateLastUpdateToLocalDate(procurementDto.getLastUpdatedFromEIS()))
                 .dateTimeLastUpdated(LocalDate.now())
-                .fzNumber(remodelFztoInteger(procurementDto.getFzNumber()))
+                .fzNumber(remodelFzToInteger(procurementDto.getFzNumber()))
                 .linkOnPlacement(remodelStringUrlToURL(procurementDto.getLinkOnPlacement()))
                 .objectOf(procurementDto.getObjectOf())
                 .procedureType(remodelProcedureType(procurementDto.getProcedureType()))
@@ -70,13 +74,22 @@ public class ProcurementDtoServiceImpl implements ProcurementDtoService {
         try {
             return new URL(linkOnPlacement);
         } catch (MalformedURLException e) {
-            var message = String.format("Error URL %s", linkOnPlacement);
+            var message = String.format(ERROR_URL, linkOnPlacement);
             logger.error(message);
             throw new BadDataParsingException(message, e);
         }
     }
 
-    protected int remodelFztoInteger(String fzNumber) {
+    protected int remodelFzToInteger(String fzNumber) {
+        if (fzNumber.startsWith("615")) {
+            return FZ_615;
+        }
+        if (fzNumber.startsWith("44")) {
+            return FZ_44;
+        }
+        if (fzNumber.startsWith("223")) {
+            return FZ_223;
+        }
         return 0;
     }
 
