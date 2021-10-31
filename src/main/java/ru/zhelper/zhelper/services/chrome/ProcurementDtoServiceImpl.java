@@ -33,6 +33,7 @@ public class ProcurementDtoServiceImpl implements ProcurementDtoService {
         if (procurementFromBase.isEmpty()) {
             procurementDataManager.save(remodelDtoToProcurement(procurementDto));
         }
+        // Todo здесь будет сохраняться связь пользователя и закупки
     }
 
     protected Procurement remodelDtoToProcurement(ProcurementDto procurementDto) {
