@@ -14,6 +14,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.time.LocalDate;
 import java.time.ZonedDateTime;
+import java.util.TimeZone;
 
 
 @Service
@@ -44,13 +45,14 @@ public class ProcurementDtoServiceImpl implements ProcurementDtoService {
         if (logger.isDebugEnabled()) {
             logger.debug(REMODEL_DTO_TO_PROCUREMENT, procurementDto);
         }
+        var timeZone = StringToTimezone(procurementDto.getTimeZone());
         var procurement = Procurement.builder()
                 .uin(procurementDto.getUin())
-                .applicationDeadline(remodelDeadlineFromStringToTime(procurementDto.getApplicationDeadline()))
+                .applicationDeadline(remodelDeadlineFromStringToTime(procurementDto.getApplicationDeadline(), timeZone))
                 .contractPrice(remodelPriceToBigDecimal(procurementDto.getContractPrice()))
                 .applicationSecure(procurementDto.getApplicationSecure())
                 .contractSecure(procurementDto.getContractSecure())
-                .dateOfAuction(remodelDateOfAuctionToZonedDateTime(procurementDto.getDateOfAuction()))
+                .dateOfAuction(remodelDateOfAuctionToZonedDateTime(procurementDto.getDateOfAuction(), timeZone))
                 .dateOfPlacement(remodelDateOfPlacementToLocalDate(procurementDto.getDateOfPlacement()))
                 .lastUpdatedFromEIS(remodelDateLastUpdateToLocalDate(procurementDto.getLastUpdatedFromEIS()))
                 .dateTimeLastUpdated(LocalDate.now())
@@ -64,6 +66,12 @@ public class ProcurementDtoServiceImpl implements ProcurementDtoService {
             logger.debug(DTO_WAS_REMODELED, procurement);
         }
         return procurement;
+    }
+
+    private TimeZone StringToTimezone(String timeZone) {
+        //"Владивосток МСК+7 (UTC+10)" 44
+        //  ---?     223 Фз узнать
+        return null;
     }
 
     protected ProcedureType remodelProcedureType(String procedureType) {
@@ -109,7 +117,7 @@ public class ProcurementDtoServiceImpl implements ProcurementDtoService {
         return LocalDate.of(Integer.parseInt(timeParts[2]), Integer.parseInt(timeParts[1]), Integer.parseInt(timeParts[0]));
     }
 
-    protected ZonedDateTime remodelDateOfAuctionToZonedDateTime(String dateOfAuction) {
+    protected ZonedDateTime remodelDateOfAuctionToZonedDateTime(String dateOfAuction, TimeZone timeZone) {
         return null;
     }
 
@@ -120,7 +128,11 @@ public class ProcurementDtoServiceImpl implements ProcurementDtoService {
         return new BigDecimal(contractPrice);
     }
 
-    protected ZonedDateTime remodelDeadlineFromStringToTime(String applicationDeadline) {
-        return null;
+    protected ZonedDateTime remodelDeadlineFromStringToTime(String applicationDeadline, TimeZone timeZone) {
+        if (applicationDeadline == null || applicationDeadline.isEmpty() || applicationDeadline.isBlank()) {
+            return null;
+        }
+        var timeParts = applicationDeadline.substring(0, 10).split("\\.");
+        return ZonedDateTime.of(Integer.parseInt(timeParts[2]), Integer.parseInt(timeParts[1]), Integer.parseInt(timeParts[0]), 0, 0, 0, 0, timeZone.toZoneId());
     }
 }
