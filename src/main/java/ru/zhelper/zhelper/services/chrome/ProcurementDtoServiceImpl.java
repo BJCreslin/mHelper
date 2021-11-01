@@ -102,7 +102,11 @@ public class ProcurementDtoServiceImpl implements ProcurementDtoService {
     }
 
     protected LocalDate remodelDateOfPlacementToLocalDate(String dateOfPlacement) {
-        return null;
+        if (dateOfPlacement == null || dateOfPlacement.isEmpty() || dateOfPlacement.isBlank()) {
+            return null;
+        }
+        var timeParts = dateOfPlacement.substring(0, 10).split("\\.");
+        return LocalDate.of(Integer.parseInt(timeParts[2]), Integer.parseInt(timeParts[1]), Integer.parseInt(timeParts[0]));
     }
 
     protected ZonedDateTime remodelDateOfAuctionToZonedDateTime(String dateOfAuction) {
@@ -110,7 +114,10 @@ public class ProcurementDtoServiceImpl implements ProcurementDtoService {
     }
 
     protected BigDecimal remodelPriceToBigDecimal(String contractPrice) {
-        return null;
+        if (contractPrice == null || contractPrice.isEmpty() || contractPrice.isBlank()) {
+            return null;
+        }
+        return new BigDecimal(contractPrice);
     }
 
     protected ZonedDateTime remodelDeadlineFromStringToTime(String applicationDeadline) {

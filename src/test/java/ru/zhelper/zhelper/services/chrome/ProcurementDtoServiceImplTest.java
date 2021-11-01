@@ -8,6 +8,7 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.ActiveProfiles;
 import ru.zhelper.zhelper.services.dao.ProcurementDataManager;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 
 @ActiveProfiles("test")
@@ -59,5 +60,38 @@ class ProcurementDtoServiceImplTest {
     @NullAndEmptySource
     void givenNull_remodelDateLastUpdateToLocalDate_thenNull(String nullDate) {
         Assertions.assertNull(procurementDtoService.remodelDateLastUpdateToLocalDate(nullDate));
+    }
+
+    @Test
+    void given223_remodelDateOfPlacementToLocalDate_thenLocalDate() {
+        var lastUpdateLocalDate = LocalDate.of(2021, 10, 31);
+        var lastUpdate = "31.10.2021 (МСК+6)";
+        Assertions.assertEquals(lastUpdateLocalDate, procurementDtoService.remodelDateOfPlacementToLocalDate(lastUpdate));
+    }
+
+    @Test
+    void given44_remodelDateOfPlacementToLocalDate_thenLocalDate() {
+        var lastUpdateLocalDate = LocalDate.of(2021, 11, 1);
+        var lastUpdate = "01.11.2021";
+        Assertions.assertEquals(lastUpdateLocalDate, procurementDtoService.remodelDateOfPlacementToLocalDate(lastUpdate));
+    }
+
+    @ParameterizedTest
+    @NullAndEmptySource
+    void givenNull_remodelDateOfPlacementToLocalDate_thenNull(String nullDate) {
+        Assertions.assertNull(procurementDtoService.remodelDateOfPlacementToLocalDate(nullDate));
+    }
+
+    @Test
+    void given44_remodelPriceToBigDecimal_thenLocalDate() {
+        var contractPrice = "123.42";
+        var price = new BigDecimal(contractPrice);
+        Assertions.assertEquals(price, procurementDtoService.remodelPriceToBigDecimal(contractPrice));
+    }
+
+    @ParameterizedTest
+    @NullAndEmptySource
+    void givenNull_remodelPriceToBigDecimal_thenNull(String nullDate) {
+        Assertions.assertNull(procurementDtoService.remodelPriceToBigDecimal(nullDate));
     }
 }
