@@ -94,7 +94,11 @@ public class ProcurementDtoServiceImpl implements ProcurementDtoService {
     }
 
     protected LocalDate remodelDateLastUpdateToLocalDate(String lastUpdatedFromEIS) {
-        return null;
+        if (lastUpdatedFromEIS == null || lastUpdatedFromEIS.isEmpty() || lastUpdatedFromEIS.isBlank()) {
+            return null;
+        }
+        var timeParts = lastUpdatedFromEIS.substring(0, 10).split("\\.");
+        return LocalDate.of(Integer.parseInt(timeParts[2]), Integer.parseInt(timeParts[1]), Integer.parseInt(timeParts[0]));
     }
 
     protected LocalDate remodelDateOfPlacementToLocalDate(String dateOfPlacement) {
