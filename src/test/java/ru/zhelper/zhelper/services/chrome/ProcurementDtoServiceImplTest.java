@@ -50,7 +50,7 @@ class ProcurementDtoServiceImplTest {
 
     @Test
     void given44_remodelDateLastUpdateToLocalDate_thenLocalDate() {
-        var lastUpdateLocalDate = LocalDate.of(2021, 11, 01);
+        var lastUpdateLocalDate = LocalDate.of(2021, 11, 1);
         var lastUpdate = "01.11.2021";
         Assertions.assertEquals(lastUpdateLocalDate, procurementDtoService.remodelDateLastUpdateToLocalDate(lastUpdate));
     }
