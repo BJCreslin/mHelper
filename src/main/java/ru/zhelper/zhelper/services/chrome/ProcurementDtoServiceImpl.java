@@ -6,7 +6,7 @@ import org.springframework.stereotype.Service;
 import ru.zhelper.zhelper.models.ProcedureType;
 import ru.zhelper.zhelper.models.Procurement;
 import ru.zhelper.zhelper.models.dto.ProcurementDto;
-import ru.zhelper.zhelper.services.dao.ProcurementDataManager;
+import ru.zhelper.zhelper.services.ProcurementDataManager;
 import ru.zhelper.zhelper.services.exceptions.BadDataParsingException;
 
 import java.math.BigDecimal;
@@ -69,8 +69,42 @@ public class ProcurementDtoServiceImpl implements ProcurementDtoService {
     }
 
     private TimeZone StringToTimezone(String timeZone) {
+
         //"Владивосток МСК+7 (UTC+10)" 44
         //  ---?     223 Фз узнать
+
+        if (timeZone == null || timeZone.isEmpty() || timeZone.isBlank()) {
+            return null;
+        }
+
+        if (timeZone.toLowerCase().contains("владивосток") || timeZone.contains("МСК+7") || timeZone.contains("UTC+10")) {
+            return TimeZone.getTimeZone("Asia/Vladivostok");
+        }
+        if (timeZone.contains("МСК+6") || timeZone.contains("UTC+9")) {
+            return TimeZone.getTimeZone("Asia/Yakutsk");
+        }
+        if (timeZone.contains("МСК+5") || timeZone.contains("UTC+8")) {
+            return TimeZone.getTimeZone("Asia/Irkutsk");
+        }
+        if (timeZone.contains("МСК+4") || timeZone.contains("UTC+7")) {
+            return TimeZone.getTimeZone("Asia/Novosibirsk");
+        }
+        if (timeZone.contains("МСК+3") || timeZone.contains("UTC+6")) {
+            return TimeZone.getTimeZone("Asia/Omsk");
+        }
+        if (timeZone.contains("МСК+2") || timeZone.contains("UTC+5")) {
+            return TimeZone.getTimeZone("Asia/Yekaterinburg");
+        }
+        if (timeZone.contains("МСК+1") || timeZone.contains("UTC+4")) {
+            return TimeZone.getTimeZone("Europe/Samara");
+        }
+        if (timeZone.contains("МСК-1") || timeZone.contains("UTC+2")) {
+            return TimeZone.getTimeZone("MSK-01 - Kaliningrad");
+        }
+//Must be LAST!!!!!
+        if (timeZone.contains("МСК") || timeZone.contains("UTC+3")) {
+            return TimeZone.getTimeZone("Europe/Moscow");
+        }
         return null;
     }
 

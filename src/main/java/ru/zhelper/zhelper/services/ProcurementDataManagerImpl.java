@@ -1,4 +1,4 @@
-package ru.zhelper.zhelper.services.dao;
+package ru.zhelper.zhelper.services;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -9,7 +9,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import ru.zhelper.zhelper.models.Procurement;
 import ru.zhelper.zhelper.repository.ProcurementRepo;
-import ru.zhelper.zhelper.services.ProcurementDataManager;
 import ru.zhelper.zhelper.services.exceptions.DataManagerException;
 
 import javax.persistence.EntityNotFoundException;

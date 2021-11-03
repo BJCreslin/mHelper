@@ -1,4 +1,4 @@
-package ru.zhelper.zhelper.services.dao;
+package ru.zhelper.zhelper.services;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
