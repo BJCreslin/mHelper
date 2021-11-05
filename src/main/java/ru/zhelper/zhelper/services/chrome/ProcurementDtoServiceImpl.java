@@ -70,6 +70,7 @@ public class ProcurementDtoServiceImpl implements ProcurementDtoService {
         return procurement;
     }
 
+    //ToDo: В будущем возможно сделать отельный сервис определения часовых поясов
     private TimeZone stringToTimeZone(String timeZone) {
         if (timeZone == null || timeZone.isEmpty() || timeZone.isBlank()) {
             return null;
