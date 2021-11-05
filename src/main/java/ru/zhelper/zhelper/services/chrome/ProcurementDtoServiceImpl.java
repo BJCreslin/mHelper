@@ -45,7 +45,7 @@ public class ProcurementDtoServiceImpl implements ProcurementDtoService {
         if (logger.isDebugEnabled()) {
             logger.debug(REMODEL_DTO_TO_PROCUREMENT, procurementDto);
         }
-        var timeZone = StringToTimezone(procurementDto.getTimeZone());
+        var timeZone = stringToTimeZone(procurementDto.getTimeZone());
         var procurement = Procurement.builder()
                 .uin(procurementDto.getUin())
                 .applicationDeadline(remodelDeadlineFromStringToTime(procurementDto.getApplicationDeadline(), timeZone))
@@ -68,15 +68,10 @@ public class ProcurementDtoServiceImpl implements ProcurementDtoService {
         return procurement;
     }
 
-    private TimeZone StringToTimezone(String timeZone) {
-
-        //"Владивосток МСК+7 (UTC+10)" 44
-        //  ---?     223 Фз узнать
-
+    private TimeZone stringToTimeZone(String timeZone) {
         if (timeZone == null || timeZone.isEmpty() || timeZone.isBlank()) {
             return null;
         }
-
         if (timeZone.toLowerCase().contains("владивосток") || timeZone.contains("МСК+7") || timeZone.contains("UTC+10")) {
             return TimeZone.getTimeZone("Asia/Vladivostok");
         }
