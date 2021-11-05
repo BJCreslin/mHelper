@@ -29,6 +29,7 @@ public enum ProcedureType {
             " предусмотренную частью 12 статьи 93 Закона № 44-ФЗ"),
     ELECTRONIC_AUCTION_615FZ("Электронный аукцион (ПП РФ 615)"),
     PRELIMINARY_SELECTION_615FZ("Предварительный отбор (ПП РФ 615)"),
+    OTHER_223("223-ФЗ Прочие"),
     DEFAULT_NONAME_PROCEDURE("Неопределенный тип закупки");
 
     private final String title;

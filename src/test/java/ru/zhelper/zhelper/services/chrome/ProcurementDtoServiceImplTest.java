@@ -144,7 +144,9 @@ class ProcurementDtoServiceImplTest {
                 Arguments.of("Закупка товара у единственного поставщика на сумму," +
                         " предусмотренную частью 12 статьи 93 Закона № 44-ФЗ", ProcedureType.PURCHASE_OF_GOODS_FROM_A_SINGLE_SUPPLIER),
                 Arguments.of("Электронный аукцион (ПП РФ 615)", ProcedureType.ELECTRONIC_AUCTION_615FZ),
-                Arguments.of("Предварительный отбор (ПП РФ 615)", ProcedureType.PRELIMINARY_SELECTION_615FZ)
+                Arguments.of("Предварительный отбор (ПП РФ 615)", ProcedureType.PRELIMINARY_SELECTION_615FZ),
+                Arguments.of("223-ФЗ Прочие", ProcedureType.OTHER_223)
+
         );
     }
 }

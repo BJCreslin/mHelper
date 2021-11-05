@@ -13,6 +13,7 @@ import java.math.BigDecimal;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.ZonedDateTime;
 import java.util.TimeZone;
 
@@ -143,21 +144,19 @@ public class ProcurementDtoServiceImpl implements ProcurementDtoService {
         return getLocalDate(lastUpdatedFromEIS);
     }
 
-    private LocalDate getLocalDate(String lastUpdatedFromEIS) {
-        if (lastUpdatedFromEIS == null || lastUpdatedFromEIS.isEmpty() || lastUpdatedFromEIS.isBlank()) {
-            return null;
-        }
-        var timeParts = lastUpdatedFromEIS.substring(0, 10).split("\\.");
-        return LocalDate.of(Integer.parseInt(timeParts[2]), Integer.parseInt(timeParts[1]), Integer.parseInt(timeParts[0]));
-    }
 
     protected LocalDate remodelDateOfPlacementToLocalDate(String dateOfPlacement) {
         return getLocalDate(dateOfPlacement);
     }
 
     protected ZonedDateTime remodelDateOfAuctionToZonedDateTime(String dateOfAuction, TimeZone timeZone) {
+        if (dateOfAuction == null || dateOfAuction.isEmpty() || dateOfAuction.isBlank()) {
+            return null;
+        }
+        return ZonedDateTime.of(getLocalDatTime(dateOfAuction), timeZone.toZoneId());
         return null;
     }
+
 
     protected BigDecimal remodelPriceToBigDecimal(String contractPrice) {
         if (contractPrice == null || contractPrice.isEmpty() || contractPrice.isBlank()) {
@@ -172,5 +171,20 @@ public class ProcurementDtoServiceImpl implements ProcurementDtoService {
         }
         var timeParts = applicationDeadline.substring(0, 10).split("\\.");
         return ZonedDateTime.of(Integer.parseInt(timeParts[2]), Integer.parseInt(timeParts[1]), Integer.parseInt(timeParts[0]), 0, 0, 0, 0, timeZone.toZoneId());
+    }
+
+    private LocalDate getLocalDate(String stringFormatDate) {
+        if (stringFormatDate == null || stringFormatDate.isEmpty() || stringFormatDate.isBlank()) {
+            return null;
+        }
+        var timeParts = stringFormatDate.substring(0, 10).split("\\.");
+        return LocalDate.of(Integer.parseInt(timeParts[2]), Integer.parseInt(timeParts[1]), Integer.parseInt(timeParts[0]));
+    }
+
+    private LocalDateTime getLocalDatTime(String stringFormatDate) {
+        if (stringFormatDate == null || stringFormatDate.isEmpty() || stringFormatDate.isBlank()) {
+            return null;
+        }
+
     }
 }

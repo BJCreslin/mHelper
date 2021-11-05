@@ -77,8 +77,13 @@ function fillProcurementWith223() {
             case 'Дата подведения итогов':
                 dataAboutProcurement.summingUpDate = x.getElementsByTagName("td")[1].innerText;
                 break;
+            case 'Дата начала срока подачи ценовых предложений (по местному времени заказчика)':
+                dataAboutProcurement.dateOfAuction = x.getElementsByTagName("td")[1].innerText;
+                break;
+            case 'Время начала срока подачи ценовых предложений (по местному времени заказчика)':
+                dataAboutProcurement.timeOfAuction = x.getElementsByTagName("td")[1].innerText;
+                break;
         }
-
     })
 }
 
