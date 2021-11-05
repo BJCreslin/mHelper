@@ -14,6 +14,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.time.ZonedDateTime;
 import java.util.TimeZone;
 
@@ -54,7 +55,7 @@ public class ProcurementDtoServiceImpl implements ProcurementDtoService {
                 .contractPrice(remodelPriceToBigDecimal(procurementDto.getContractPrice()))
                 .applicationSecure(procurementDto.getApplicationSecure())
                 .contractSecure(procurementDto.getContractSecure())
-                .dateOfAuction(remodelDateOfAuctionToZonedDateTime(procurementDto.getDateOfAuction(), timeZone))
+                .dateOfAuction(remodelDateOfAuctionToZonedDateTime(procurementDto.getDateOfAuction(), procurementDto.getTimeOfAuction(), timeZone))
                 .dateOfPlacement(remodelDateOfPlacementToLocalDate(procurementDto.getDateOfPlacement()))
                 .lastUpdatedFromEIS(remodelDateLastUpdateToLocalDate(procurementDto.getLastUpdatedFromEIS()))
                 .dateTimeLastUpdated(LocalDate.now())
@@ -149,12 +150,11 @@ public class ProcurementDtoServiceImpl implements ProcurementDtoService {
         return getLocalDate(dateOfPlacement);
     }
 
-    protected ZonedDateTime remodelDateOfAuctionToZonedDateTime(String dateOfAuction, TimeZone timeZone) {
+    protected ZonedDateTime remodelDateOfAuctionToZonedDateTime(String dateOfAuction, String timeOfAuction, TimeZone timeZone) {
         if (dateOfAuction == null || dateOfAuction.isEmpty() || dateOfAuction.isBlank()) {
             return null;
         }
-        return ZonedDateTime.of(getLocalDatTime(dateOfAuction), timeZone.toZoneId());
-        return null;
+        return ZonedDateTime.of(LocalDateTime.of(getLocalDate(dateOfAuction), getLocalTime(timeOfAuction)), timeZone.toZoneId());
     }
 
 
@@ -173,18 +173,19 @@ public class ProcurementDtoServiceImpl implements ProcurementDtoService {
         return ZonedDateTime.of(Integer.parseInt(timeParts[2]), Integer.parseInt(timeParts[1]), Integer.parseInt(timeParts[0]), 0, 0, 0, 0, timeZone.toZoneId());
     }
 
+    private LocalTime getLocalTime(String stringFormatTime) {
+        if (stringFormatTime == null || stringFormatTime.isEmpty() || stringFormatTime.isBlank()) {
+            return null;
+        }
+        var timeParts = stringFormatTime.split(" ")[0].split(":");
+        return LocalTime.of(Integer.parseInt(timeParts[0]), Integer.parseInt(timeParts[1]));
+    }
+
     private LocalDate getLocalDate(String stringFormatDate) {
         if (stringFormatDate == null || stringFormatDate.isEmpty() || stringFormatDate.isBlank()) {
             return null;
         }
         var timeParts = stringFormatDate.substring(0, 10).split("\\.");
         return LocalDate.of(Integer.parseInt(timeParts[2]), Integer.parseInt(timeParts[1]), Integer.parseInt(timeParts[0]));
-    }
-
-    private LocalDateTime getLocalDatTime(String stringFormatDate) {
-        if (stringFormatDate == null || stringFormatDate.isEmpty() || stringFormatDate.isBlank()) {
-            return null;
-        }
-
     }
 }
