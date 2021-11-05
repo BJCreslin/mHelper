@@ -3,13 +3,17 @@ package ru.zhelper.zhelper.services.chrome;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
 import org.junit.jupiter.params.provider.NullAndEmptySource;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.ActiveProfiles;
-import ru.zhelper.zhelper.services.dao.ProcurementDataManager;
+import ru.zhelper.zhelper.models.ProcedureType;
+import ru.zhelper.zhelper.services.ProcurementDataManager;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.stream.Stream;
 
 @ActiveProfiles("test")
 class ProcurementDtoServiceImplTest {
@@ -17,6 +21,7 @@ class ProcurementDtoServiceImplTest {
     ProcurementDataManager procurementDataManager;
 
     ProcurementDtoServiceImpl procurementDtoService = new ProcurementDtoServiceImpl(procurementDataManager);
+
 
     @Test
     void given615_remodelFzToInteger_thenInteger() {
@@ -93,5 +98,46 @@ class ProcurementDtoServiceImplTest {
     @NullAndEmptySource
     void givenNull_remodelPriceToBigDecimal_thenNull(String nullDate) {
         Assertions.assertNull(procurementDtoService.remodelPriceToBigDecimal(nullDate));
+    }
+
+    @ParameterizedTest
+    @NullAndEmptySource
+    void givenNull_remodelProcedureType_thenDefaultValue(String procedureType) {
+        Assertions.assertEquals(ProcedureType.DEFAULT_NONAME_PROCEDURE, procurementDtoService.remodelProcedureType(procedureType));
+    }
+
+    @ParameterizedTest
+    @MethodSource("provideProcedureType")
+    void givenProcedure_remodelProcedureType_thenDefaultValue(String procedureTypeString, ProcedureType procedureType) {
+        Assertions.assertEquals(procedureType, procurementDtoService.remodelProcedureType(procedureTypeString));
+    }
+
+    private static Stream<Arguments> provideProcedureType() {
+        return Stream.of(
+                Arguments.of("Электронный аукцион", ProcedureType.ELECTRONIC_AUCTION),
+                Arguments.of("Закупка у единственного поставщика (подрядчика, исполнителя)", ProcedureType.PURCHASE_FROM_A_SINGLE_SUPPLIER),
+                Arguments.of("Запрос котировок в электронной форме", ProcedureType.REQUEST_FOR_QUOTATIONS_IN_ELECTRONIC_FORM),
+                Arguments.of("Способ определения поставщика (подрядчика, исполнителя), " +
+                                "установленный Правительством Российской Федерации в соответствии со ст. 111 Федерального закона № 44-ФЗ",
+                        ProcedureType.METHOD_FOR_DETERMINING_THE_SUPPLIER_BY_ARTICLE_111_44_FZ),
+                Arguments.of("Открытый конкурс в электронной форме", ProcedureType.OPEN_ELECTRONIC_COMPETITION),
+                Arguments.of("Закрытый аукцион", ProcedureType.CLOSED_AUCTION),
+                Arguments.of("Запрос предложений в электронной форме", ProcedureType.REQUEST_FOR_PROPOSALS_IN_ELECTRONIC_FORM),
+                Arguments.of("Предварительный отбор", ProcedureType.PRELIMINARY_SELECTION),
+                Arguments.of("Конкурс с ограниченным участием в электронной форме", ProcedureType.COMPETITION_WITH_LIMITED_PARTICIPATION_IN_ELECTRONIC_FORM),
+                Arguments.of("Запрос котировок", ProcedureType.REQUEST_FOR_QUOTATIONS),
+                Arguments.of("Открытый конкурс", ProcedureType.OPEN_COMPETITION),
+                Arguments.of("Закрытый конкурс", ProcedureType.CLOSED_COMPETITION),
+                Arguments.of("Двухэтапный конкурс в электронной форме", ProcedureType.TWO_STAGE_ELECTRONIC_COMPETITION),
+                Arguments.of("Закрытый двухэтапный конкурс", ProcedureType.CLOSED_TWO_STAGE_COMPETITION),
+                Arguments.of("Конкурс с ограниченным участием", ProcedureType.COMPETITION_WITH_LIMITED_PARTICIPATION),
+                Arguments.of("Двухэтапный конкурс", ProcedureType.TWO_STAGE_COMPETITION),
+                Arguments.of("Запрос котировок без размещения извещения", ProcedureType.REQUEST_FOR_QUOTATIONS_WITHOUT_PLACING_A_NOTICE),
+                Arguments.of("Запрос предложений", ProcedureType.REQUEST_FOR_PROPOSALS),
+                Arguments.of("Закупка товара у единственного поставщика на сумму," +
+                        " предусмотренную частью 12 статьи 93 Закона № 44-ФЗ", ProcedureType.PURCHASE_OF_GOODS_FROM_A_SINGLE_SUPPLIER),
+                Arguments.of("Электронный аукцион (ПП РФ 615)", ProcedureType.ELECTRONIC_AUCTION_615FZ),
+                Arguments.of("Предварительный отбор (ПП РФ 615)", ProcedureType.PRELIMINARY_SELECTION_615FZ)
+        );
     }
 }

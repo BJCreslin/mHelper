@@ -23,6 +23,7 @@ public class ProcurementDtoServiceImpl implements ProcurementDtoService {
     public static final String REMODEL_DTO_TO_PROCUREMENT = "Remodel Dto to Procurement {}";
     public static final String DTO_WAS_REMODELED = "Dto was remodeled {}";
     public static final String ERROR_URL = "Error URL %s";
+    public static final String NEED_ADD_TYPE = "Need add the procedure type: %s";
     public static final int FZ_615 = 615;
     public static final int FZ_44 = 44;
     public static final int FZ_223 = 223;
@@ -104,7 +105,15 @@ public class ProcurementDtoServiceImpl implements ProcurementDtoService {
     }
 
     protected ProcedureType remodelProcedureType(String procedureType) {
-        return null;
+        if (procedureType == null || procedureType.isEmpty() || procedureType.isBlank()) {
+            return ProcedureType.DEFAULT_NONAME_PROCEDURE;
+        }
+        var procedure = ProcedureType.get(procedureType);
+        if (procedure == ProcedureType.DEFAULT_NONAME_PROCEDURE) {
+            var msg = String.format(NEED_ADD_TYPE, procedureType);
+            logger.error(msg);
+        }
+        return procedure;
     }
 
     protected URL remodelStringUrlToURL(String linkOnPlacement) {
@@ -131,6 +140,10 @@ public class ProcurementDtoServiceImpl implements ProcurementDtoService {
     }
 
     protected LocalDate remodelDateLastUpdateToLocalDate(String lastUpdatedFromEIS) {
+        return getLocalDate(lastUpdatedFromEIS);
+    }
+
+    private LocalDate getLocalDate(String lastUpdatedFromEIS) {
         if (lastUpdatedFromEIS == null || lastUpdatedFromEIS.isEmpty() || lastUpdatedFromEIS.isBlank()) {
             return null;
         }
@@ -139,11 +152,7 @@ public class ProcurementDtoServiceImpl implements ProcurementDtoService {
     }
 
     protected LocalDate remodelDateOfPlacementToLocalDate(String dateOfPlacement) {
-        if (dateOfPlacement == null || dateOfPlacement.isEmpty() || dateOfPlacement.isBlank()) {
-            return null;
-        }
-        var timeParts = dateOfPlacement.substring(0, 10).split("\\.");
-        return LocalDate.of(Integer.parseInt(timeParts[2]), Integer.parseInt(timeParts[1]), Integer.parseInt(timeParts[0]));
+        return getLocalDate(dateOfPlacement);
     }
 
     protected ZonedDateTime remodelDateOfAuctionToZonedDateTime(String dateOfAuction, TimeZone timeZone) {
