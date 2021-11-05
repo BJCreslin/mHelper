@@ -6,6 +6,7 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.junit.jupiter.params.provider.NullAndEmptySource;
+import org.junit.jupiter.params.provider.ValueSource;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.ActiveProfiles;
 import ru.zhelper.zhelper.models.ProcedureType;
@@ -107,8 +108,14 @@ class ProcurementDtoServiceImplTest {
     }
 
     @ParameterizedTest
+    @ValueSource(strings = {"Bad1, Аукцион плохой"})
+    void givenProcedure_remodelProcedureType_thenProcedureType(String procedureTypeString) {
+        Assertions.assertEquals(ProcedureType.DEFAULT_NONAME_PROCEDURE, procurementDtoService.remodelProcedureType(procedureTypeString));
+    }
+
+    @ParameterizedTest
     @MethodSource("provideProcedureType")
-    void givenProcedure_remodelProcedureType_thenDefaultValue(String procedureTypeString, ProcedureType procedureType) {
+    void givenNoPresentProcedure_remodelProcedureType_thenDefaultValue(String procedureTypeString, ProcedureType procedureType) {
         Assertions.assertEquals(procedureType, procurementDtoService.remodelProcedureType(procedureTypeString));
     }
 
