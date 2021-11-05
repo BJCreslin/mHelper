@@ -18,7 +18,6 @@ import java.time.LocalTime;
 import java.time.ZonedDateTime;
 import java.util.TimeZone;
 
-
 @Service
 public class ProcurementDtoServiceImpl implements ProcurementDtoService {
     private static final Logger logger = LoggerFactory.getLogger(ProcurementDtoServiceImpl.class);
@@ -145,7 +144,6 @@ public class ProcurementDtoServiceImpl implements ProcurementDtoService {
         return getLocalDate(lastUpdatedFromEIS);
     }
 
-
     protected LocalDate remodelDateOfPlacementToLocalDate(String dateOfPlacement) {
         return getLocalDate(dateOfPlacement);
     }
@@ -156,7 +154,6 @@ public class ProcurementDtoServiceImpl implements ProcurementDtoService {
         }
         return ZonedDateTime.of(LocalDateTime.of(getLocalDate(dateOfAuction), getLocalTime(timeOfAuction)), timeZone.toZoneId());
     }
-
 
     protected BigDecimal remodelPriceToBigDecimal(String contractPrice) {
         if (contractPrice == null || contractPrice.isEmpty() || contractPrice.isBlank()) {
