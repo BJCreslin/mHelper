@@ -101,7 +101,7 @@ public class ProcurementDtoServiceImpl implements ProcurementDtoService {
         if (timeZone.contains("МСК") || timeZone.contains("UTC+3")) {
             return TimeZone.getTimeZone("Europe/Moscow");
         }
-        return null;
+        return TimeZone.getTimeZone("Europe/Moscow");
     }
 
     protected ProcedureType remodelProcedureType(String procedureType) {

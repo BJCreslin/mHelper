@@ -2,6 +2,7 @@ package ru.zhelper.zhelper.controllers;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
@@ -31,7 +32,7 @@ public class ChromeExtensionController {
 
     private final ProcurementDtoService service;
 
-    public ChromeExtensionController(ProcurementDtoService service) {
+    public ChromeExtensionController(@Qualifier("procurementDtoServiceImpl") ProcurementDtoService service) {
         this.service = service;
     }
 
