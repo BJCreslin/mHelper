@@ -6,7 +6,7 @@ import org.springframework.stereotype.Service;
 import ru.zhelper.zhelper.models.ProcedureType;
 import ru.zhelper.zhelper.models.Procurement;
 import ru.zhelper.zhelper.models.dto.ProcurementDto;
-import ru.zhelper.zhelper.services.ProcurementDataManager;
+import ru.zhelper.zhelper.services.dao.ProcurementDataManager;
 import ru.zhelper.zhelper.services.exceptions.BadDataParsingException;
 
 import java.math.BigDecimal;

@@ -9,7 +9,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import ru.zhelper.zhelper.models.Procurement;
 import ru.zhelper.zhelper.repository.ProcurementRepo;
-import ru.zhelper.zhelper.services.ProcurementDataManager;
 import ru.zhelper.zhelper.services.exceptions.DataManagerException;
 
 import javax.persistence.EntityNotFoundException;
