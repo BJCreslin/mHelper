@@ -32,7 +32,7 @@ public class ChromeExtensionController {
 
     private final ProcurementDtoService service;
 
-    public ChromeExtensionController(@Qualifier("procurementDtoServiceImpl") ProcurementDtoService service) {
+    public ChromeExtensionController(ProcurementDtoService service) {
         this.service = service;
     }
 

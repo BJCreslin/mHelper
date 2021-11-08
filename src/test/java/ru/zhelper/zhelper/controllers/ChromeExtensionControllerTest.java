@@ -16,6 +16,8 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import ru.zhelper.zhelper.models.dto.ProcurementDto;
 import ru.zhelper.zhelper.repository.ProcurementRepo;
 import ru.zhelper.zhelper.services.ProcurementService;
+import ru.zhelper.zhelper.services.chrome.ProcurementDtoService;
+import ru.zhelper.zhelper.services.chrome.ProcurementDtoServiceImpl;
 
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -26,7 +28,7 @@ class ChromeExtensionControllerTest {
     private final String PATH = "http://localhost:8080/chrome/";
     private final ObjectMapper mapper = new ObjectMapper();
     @MockBean
-    ProcurementService service;
+    ProcurementDtoServiceImpl service;
     @MockBean
     ProcurementRepo repo;
     @Autowired
