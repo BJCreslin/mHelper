@@ -28,7 +28,9 @@ public enum ProcedureType {
     PURCHASE_OF_GOODS_FROM_A_SINGLE_SUPPLIER("Закупка товара у единственного поставщика на сумму," +
             " предусмотренную частью 12 статьи 93 Закона № 44-ФЗ"),
     ELECTRONIC_AUCTION_615FZ("Электронный аукцион (ПП РФ 615)"),
-    PRELIMINARY_SELECTION_615FZ("Предварительный отбор (ПП РФ 615)");
+    PRELIMINARY_SELECTION_615FZ("Предварительный отбор (ПП РФ 615)"),
+    OTHER_223("223-ФЗ Прочие"),
+    DEFAULT_NONAME_PROCEDURE("Неопределенный тип закупки");
 
     private final String title;
     private static final Map<String, ProcedureType> ENUM_MAP;
@@ -55,6 +57,6 @@ public enum ProcedureType {
     }
 
     public static ProcedureType get(String name) {
-        return ENUM_MAP.get(name.toLowerCase());
+        return ENUM_MAP.getOrDefault(name.toLowerCase(), DEFAULT_NONAME_PROCEDURE);
     }
 }

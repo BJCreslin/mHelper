@@ -21,6 +21,7 @@ import ru.zhelper.zhelper.models.ProcedureType;
 import ru.zhelper.zhelper.models.Procurement;
 import ru.zhelper.zhelper.models.Stage;
 import ru.zhelper.zhelper.repository.ProcurementRepo;
+import ru.zhelper.zhelper.services.dao.ProcurementDataManagerImpl;
 import ru.zhelper.zhelper.services.exceptions.DataManagerException;
 
 import javax.transaction.Transactional;
