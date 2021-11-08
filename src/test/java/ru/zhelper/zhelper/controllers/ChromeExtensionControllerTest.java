@@ -21,14 +21,13 @@ import ru.zhelper.zhelper.services.chrome.ProcurementDtoServiceImpl;
 
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@WebMvcTest
+@WebMvcTest(ChromeExtensionController.class)
 @ActiveProfiles("test")
-@AutoConfigureMockMvc
 class ChromeExtensionControllerTest {
     private final String PATH = "http://localhost:8080/chrome/";
     private final ObjectMapper mapper = new ObjectMapper();
     @MockBean
-    ProcurementDtoServiceImpl service;
+    ProcurementDtoService service;
     @MockBean
     ProcurementRepo repo;
     @Autowired
