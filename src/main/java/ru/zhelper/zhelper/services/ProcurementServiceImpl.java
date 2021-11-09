@@ -7,6 +7,8 @@ import ru.zhelper.zhelper.models.dto.ProcurementAddress;
 import ru.zhelper.zhelper.repository.ProcurementRepo;
 import ru.zhelper.zhelper.services.parsers_dispatcher.Dispatcher;
 
+import java.util.Optional;
+
 @Service
 public class ProcurementServiceImpl implements ProcurementService {
     private final Dispatcher dispatcher;
@@ -21,13 +23,9 @@ public class ProcurementServiceImpl implements ProcurementService {
     @Override
     public void action(ProcurementAddress procurementAddress) {
         Procurement procurement = dispatcher.getFromUrl(procurementAddress.getAddress());
-        Procurement procurementFromDB = repository.getByUin(procurement.getUin());
-        if (procurementFromDB == null) {
-            repository.save(procurement);
-        } else {
-            BeanUtils.copyProperties(procurement, procurementFromDB, "id", "uin");
-            repository.save(procurementFromDB);
-        }
+        Optional<Procurement> procurementFromDB = repository.getByUin(procurement.getUin());
+        procurementFromDB.ifPresent(value -> BeanUtils.copyProperties(value, procurement, "id", "uin"));
+        repository.save(procurement);
     }
 
 

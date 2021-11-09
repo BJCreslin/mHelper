@@ -140,7 +140,8 @@ public class ProcurementDataManagerImpl implements ProcurementDataManager {
         if (LOGGER.isInfoEnabled()) {
             LOGGER.info("Find PROCUREMENT by UIN: {}", uin);
         }
-        return Optional.of(repository.getByUin(uin));
+
+        return repository.getByUin(uin);
     }
 
     @Override
