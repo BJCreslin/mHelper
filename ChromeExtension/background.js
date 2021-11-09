@@ -1,4 +1,4 @@
-const SERVER_URL = "https://zhelper.ru/api/";
+const SERVER_URL = "https://zhelper.ru/chrome/";
 chrome.runtime.onMessage.addListener(
     function (request, sender, sendResponse) {
         if (request.destination === "background") {
