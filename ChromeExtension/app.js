@@ -101,6 +101,9 @@ function fillProcurementWith615And44() {
             case 'Заказчик':
                 dataAboutProcurement.publisherName = x.nextElementSibling.innerText.trim();
                 break;
+            case 'Организация, осуществляющая размещение':
+                dataAboutProcurement.publisherName = x.nextElementSibling.innerText.trim();
+                break;
             case 'Начальная цена':
                 dataAboutProcurement.contractPrice = x.nextElementSibling.innerText.replace(" ₽", "").replace(",", ".").replaceAll(/\W/g, "").trim();
                 break;
