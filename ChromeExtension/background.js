@@ -1,5 +1,5 @@
-// const SERVER_URL = "https://zhelper.ru/chrome/";
-const SERVER_URL = "https://localhost:8080/chrome/";
+const SERVER_URL = "https://zhelper.ru/chrome/";
+// const SERVER_URL = "https://localhost:8080/chrome/";
 chrome.runtime.onMessage.addListener(
     function (request, sender, sendResponse) {
         if (request.destination === "background") {
@@ -8,7 +8,7 @@ chrome.runtime.onMessage.addListener(
                 mode: 'no-cors',
                 headers: {
                     'Accept': 'application/json, application/xml, text/plain, text/html, *.*',
-                    'Content-Type': 'application/x-www-form-urlencoded; charset=utf-8'
+                    'Content-Type': 'application/json; charset=utf-8'
                 },
                 body: JSON.stringify(request.data)
             });
