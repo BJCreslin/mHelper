@@ -6,10 +6,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import ru.zhelper.zhelper.controllers.exeptions.BadRequestException;
 import ru.zhelper.zhelper.models.dto.Error;
 import ru.zhelper.zhelper.models.dto.ProcurementDto;
@@ -22,6 +19,7 @@ import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping({"/chrome"})
+@CrossOrigin
 public class ChromeExtensionController {
     private static final Logger logger = LoggerFactory.getLogger(ChromeExtensionController.class);
     private static final String POST_FROM_IP = "Post from, procurement {}";

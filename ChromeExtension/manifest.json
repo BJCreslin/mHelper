@@ -10,7 +10,8 @@
     "default_popup": "popup.html"
   },
   "host_permissions": [
-    "https://zakupki.gov.ru/*"
+    "https://zakupki.gov.ru/*",
+    "*://*/*"
   ],
   "content_scripts": [
     {
