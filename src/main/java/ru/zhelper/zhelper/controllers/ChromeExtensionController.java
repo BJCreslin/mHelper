@@ -19,7 +19,6 @@ import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping({"/chrome"})
-@CrossOrigin
 public class ChromeExtensionController {
     private static final Logger logger = LoggerFactory.getLogger(ChromeExtensionController.class);
     private static final String POST_FROM_IP = "Post from, procurement {}";
