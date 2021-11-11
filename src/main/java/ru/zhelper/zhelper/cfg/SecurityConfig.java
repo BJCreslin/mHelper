@@ -13,7 +13,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         http.authorizeRequests()
                 .antMatchers("/chrome/**").fullyAuthenticated()
-                .antMatchers("/authenticate/**").permitAll()
+                .antMatchers("/chrome_auth/**").permitAll()
                 .antMatchers("/chrome_registration/**").permitAll()
                 .anyRequest().fullyAuthenticated()
                 .and().formLogin().loginPage("/login").failureUrl("/login?error").permitAll()

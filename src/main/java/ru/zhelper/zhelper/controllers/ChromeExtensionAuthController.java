@@ -6,8 +6,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 @Controller
-@RequestMapping("/chrome_registration")
-public class ChromeExtensionRegistrationController {
+@RequestMapping({"/chrome_auth"})
+public class ChromeExtensionAuthController {
     private static final Logger LOGGER = LoggerFactory.getLogger(ChromeExtensionAuthController.class);
 
 }
