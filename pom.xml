@@ -24,6 +24,7 @@
         <postgresVersion>42.2.23</postgresVersion>
         <H2Version>1.4.200</H2Version>
         <MavenCompilerVersion>3.3.1</MavenCompilerVersion>
+        <JwtVersion>0.9.1</JwtVersion>
     </properties>
     <profiles>
         <profile>

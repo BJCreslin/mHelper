@@ -57,6 +57,5 @@ public class ChromeExtensionController {
             logger.error(ERROR_FROM_PARSING, exception);
             throw new BadRequestException(ERROR_FROM_PARSING, exception);
         }
-
     }
 }
