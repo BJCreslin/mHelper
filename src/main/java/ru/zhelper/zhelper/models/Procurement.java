@@ -53,19 +53,19 @@ public class Procurement implements Serializable {
     //Дата и время окончания срока подачи заявок
     //ИНФОРМАЦИЯ О ПРОЦЕДУРЕ ЭЛЕКТРОННОГО АУКЦИОНА -> Дата и время окончания срока подачи заявок на участие в электронном аукционе
     //ПОРЯДОК ПРОВЕДЕНИЯ ПРОЦЕДУРЫ -> Дата и время окончания подачи заявок (по местному времени заказчика)
-    @Column(name = "application_deadline", nullable = false)
+    @Column(name = "application_deadline")
     private ZonedDateTime applicationDeadline;
 
     //Максимальная цена
     //Начальная цена
     //СПИСОК ЛОТОВ -> СВЕДЕНИЯ О ЦЕНЕ ДОГОВОРА -> Начальная (максимальная) цена договора 
-    @Column(name = "contract_price", nullable = false)
+    @Column(name = "contract_price")
     private BigDecimal contractPrice;
 
     //Тип закупки
     //ОБЩАЯ ИНФОРМАЦИЯ О ЗАКУПКЕ -> Способ определения поставщика (подрядчика, исполнителя)
     //ОБЩИЕ СВЕДЕНИЯ О ЗАКУПКЕ -> Способ размещения закупки
-    @Column(name = "procedure_type", nullable = false)
+    @Column(name = "procedure_type")
     @Enumerated(EnumType.STRING)
     private ProcedureType procedureType;
 
@@ -78,7 +78,7 @@ public class Procurement implements Serializable {
     //Есть ли ограничения по СМП
     //ПРЕИМУЩЕСТВА, ТРЕБОВАНИЯ К УЧАСТНИКАМ -> Ограничения и запреты
     //ТРЕБОВАНИЯ К УЧАСТНИКАМ ЗАКУПКИ или ПОРЯДОК ПРОВЕДЕНИЯ ПРОЦЕДУРЫ -> Порядок подведения итогов
-    @Column(name = "restrictions", nullable = false)
+    @Column(name = "restrictions")
     private String restrictions;
 
     //Ссылка на закупку на площадке размещения
@@ -91,7 +91,7 @@ public class Procurement implements Serializable {
     //Обеспечение заявки
     //ОБЕСПЕЧЕНИЕ ЗАЯВКИ -> Обеспечение заявки (размер)
     // = см. документацию
-    @Column(name = "application_secure", nullable = false)
+    @Column(name = "application_secure")
     private String applicationSecure;
 
     //Обеспечение контракта

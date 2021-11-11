@@ -12,9 +12,9 @@ import ru.zhelper.zhelper.exceptions.DaoException;
 import javax.naming.NamingException;
 import javax.sql.DataSource;
 
-@Configuration
-@EnableTransactionManagement
-@Profile("ci")
+//@Configuration
+//@EnableTransactionManagement
+//@Profile("ci")
 public class Config {
     private static final Logger LOGGER = LoggerFactory.getLogger(Config.class);
     private static final String ENV_JDBC = "java:comp/env/jdbc/zhelperdb";
