@@ -3,6 +3,7 @@ package ru.zhelper.zhelper.controllers;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 @Controller
@@ -10,4 +11,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 public class ChromeExtensionAuthController {
     private static final Logger LOGGER = LoggerFactory.getLogger(ChromeExtensionAuthController.class);
 
+    @GetMapping({"", "/"})
+    public void testAuth() {
+
+    }
 }
