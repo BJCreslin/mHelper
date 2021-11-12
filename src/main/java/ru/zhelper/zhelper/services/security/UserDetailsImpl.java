@@ -9,7 +9,7 @@ import ru.zhelper.zhelper.models.users.User;
 import java.util.Collection;
 import java.util.stream.Collectors;
 
-public class UserDetailServiceImpl implements UserDetails {
+public class UserDetailsImpl implements UserDetails {
     private static final long serialVersionUID = -4603089111149819076L;
 
     private Long id;
@@ -21,7 +21,7 @@ public class UserDetailServiceImpl implements UserDetails {
     private Collection<? extends GrantedAuthority> authorities;
 
 
-    public UserDetailServiceImpl(Long id, String username, String email, String telegramUserId, String password, Collection<? extends GrantedAuthority> authorities) {
+    public UserDetailsImpl(Long id, String username, String email, String telegramUserId, String password, Collection<? extends GrantedAuthority> authorities) {
         this.id = id;
         this.username = username;
         this.email = email;
@@ -34,7 +34,7 @@ public class UserDetailServiceImpl implements UserDetails {
         var authorities = user.getRoles().stream()
                 .map(role -> new SimpleGrantedAuthority(role.getName().getName()))
                 .collect(Collectors.toList());
-        return new UserDetailServiceImpl(
+        return new UserDetailsImpl(
                 user.getId(),
                 user.getUsername(),
                 user.getEmail(),
