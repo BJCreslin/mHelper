@@ -7,7 +7,7 @@ import ru.zhelper.zhelper.models.users.User;
 import java.util.Optional;
 
 @Repository
-public interface UserRepo extends JpaRepository<User, Long> {
+public interface UserRepository extends JpaRepository<User, Long> {
     Optional<User> findByUsername(String userName);
 
     Optional<User> findByTelegramUserId(String telegramUserId);
