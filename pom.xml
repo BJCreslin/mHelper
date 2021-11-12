@@ -19,9 +19,9 @@
         <java.version>11</java.version>
         <maven.compiler.source>11</maven.compiler.source>
         <maven.compiler.target>11</maven.compiler.target>
-        <JSoupVersion>1.14.1</JSoupVersion>
+        <JSoupVersion>1.14.3</JSoupVersion>
         <serFireVersion>3.0.0-M5</serFireVersion>
-        <postgresVersion>42.2.23</postgresVersion>
+        <postgresVersion>42.3.1</postgresVersion>
         <H2Version>1.4.200</H2Version>
         <MavenCompilerVersion>3.3.1</MavenCompilerVersion>
         <JjwtVersion>0.11.2</JjwtVersion>
