@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.*;
 import ru.zhelper.zhelper.controllers.exeptions.BadRequestException;
 import ru.zhelper.zhelper.models.dto.Error;
 import ru.zhelper.zhelper.models.dto.ProcurementDto;
-import ru.zhelper.zhelper.models.dto.Success;
+import ru.zhelper.zhelper.models.dto.MessageResponse;
 import ru.zhelper.zhelper.services.chrome.ProcurementDtoService;
 import ru.zhelper.zhelper.services.exceptions.BadDataParsingException;
 
@@ -49,7 +49,7 @@ public class ChromeExtensionController {
         }
         try {
             service.save(procurementDto);
-            var success = new Success();
+            var success = new MessageResponse();
             success.setMessage(PROCUREMENT_WAS_SAVED);
             success.setCode(1);
             return new ResponseEntity<>(success, HttpStatus.CREATED);

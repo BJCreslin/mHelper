@@ -5,7 +5,7 @@ import lombok.NoArgsConstructor;
 
 @NoArgsConstructor
 @Data
-public class Success {
+public class MessageResponse {
     private int code;
     private String message;
 }
