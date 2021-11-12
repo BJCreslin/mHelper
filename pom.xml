@@ -24,7 +24,7 @@
         <postgresVersion>42.2.23</postgresVersion>
         <H2Version>1.4.200</H2Version>
         <MavenCompilerVersion>3.3.1</MavenCompilerVersion>
-        <JwtVersion>0.9.1</JwtVersion>
+        <JjwtVersion>0.11.2</JjwtVersion>
     </properties>
     <profiles>
         <profile>
@@ -114,6 +114,25 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-security</artifactId>
         </dependency>
+        <dependency>
+            <groupId>io.jsonwebtoken</groupId>
+            <artifactId>jjwt-api</artifactId>
+            <version>${JjwtVersion}</version>
+        </dependency>
+        <dependency>
+            <groupId>io.jsonwebtoken</groupId>
+            <artifactId>jjwt-impl</artifactId>
+            <version>${JjwtVersion}</version>
+            <scope>runtime</scope>
+        </dependency>
+        <dependency>
+            <groupId>io.jsonwebtoken</groupId>
+            <artifactId>jjwt-jackson</artifactId>
+            <version>${JjwtVersion}</version>
+            <scope>runtime</scope>
+        </dependency>
+
+
     </dependencies>
     <build>
         <plugins>
