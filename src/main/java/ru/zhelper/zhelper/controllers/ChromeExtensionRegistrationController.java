@@ -8,6 +8,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @Controller
 @RequestMapping("/chrome_registration")
 public class ChromeExtensionRegistrationController {
-    private static final Logger LOGGER = LoggerFactory.getLogger(ChromeExtensionAuthController.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(ChromeExtensionRegistrationController.class);
 
 }

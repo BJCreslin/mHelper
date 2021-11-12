@@ -16,7 +16,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/chrome_auth/**").permitAll()
                 .antMatchers("/chrome_registration/**").permitAll()
                 .anyRequest().fullyAuthenticated()
-                .and().formLogin().loginPage("/login").failureUrl("/login?error").permitAll()
+                .and().formLogin().permitAll()
                 .and().logout().permitAll();
         http.csrf().disable();
     }
