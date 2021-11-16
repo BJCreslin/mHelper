@@ -36,7 +36,7 @@ public class ChromeExtensionController {
 
     @PostMapping(value = "/")
     @Validated
-    public ResponseEntity newProcurement(@Valid @RequestBody ProcurementDto procurementDto, BindingResult bindingResult) {
+    public ResponseEntity<?> newProcurement(@Valid @RequestBody ProcurementDto procurementDto, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             var errors = bindingResult.getFieldErrors();
             var responseObject = new Error();
