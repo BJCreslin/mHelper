@@ -38,7 +38,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         http.cors().and().csrf().disable()
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
                 .authorizeRequests()
-                .antMatchers("/chrome/**").fullyAuthenticated()
+                .antMatchers("/chrome/**").authenticated()
                 .antMatchers("/chrome_auth/**").permitAll()
                 .antMatchers("/chrome_registration/**").permitAll()
                 .anyRequest().fullyAuthenticated()
