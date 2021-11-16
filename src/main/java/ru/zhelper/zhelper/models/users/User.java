@@ -2,11 +2,9 @@ package ru.zhelper.zhelper.models.users;
 
 import lombok.Data;
 import org.hibernate.annotations.Type;
-import org.springframework.lang.Nullable;
 
 import javax.persistence.*;
 import javax.validation.constraints.Email;
-import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Null;
 import javax.validation.constraints.Size;
 import java.time.LocalDateTime;
@@ -21,7 +19,7 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Size(max = 30,min = 2)
+    @Size(max = 30, min = 2)
     private String username;
 
     @Size(max = 50)
@@ -51,5 +49,11 @@ public class User {
 
     public User() {
         this.created = LocalDateTime.now();
+    }
+
+    public User(String username, String email, String password) {
+        this.username = username;
+        this.email = email;
+        this.password = password;
     }
 }
