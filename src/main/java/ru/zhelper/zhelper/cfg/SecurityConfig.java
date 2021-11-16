@@ -23,6 +23,11 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     private UserDetailsService userDetailsService;
     private AuthEntryPointJwt unauthorizedHandler;
 
+    public SecurityConfig(UserDetailsService userDetailsService, AuthEntryPointJwt unauthorizedHandler) {
+        this.userDetailsService = userDetailsService;
+        this.unauthorizedHandler = unauthorizedHandler;
+    }
+
     @Bean
     public AuthTokenFilter authenticationJwtFilter() {
         return new AuthTokenFilter();
@@ -39,7 +44,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .anyRequest().fullyAuthenticated()
                 .and().formLogin().permitAll()
                 .and().logout().permitAll();
-        http.addFilterBefore(authenticationJwtFilter(), UsernamePasswordAuthenticationFilter());
+        http.addFilterBefore(authenticationJwtFilter(), UsernamePasswordAuthenticationFilter.class);
     }
 
     @Override

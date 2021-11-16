@@ -3,9 +3,11 @@ package ru.zhelper.zhelper.services.security;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.stereotype.Service;
 import ru.zhelper.zhelper.models.users.User;
 import ru.zhelper.zhelper.repository.UserRepository;
 
+@Service
 public class UserDetailsServiceImpl implements UserDetailsService {
     public static final String USER_NOT_FOUND_WITH_NAME = "User not found with name:";
     private final UserRepository repository;

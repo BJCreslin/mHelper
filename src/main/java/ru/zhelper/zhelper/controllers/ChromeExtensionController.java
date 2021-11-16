@@ -9,8 +9,8 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import ru.zhelper.zhelper.controllers.exeptions.BadRequestException;
 import ru.zhelper.zhelper.models.dto.Error;
-import ru.zhelper.zhelper.models.dto.ProcurementDto;
 import ru.zhelper.zhelper.models.dto.MessageResponse;
+import ru.zhelper.zhelper.models.dto.ProcurementDto;
 import ru.zhelper.zhelper.services.chrome.ProcurementDtoService;
 import ru.zhelper.zhelper.services.exceptions.BadDataParsingException;
 
@@ -25,6 +25,7 @@ public class ChromeExtensionController {
     private static final String ERROR_FROM_PARSING = "Error parsing";
     private static final String PROCUREMENT_IS_INVALID = "Procurement is invalid.";
     private static final String PROCUREMENT_WAS_SAVED = "Procurement was saved";
+    public static final String SUCCESSFUL_CONNECTION = "Successful connection";
 
     private final ProcurementDtoService service;
 
@@ -57,5 +58,11 @@ public class ChromeExtensionController {
             logger.error(ERROR_FROM_PARSING, exception);
             throw new BadRequestException(ERROR_FROM_PARSING, exception);
         }
+    }
+
+    @GetMapping({"", "/"})
+    @ResponseBody
+    public ResponseEntity<?> testConnect() {
+        return ResponseEntity.ok(new MessageResponse(SUCCESSFUL_CONNECTION));
     }
 }
