@@ -45,7 +45,6 @@ public class ChromeExtensionAuthController {
     private final UserRepository userRepository;
     private final RoleRepository roleRepository;
     private final PasswordEncoder passwordEncoder;
-    ;
 
     public ChromeExtensionAuthController(AuthenticationManager authenticationManager, JwtUtils jwtUtils, UserRepository userRespository, RoleRepository roleRepository, PasswordEncoder passwordEncoder) {
         this.authenticationManager = authenticationManager;
@@ -91,12 +90,14 @@ public class ChromeExtensionAuthController {
             LOGGER.debug("Create new User with Name {}, email {}", signupRequest.getUserName(), signupRequest.getEmail());
         }
         if (userRepository.existsByUsername(signupRequest.getUserName())) {
+            LOGGER.error(USERNAME_IS_EXIST);
             return ResponseEntity
                     .badRequest()
                     .body(new MessageResponse(MessageResponse.BAD_CODE, USERNAME_IS_EXIST));
         }
 
         if (userRepository.existsByEmail(signupRequest.getEmail())) {
+            LOGGER.error(EMAIL_IS_EXIST);
             return ResponseEntity
                     .badRequest()
                     .body(new MessageResponse(MessageResponse.BAD_CODE, EMAIL_IS_EXIST));
@@ -142,7 +143,9 @@ public class ChromeExtensionAuthController {
         }
         user.setRoles(roles);
         userRepository.save(user);
-
+        if (LOGGER.isDebugEnabled()) {
+            LOGGER.debug(USER_CREATED);
+        }
         return ResponseEntity.ok(new MessageResponse(USER_CREATED));
     }
 }
