@@ -40,10 +40,11 @@ public class ChromeExtensionController {
         if (bindingResult.hasErrors()) {
             var errors = bindingResult.getFieldErrors();
             var responseObject = new Error();
-            responseObject.setCode(-1);
+            responseObject.setCode(MessageResponse.BAD_CODE);
             var message = errors.stream().map(error -> "@" + error.getField().toUpperCase() + ": " + error.getDefaultMessage()).collect(Collectors.toList());
             responseObject.setMessage(PROCUREMENT_IS_INVALID);
             responseObject.setCause(message.toString());
+            logger.error(message.toString());
             return new ResponseEntity<>(responseObject, HttpStatus.BAD_REQUEST);
         }
         if (logger.isDebugEnabled()) {
@@ -53,7 +54,7 @@ public class ChromeExtensionController {
             service.save(procurementDto);
             var success = new MessageResponse();
             success.setMessage(PROCUREMENT_WAS_SAVED);
-            success.setCode(1);
+            success.setCode(MessageResponse.FINE_CODE);
             return new ResponseEntity<>(success, HttpStatus.CREATED);
         } catch (BadDataParsingException exception) {
             logger.error(ERROR_FROM_PARSING, exception);
