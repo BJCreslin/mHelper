@@ -40,6 +40,7 @@ public class ChromeExtensionAuthController {
     public static final String CHROME_EXTENSION_IS_NOT_FOUND = "Error, Role CHROME EXTENSION is not found";
     public static final String AUTHENTICATING = "User with UserName {} is authenticating";
     public static final String USER_CREATED = "User CREATED";
+    public static final String SUCCESSFUL_CONNECTION = "Successful connection";
     private final AuthenticationManager authenticationManager;
     private final JwtUtils jwtUtils;
     private final UserRepository userRepository;
@@ -56,8 +57,8 @@ public class ChromeExtensionAuthController {
 
     @GetMapping({"", "/"})
     @ResponseBody
-    public String testAuth() {
-        return "hello";
+    public ResponseEntity<?> testConnect() {
+        return ResponseEntity.ok(new MessageResponse(SUCCESSFUL_CONNECTION));
     }
 
     @PostMapping("/signin")
