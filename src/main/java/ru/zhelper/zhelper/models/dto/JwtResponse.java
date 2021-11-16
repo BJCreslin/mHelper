@@ -2,9 +2,8 @@ package ru.zhelper.zhelper.models.dto;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import ru.zhelper.zhelper.models.users.Role;
 
-import java.util.Set;
+import java.util.List;
 
 @Data
 @NoArgsConstructor
@@ -14,5 +13,13 @@ public class JwtResponse {
     private Long id;
     private String userName;
     private String email;
-    private Set<Role> roles;
+    private List<String> roles;
+
+    public JwtResponse(String token, Long id, String userName, String email, List<String> roles) {
+        this.token = token;
+        this.id = id;
+        this.userName = userName;
+        this.email = email;
+        this.roles = roles;
+    }
 }
