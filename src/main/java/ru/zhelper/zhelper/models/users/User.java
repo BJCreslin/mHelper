@@ -2,10 +2,12 @@ package ru.zhelper.zhelper.models.users;
 
 import lombok.Data;
 import org.hibernate.annotations.Type;
+import org.springframework.lang.Nullable;
 
 import javax.persistence.*;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Null;
 import javax.validation.constraints.Size;
 import java.time.LocalDateTime;
 import java.util.HashSet;
@@ -27,6 +29,7 @@ public class User extends BaseEntity {
 
     @Size(max = 50)
     @Email
+    @Null
     private String email;
 
     @Size(max = 120)
