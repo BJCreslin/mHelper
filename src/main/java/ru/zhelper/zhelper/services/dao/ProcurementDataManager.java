@@ -2,7 +2,7 @@ package ru.zhelper.zhelper.services.dao;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import ru.zhelper.zhelper.models.Procurement;
+import ru.zhelper.zhelper.models.procurements.Procurement;
 
 import java.time.LocalDate;
 import java.util.List;

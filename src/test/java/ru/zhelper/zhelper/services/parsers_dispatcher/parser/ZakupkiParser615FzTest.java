@@ -9,8 +9,8 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 import org.springframework.test.context.ActiveProfiles;
-import ru.zhelper.zhelper.models.ProcedureType;
-import ru.zhelper.zhelper.models.Stage;
+import ru.zhelper.zhelper.models.procurements.ProcedureType;
+import ru.zhelper.zhelper.models.procurements.Stage;
 import ru.zhelper.zhelper.services.exceptions.BadDataParsingException;
 
 import java.io.IOException;

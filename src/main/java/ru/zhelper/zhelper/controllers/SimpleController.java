@@ -6,7 +6,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import ru.zhelper.zhelper.controllers.exeptions.BadRequestException;
-import ru.zhelper.zhelper.models.Procurement;
+import ru.zhelper.zhelper.models.procurements.Procurement;
 import ru.zhelper.zhelper.models.dto.ProcurementAddress;
 import ru.zhelper.zhelper.repository.ProcurementRepo;
 import ru.zhelper.zhelper.services.ProcurementService;

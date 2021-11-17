@@ -2,13 +2,9 @@ package ru.zhelper.zhelper.services.validator;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
-import ru.zhelper.zhelper.models.ProcurementType;
+import ru.zhelper.zhelper.models.procurements.ProcurementType;
 
 import java.util.ArrayList;
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 class URLValidatorImplTest {
 

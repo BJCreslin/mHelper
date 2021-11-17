@@ -6,9 +6,9 @@ import org.jsoup.nodes.Element;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
-import ru.zhelper.zhelper.models.ProcedureType;
-import ru.zhelper.zhelper.models.Procurement;
-import ru.zhelper.zhelper.models.Stage;
+import ru.zhelper.zhelper.models.procurements.ProcedureType;
+import ru.zhelper.zhelper.models.procurements.Procurement;
+import ru.zhelper.zhelper.models.procurements.Stage;
 import ru.zhelper.zhelper.services.exceptions.BadDataParsingException;
 
 import java.io.IOException;

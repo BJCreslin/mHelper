@@ -1,4 +1,4 @@
-package ru.zhelper.zhelper.models;
+package ru.zhelper.zhelper.models.procurements;
 
 import java.util.Collections;
 import java.util.Map;
