@@ -7,7 +7,7 @@ import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-import ru.zhelper.zhelper.models.Procurement;
+import ru.zhelper.zhelper.models.procurements.Procurement;
 import ru.zhelper.zhelper.repository.ProcurementRepo;
 import ru.zhelper.zhelper.services.exceptions.DataManagerException;
 
