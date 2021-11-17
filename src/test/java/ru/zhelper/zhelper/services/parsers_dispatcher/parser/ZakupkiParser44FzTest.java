@@ -5,6 +5,7 @@ import org.jsoup.nodes.Document;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import ru.zhelper.zhelper.models.ProcedureType;
@@ -22,7 +23,7 @@ import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 
 @SpringBootTest
-@ActiveProfiles("test")
+@ActiveProfiles("serviceTest")
 class ZakupkiParser44FzTest {
     private static final String FILE_NAME_GOOD_HTML = "44fz0834100000221000038.html";
     private static final String FILE_NAME_BAD_HTML = "44fz0834100000221000038bad.html";

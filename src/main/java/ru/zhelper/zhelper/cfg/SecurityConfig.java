@@ -2,6 +2,7 @@ package ru.zhelper.zhelper.cfg;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Profile;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
@@ -16,11 +17,12 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 import ru.zhelper.zhelper.cfg.jwt.AuthEntryPointJwt;
 import ru.zhelper.zhelper.cfg.jwt.AuthTokenFilter;
 
+@Profile("!test")
 @Configuration
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(prePostEnabled = true)
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
-    private UserDetailsService userDetailsService;
+    private final UserDetailsService userDetailsService;
     private AuthEntryPointJwt unauthorizedHandler;
 
     public SecurityConfig(UserDetailsService userDetailsService, AuthEntryPointJwt unauthorizedHandler) {
