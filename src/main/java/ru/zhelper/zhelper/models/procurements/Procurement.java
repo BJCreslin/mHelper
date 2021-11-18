@@ -1,4 +1,4 @@
-package ru.zhelper.zhelper.models;
+package ru.zhelper.zhelper.models.procurements;
 
 
 import lombok.AllArgsConstructor;
@@ -6,6 +6,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.Type;
+import ru.zhelper.zhelper.models.BaseEntity;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -20,16 +21,12 @@ import java.time.ZonedDateTime;
 @AllArgsConstructor
 @Builder
 @Table(name = "procurements")
-public class Procurement implements Serializable {
+public class Procurement extends BaseEntity implements Serializable {
 
     //Что означает поле
     //Где можно найти по ФЗ №44
     //и по ФЗ №223
     private static final long serialVersionUID = 8376509998615282286L;
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
 
     //Этап закупки
     //ОБЩАЯ ИНФОРМАЦИЯ О ЗАКУПКЕ -> Этап закупки

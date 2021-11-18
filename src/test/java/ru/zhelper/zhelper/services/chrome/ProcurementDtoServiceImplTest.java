@@ -9,7 +9,7 @@ import org.junit.jupiter.params.provider.NullAndEmptySource;
 import org.junit.jupiter.params.provider.ValueSource;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.ActiveProfiles;
-import ru.zhelper.zhelper.models.ProcedureType;
+import ru.zhelper.zhelper.models.procurements.ProcedureType;
 import ru.zhelper.zhelper.services.dao.ProcurementDataManager;
 
 import java.math.BigDecimal;

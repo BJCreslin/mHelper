@@ -7,8 +7,8 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
-import ru.zhelper.zhelper.models.ProcedureType;
-import ru.zhelper.zhelper.models.Stage;
+import ru.zhelper.zhelper.models.procurements.ProcedureType;
+import ru.zhelper.zhelper.models.procurements.Stage;
 import ru.zhelper.zhelper.services.exceptions.BadDataParsingException;
 
 import java.io.File;
