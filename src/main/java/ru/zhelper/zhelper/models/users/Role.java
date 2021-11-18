@@ -1,6 +1,7 @@
 package ru.zhelper.zhelper.models.users;
 
 import lombok.Data;
+import org.hibernate.annotations.Type;
 import ru.zhelper.zhelper.models.BaseEntity;
 
 import javax.persistence.*;

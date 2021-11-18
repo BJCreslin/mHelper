@@ -1,8 +1,9 @@
 package ru.zhelper.zhelper.models.users;
 
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.hibernate.annotations.Type;
-import org.springframework.lang.Nullable;
+import ru.zhelper.zhelper.models.BaseEntity;
 
 import javax.persistence.*;
 import javax.validation.constraints.Email;
@@ -42,10 +43,6 @@ public class User extends BaseEntity {
             joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "role_id"))
     private Set<Role> roles = new HashSet<>();
-
-    private LocalDateTime created;
-
-    private LocalDateTime edited;
 
     @Lob
     @Column(length = 10000)
