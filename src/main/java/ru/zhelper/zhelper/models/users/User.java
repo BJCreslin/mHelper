@@ -1,6 +1,7 @@
 package ru.zhelper.zhelper.models.users;
 
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.hibernate.annotations.Type;
 import ru.zhelper.zhelper.models.BaseEntity;
 
@@ -19,6 +20,7 @@ import java.util.Set;
                 @UniqueConstraint(columnNames = "email"),
                 @UniqueConstraint(columnNames = "telegramUserId")
         })
+@NoArgsConstructor
 public class User extends BaseEntity {
     @NotBlank(message = "Name is mandatory")
     @Size(max = 30)
@@ -43,4 +45,10 @@ public class User extends BaseEntity {
     @Column(length = 10000)
     @Type(type = "org.hibernate.type.TextType")
     private String comment;
+
+    public User(String userName, String email, String password) {
+        this.username = userName;
+        this.email = email;
+        this.password = password;
+    }
 }

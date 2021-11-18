@@ -5,7 +5,6 @@ chrome.runtime.onMessage.addListener(
         if (request.destination === "background") {
             fetch(SERVER_URL, {
                 method: 'POST',
-                // mode: 'no-cors',
                 headers: {
                     'Accept': 'application/json, application/xml, text/plain, text/html, *.*',
                     'Content-Type': 'application/json; charset=utf-8'
@@ -18,10 +17,6 @@ chrome.runtime.onMessage.addListener(
                     ));
                 }
             })
-            // const request = new XMLHttpRequest();
-            // request.open("POST", SERVER_URL, true);
-            // request.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
-            // request.send(JSON.stringify(request.data));
             return true;
         }
     }
