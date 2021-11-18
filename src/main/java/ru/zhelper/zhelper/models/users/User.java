@@ -2,12 +2,12 @@ package ru.zhelper.zhelper.models.users;
 
 import lombok.Data;
 import org.hibernate.annotations.Type;
+import ru.zhelper.zhelper.models.BaseEntity;
 
 import javax.persistence.*;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
-import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -19,6 +19,7 @@ import java.util.Set;
                 @UniqueConstraint(columnNames = "email"),
                 @UniqueConstraint(columnNames = "telegramUserId")
         })
+@NoArgsConstructor
 public class User extends BaseEntity {
     @NotBlank(message = "Name is mandatory")
     @Size(max = 30)
@@ -39,21 +40,13 @@ public class User extends BaseEntity {
             inverseJoinColumns = @JoinColumn(name = "role_id"))
     private Set<Role> roles = new HashSet<>();
 
-    private LocalDateTime created;
-
-    private LocalDateTime edited;
-
     @Lob
     @Column(length = 10000)
     @Type(type = "org.hibernate.type.TextType")
     private String comment;
 
-    public User() {
-        this.created = LocalDateTime.now();
-    }
-
-    public User(String username, String email, String password) {
-        this.username = username;
+    public User(String userName, String email, String password) {
+        this.username = userName;
         this.email = email;
         this.password = password;
     }
