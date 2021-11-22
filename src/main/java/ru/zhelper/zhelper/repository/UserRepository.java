@@ -12,9 +12,9 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
     Optional<User> findByTelegramUserId(String telegramUserId);
 
-    Boolean existsByUsername(String userName);
+    boolean existsByUsername(String userName);
 
-    Boolean existsByTelegramUserId(String telegramUserId);
+    boolean existsByTelegramUserId(String telegramUserId);
 
-    Boolean existsByEmail(String email);
+    boolean existsByEmail(String email);
 }
