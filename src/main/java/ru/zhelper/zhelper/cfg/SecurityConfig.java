@@ -26,17 +26,13 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     public static final String CHROME_API = "/chrome/**";
     public static final String CHROME_AUTH = "/chrome_auth/**";
     public static final String CHROME_REGISTRATION = "/chrome_registration/**";
-    private final UserDetailsService userDetailsService;
-    private AuthEntryPointJwt unauthorizedHandler;
 
-    public SecurityConfig(UserDetailsService userDetailsService, AuthEntryPointJwt unauthorizedHandler) {
-        this.userDetailsService = userDetailsService;
-        this.unauthorizedHandler = unauthorizedHandler;
-    }
+    private final JwtTokenProvider jwtTokenProvider;
 
     @Bean
-    public AuthTokenFilter authenticationJwtFilter() {
-        return new AuthTokenFilter();
+    @Override
+    public AuthenticationManager authenticationManagerBean() throws Exception {
+        return super.authenticationManagerBean();
     }
 
     @Override
@@ -50,18 +46,12 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .anyRequest().authenticated()
                 .and().formLogin().permitAll()
                 .and().logout().permitAll();
-        http.addFilterBefore(authenticationJwtFilter(), UsernamePasswordAuthenticationFilter.class);
+        http.addFilterBefore(new JwtConfigurer(jwtTokenProvider));
     }
 
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
         auth.userDetailsService(userDetailsService).passwordEncoder(passwordEncoder());
-    }
-
-    @Bean
-    @Override
-    public AuthenticationManager authenticationManagerBean() throws Exception {
-        return super.authenticationManagerBean();
     }
 
     @Bean
