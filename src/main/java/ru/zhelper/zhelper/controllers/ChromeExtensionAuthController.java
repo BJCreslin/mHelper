@@ -8,10 +8,11 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
-import ru.zhelper.zhelper.cfg.jwt.JwtUtils;
+import ru.zhelper.zhelper.cfg.JwtTokenProvider;
 import ru.zhelper.zhelper.models.dto.JwtResponse;
 import ru.zhelper.zhelper.models.dto.LoginRequest;
 import ru.zhelper.zhelper.models.dto.MessageResponse;
@@ -41,15 +42,16 @@ public class ChromeExtensionAuthController {
     public static final String AUTHENTICATING = "User with UserName {} is authenticating";
     public static final String USER_CREATED = "User CREATED";
     public static final String SUCCESSFUL_CONNECTION = "Successful connection";
+    public static final String USER_NOT_FOUND = "User with name %s not found";
     private final AuthenticationManager authenticationManager;
-    private final JwtUtils jwtUtils;
+    private final JwtTokenProvider jwtTokenProvider;
     private final UserRepository userRepository;
     private final RoleRepository roleRepository;
     private final PasswordEncoder passwordEncoder;
 
-    public ChromeExtensionAuthController(AuthenticationManager authenticationManager, JwtUtils jwtUtils, UserRepository userRespository, RoleRepository roleRepository, PasswordEncoder passwordEncoder) {
+    public ChromeExtensionAuthController(AuthenticationManager authenticationManager, JwtTokenProvider jwtTokenProvider, UserRepository userRespository, RoleRepository roleRepository, PasswordEncoder passwordEncoder) {
         this.authenticationManager = authenticationManager;
-        this.jwtUtils = jwtUtils;
+        this.jwtTokenProvider = jwtTokenProvider;
         this.userRepository = userRespository;
         this.roleRepository = roleRepository;
         this.passwordEncoder = passwordEncoder;
@@ -71,13 +73,13 @@ public class ChromeExtensionAuthController {
                         loginRequest.getUserName(),
                         loginRequest.getPassword()));
         SecurityContextHolder.getContext().setAuthentication(authentication);
-        String jwt = jwtUtils.generateJwtToken(authentication);
-
+        User user = userRepository.findByUsername(loginRequest.getUserName()).
+                orElseThrow(() -> new UsernameNotFoundException(String.format(USER_NOT_FOUND, loginRequest.getUserName())));
         JwtUser userDetails = (JwtUser) authentication.getPrincipal();
         List<String> roles = userDetails.getAuthorities().stream()
                 .map(GrantedAuthority::getAuthority)
                 .collect(Collectors.toList());
-
+        String jwt = jwtTokenProvider.createToken(user.getUsername(), user.getRoles());
         return ResponseEntity.ok(new JwtResponse(jwt,
                 userDetails.getId(),
                 userDetails.getUsername(),
