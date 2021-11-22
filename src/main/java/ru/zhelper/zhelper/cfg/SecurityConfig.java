@@ -40,9 +40,11 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers(CHROME_API).hasAnyRole(ERole.ROLE_CHROME_EXTENSION.getName(), ERole.ROLE_ADMIN.getName())
                 .antMatchers(CHROME_AUTH).permitAll()
                 .antMatchers(CHROME_REGISTRATION).permitAll()
+                .and().authorizeRequests().antMatchers("/h2-console/**").permitAll().filterSecurityInterceptorOncePerRequest(false)
                 .anyRequest().authenticated()
                 .and().formLogin().permitAll()
                 .and().logout().permitAll().and()
                 .apply(new JwtConfigurer(jwtTokenProvider));
+        http.headers().frameOptions().disable();
     }
 }

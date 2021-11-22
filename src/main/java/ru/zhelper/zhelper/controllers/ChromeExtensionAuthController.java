@@ -92,6 +92,7 @@ public class ChromeExtensionAuthController {
         if (LOGGER.isDebugEnabled()) {
             LOGGER.debug("Create new User with Name {}, email {}", signupRequest.getUserName(), signupRequest.getEmail());
         }
+        LOGGER.error("*********************" + signupRequest.toString());
         if (userRepository.existsByUsername(signupRequest.getUserName())) {
             LOGGER.error(USERNAME_IS_EXIST);
             return ResponseEntity
