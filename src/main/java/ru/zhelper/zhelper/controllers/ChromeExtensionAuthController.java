@@ -30,7 +30,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 @Controller
-@RequestMapping({"chrome_auth"})
+@RequestMapping({"/chrome_auth"})
 @CrossOrigin(origins = "*", maxAge = 3600)
 public class ChromeExtensionAuthController {
     private static final Logger LOGGER = LoggerFactory.getLogger(ChromeExtensionAuthController.class);
