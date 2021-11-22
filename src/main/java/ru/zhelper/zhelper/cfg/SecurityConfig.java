@@ -23,6 +23,9 @@ import ru.zhelper.zhelper.models.users.ERole;
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(prePostEnabled = true)
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
+    public static final String CHROME_API = "/chrome/**";
+    public static final String CHROME_AUTH = "/chrome_auth/**";
+    public static final String CHROME_REGISTRATION = "/chrome_registration/**";
     private final UserDetailsService userDetailsService;
     private AuthEntryPointJwt unauthorizedHandler;
 
@@ -41,9 +44,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         http.cors().and().csrf().disable()
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
                 .authorizeRequests()
-                .antMatchers("/chrome/**").hasAnyRole(ERole.ROLE_CHROME_EXTENSION.getName(), ERole.ROLE_ADMIN.getName())
-                .antMatchers("/chrome_auth/**").permitAll()
-                .antMatchers("/chrome_registration/**").permitAll()
+                .antMatchers(CHROME_API).hasAnyRole(ERole.ROLE_CHROME_EXTENSION.getName(), ERole.ROLE_ADMIN.getName())
+                .antMatchers(CHROME_AUTH).permitAll()
+                .antMatchers(CHROME_REGISTRATION).permitAll()
                 .anyRequest().authenticated()
                 .and().formLogin().permitAll()
                 .and().logout().permitAll();
