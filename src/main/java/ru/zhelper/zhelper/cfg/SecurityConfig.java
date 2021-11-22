@@ -16,6 +16,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import ru.zhelper.zhelper.cfg.jwt.AuthEntryPointJwt;
 import ru.zhelper.zhelper.cfg.jwt.AuthTokenFilter;
+import ru.zhelper.zhelper.models.users.ERole;
 
 @Profile("!test")
 @Configuration
@@ -40,10 +41,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         http.cors().and().csrf().disable()
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
                 .authorizeRequests()
-                .antMatchers("/chrome/**").authenticated()
+                .antMatchers("/chrome/**").hasAnyRole(ERole.ROLE_CHROME_EXTENSION.getName(), ERole.ROLE_ADMIN.getName())
                 .antMatchers("/chrome_auth/**").permitAll()
                 .antMatchers("/chrome_registration/**").permitAll()
-                .anyRequest().fullyAuthenticated()
+                .anyRequest().authenticated()
                 .and().formLogin().permitAll()
                 .and().logout().permitAll();
         http.addFilterBefore(authenticationJwtFilter(), UsernamePasswordAuthenticationFilter.class);
