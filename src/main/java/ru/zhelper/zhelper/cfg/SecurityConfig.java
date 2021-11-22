@@ -4,18 +4,11 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
-import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-import ru.zhelper.zhelper.cfg.jwt.AuthEntryPointJwt;
-import ru.zhelper.zhelper.cfg.jwt.AuthTokenFilter;
 import ru.zhelper.zhelper.models.users.ERole;
 
 @Profile("!test")
@@ -28,6 +21,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     public static final String CHROME_REGISTRATION = "/chrome_registration/**";
 
     private final JwtTokenProvider jwtTokenProvider;
+
+    public SecurityConfig(JwtTokenProvider jwtTokenProvider) {
+        this.jwtTokenProvider = jwtTokenProvider;
+    }
 
     @Bean
     @Override
@@ -45,17 +42,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers(CHROME_REGISTRATION).permitAll()
                 .anyRequest().authenticated()
                 .and().formLogin().permitAll()
-                .and().logout().permitAll();
-        http.addFilterBefore(new JwtConfigurer(jwtTokenProvider));
-    }
-
-    @Override
-    protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-        auth.userDetailsService(userDetailsService).passwordEncoder(passwordEncoder());
-    }
-
-    @Bean
-    public PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder();
+                .and().logout().permitAll().and()
+                .apply(new JwtConfigurer(jwtTokenProvider));
     }
 }
