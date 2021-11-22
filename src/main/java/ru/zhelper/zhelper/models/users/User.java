@@ -6,11 +6,7 @@ import org.hibernate.annotations.Type;
 import ru.zhelper.zhelper.models.BaseEntity;
 
 import javax.persistence.*;
-import javax.validation.constraints.Email;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.Null;
-import javax.validation.constraints.Size;
-import java.time.LocalDateTime;
+import javax.validation.constraints.*;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -38,6 +34,9 @@ public class User extends BaseEntity {
 
     private String telegramUserId;
 
+    @NotNull
+    private boolean enabled;
+
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(name = "user_roles",
             joinColumns = @JoinColumn(name = "user_id"),
@@ -53,5 +52,6 @@ public class User extends BaseEntity {
         this.username = userName;
         this.email = email;
         this.password = password;
+        this.enabled = true;
     }
 }

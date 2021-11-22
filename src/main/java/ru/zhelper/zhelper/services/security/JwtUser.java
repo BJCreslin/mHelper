@@ -9,24 +9,25 @@ import ru.zhelper.zhelper.models.users.User;
 import java.util.Collection;
 import java.util.stream.Collectors;
 
-public class UserDetailsImpl implements UserDetails {
+public class JwtUser implements UserDetails {
     private static final long serialVersionUID = -4603089111149819076L;
 
-    private Long id;
-    private String username;
-    private String email;
-    private String telegramUserId;
+    private final Long id;
+    private final String username;
+    private final String email;
+    private final String telegramUserId;
     @JsonIgnore
-    private String password;
+    private final String password;
+    private final boolean enabled;
     private Collection<? extends GrantedAuthority> authorities;
 
-
-    public UserDetailsImpl(Long id, String username, String email, String telegramUserId, String password, Collection<? extends GrantedAuthority> authorities) {
+    public JwtUser(Long id, String username, String email, String telegramUserId, String password, boolean enabled, Collection<? extends GrantedAuthority> authorities) {
         this.id = id;
         this.username = username;
         this.email = email;
         this.telegramUserId = telegramUserId;
         this.password = password;
+        this.enabled = enabled;
         this.authorities = authorities;
     }
 
@@ -34,12 +35,13 @@ public class UserDetailsImpl implements UserDetails {
         var authorities = user.getRoles().stream()
                 .map(role -> new SimpleGrantedAuthority(role.getName().getName()))
                 .collect(Collectors.toList());
-        return new UserDetailsImpl(
+        return new JwtUser(
                 user.getId(),
                 user.getUsername(),
                 user.getEmail(),
                 user.getTelegramUserId(),
                 user.getPassword(),
+                user.isEnabled(),
                 authorities
         );
     }
@@ -88,6 +90,6 @@ public class UserDetailsImpl implements UserDetails {
 
     @Override
     public boolean isEnabled() {
-        return true;
+        return this.enabled;
     }
 }

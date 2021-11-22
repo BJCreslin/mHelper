@@ -21,7 +21,7 @@ import ru.zhelper.zhelper.models.users.Role;
 import ru.zhelper.zhelper.models.users.User;
 import ru.zhelper.zhelper.repository.RoleRepository;
 import ru.zhelper.zhelper.repository.UserRepository;
-import ru.zhelper.zhelper.services.security.UserDetailsImpl;
+import ru.zhelper.zhelper.services.security.JwtUser;
 
 import java.util.HashSet;
 import java.util.List;
@@ -73,7 +73,7 @@ public class ChromeExtensionAuthController {
         SecurityContextHolder.getContext().setAuthentication(authentication);
         String jwt = jwtUtils.generateJwtToken(authentication);
 
-        UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
+        JwtUser userDetails = (JwtUser) authentication.getPrincipal();
         List<String> roles = userDetails.getAuthorities().stream()
                 .map(GrantedAuthority::getAuthority)
                 .collect(Collectors.toList());

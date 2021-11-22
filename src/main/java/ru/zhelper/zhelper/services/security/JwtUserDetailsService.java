@@ -28,6 +28,6 @@ public class JwtUserDetailsService implements UserDetailsService {
         if (LOGGER.isDebugEnabled()) {
             LOGGER.debug(String.format(USER_LOADED, username));
         }
-        return UserDetailsImpl.build(user);
+        return JwtUser.build(user);
     }
 }
