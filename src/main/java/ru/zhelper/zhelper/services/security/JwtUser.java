@@ -33,7 +33,7 @@ public class JwtUser implements UserDetails {
 
     public static UserDetails build(User user) {
         var authorities = user.getRoles().stream()
-                .map(role -> new SimpleGrantedAuthority(role.getName().getName()))
+                .map(role -> new SimpleGrantedAuthority(role.getName()))
                 .collect(Collectors.toList());
         return new JwtUser(
                 user.getId(),
