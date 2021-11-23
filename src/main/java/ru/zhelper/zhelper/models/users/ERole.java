@@ -4,7 +4,7 @@ public enum ERole {
     ROLE_USER("USER"),
     ROLE_ADMIN("ADMIN"),
     ROLE_TELEGRAM("TELEGRAM"),
-    ROLE_CHROME_EXTENSION("ROLE CHROME EXTENSION"),
+    CHROME_EXTENSION("CHROME_EXTENSION"),
     ROLE_EMAIL("EMAIL");
 
     private final String name;

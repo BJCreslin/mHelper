@@ -131,7 +131,7 @@ public class ChromeExtensionAuthController {
                         break;
                     case "chrome":
                         Role modRole = roleRepository
-                                .findByName(ERole.ROLE_CHROME_EXTENSION.getName())
+                                .findByName(ERole.CHROME_EXTENSION.getName())
                                 .orElseThrow(() -> new RuntimeException(CHROME_EXTENSION_IS_NOT_FOUND));
                         roles.add(modRole);
 

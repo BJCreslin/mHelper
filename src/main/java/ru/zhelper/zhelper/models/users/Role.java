@@ -10,7 +10,7 @@ import java.util.Objects;
 @Entity
 @Table(name = "roles")
 public class Role extends BaseEntity {
-    @Column(length = 20)
+    @Column(name = "name")
     private String name;
 
     public Role() {

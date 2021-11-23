@@ -37,7 +37,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         http.cors().and().csrf().disable()
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
                 .authorizeRequests()
-                .antMatchers(CHROME_API).hasAnyRole(ERole.ROLE_CHROME_EXTENSION.getName(), ERole.ROLE_ADMIN.getName())
+                .antMatchers(CHROME_API).hasAnyRole(ERole.CHROME_EXTENSION.getName(), ERole.ROLE_ADMIN.getName())
                 .antMatchers(CHROME_AUTH).permitAll()
                 .antMatchers(CHROME_REGISTRATION).permitAll()
                 .and().authorizeRequests().antMatchers("/h2-console/**").permitAll().filterSecurityInterceptorOncePerRequest(false)
