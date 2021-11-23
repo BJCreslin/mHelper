@@ -26,7 +26,6 @@ public class User extends BaseEntity {
 
     @Size(max = 50)
     @Email
-    @Null
     private String email;
 
     @Size(max = 120)
