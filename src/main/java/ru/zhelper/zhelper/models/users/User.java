@@ -4,9 +4,13 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.Type;
 import ru.zhelper.zhelper.models.BaseEntity;
+import ru.zhelper.zhelper.models.BaseStatus;
 
 import javax.persistence.*;
-import javax.validation.constraints.*;
+import javax.validation.constraints.Email;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -52,5 +56,6 @@ public class User extends BaseEntity {
         this.email = email;
         this.password = password;
         this.enabled = true;
+        setStatus(BaseStatus.ACTIVE);
     }
 }
