@@ -116,7 +116,7 @@ public class ChromeExtensionAuthController {
 
         if (reqRoles == null) {
             Role userRole = roleRepository
-                    .findByName(ERole.ROLE_USER)
+                    .findByName(ERole.ROLE_USER.getName())
                     .orElseThrow(() -> new RuntimeException(USER_IS_NOT_FOUND));
             roles.add(userRole);
         } else {
@@ -124,14 +124,14 @@ public class ChromeExtensionAuthController {
                 switch (r) {
                     case "admin":
                         Role adminRole = roleRepository
-                                .findByName(ERole.ROLE_ADMIN)
+                                .findByName(ERole.ROLE_ADMIN.getName())
                                 .orElseThrow(() -> new RuntimeException(ADMIN_IS_NOT_FOUND));
                         roles.add(adminRole);
 
                         break;
                     case "chrome":
                         Role modRole = roleRepository
-                                .findByName(ERole.ROLE_CHROME_EXTENSION)
+                                .findByName(ERole.ROLE_CHROME_EXTENSION.getName())
                                 .orElseThrow(() -> new RuntimeException(CHROME_EXTENSION_IS_NOT_FOUND));
                         roles.add(modRole);
 
@@ -139,7 +139,7 @@ public class ChromeExtensionAuthController {
 
                     default:
                         Role userRole = roleRepository
-                                .findByName(ERole.ROLE_USER)
+                                .findByName(ERole.ROLE_USER.getName())
                                 .orElseThrow(() -> new RuntimeException(USER_IS_NOT_FOUND));
                         roles.add(userRole);
                 }
