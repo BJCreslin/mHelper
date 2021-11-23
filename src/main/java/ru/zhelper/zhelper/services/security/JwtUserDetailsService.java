@@ -6,6 +6,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
+import ru.zhelper.zhelper.models.jwt.JwtUser;
 import ru.zhelper.zhelper.models.users.User;
 import ru.zhelper.zhelper.repository.UserRepository;
 

@@ -12,7 +12,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
-import ru.zhelper.zhelper.cfg.JwtTokenProvider;
+import ru.zhelper.zhelper.services.security.JwtTokenProvider;
 import ru.zhelper.zhelper.models.dto.JwtResponse;
 import ru.zhelper.zhelper.models.dto.LoginRequest;
 import ru.zhelper.zhelper.models.dto.MessageResponse;
@@ -22,7 +22,7 @@ import ru.zhelper.zhelper.models.users.Role;
 import ru.zhelper.zhelper.models.users.User;
 import ru.zhelper.zhelper.repository.RoleRepository;
 import ru.zhelper.zhelper.repository.UserRepository;
-import ru.zhelper.zhelper.services.security.JwtUser;
+import ru.zhelper.zhelper.models.jwt.JwtUser;
 
 import java.util.HashSet;
 import java.util.List;

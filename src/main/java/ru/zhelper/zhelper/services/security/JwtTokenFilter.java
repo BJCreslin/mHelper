@@ -1,4 +1,4 @@
-package ru.zhelper.zhelper.cfg;
+package ru.zhelper.zhelper.services.security;
 
 import lombok.SneakyThrows;
 import org.springframework.security.core.Authentication;

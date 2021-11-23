@@ -1,4 +1,4 @@
-package ru.zhelper.zhelper.cfg;
+package ru.zhelper.zhelper.services.security;
 
 import io.jsonwebtoken.*;
 import org.springframework.beans.factory.annotation.Value;

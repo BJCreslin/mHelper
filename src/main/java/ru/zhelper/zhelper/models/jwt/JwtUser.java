@@ -1,4 +1,4 @@
-package ru.zhelper.zhelper.services.security;
+package ru.zhelper.zhelper.models.jwt;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.springframework.security.core.GrantedAuthority;

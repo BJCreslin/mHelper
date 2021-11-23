@@ -10,6 +10,8 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import ru.zhelper.zhelper.models.users.ERole;
+import ru.zhelper.zhelper.services.security.JwtConfigurer;
+import ru.zhelper.zhelper.services.security.JwtTokenProvider;
 
 @Profile("!test")
 @Configuration
