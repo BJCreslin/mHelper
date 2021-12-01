@@ -1,0 +1,22 @@
+### Login as ADMIN
+POST http://{{host}}:{{port}}/{{version_api}}/signin/
+Content-Type: application/json
+
+{
+  "login": "admin@zhelper.ru",
+  "password": " "
+}
+
+> {% client.global.set("authorization", response.headers.valueOf("Authorization")); %}
+
+###
+
+### update organization with id
+PUT http://{{host}}:{{port}}/{{version_api}}/chrome
+Content-Type: application/json
+Authorization: {{ authorization }}
+
+{
+
+}
+###

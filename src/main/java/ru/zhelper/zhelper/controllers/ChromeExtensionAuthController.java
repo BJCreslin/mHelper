@@ -13,17 +13,17 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import ru.zhelper.zhelper.cfg.ApiVersion;
-import ru.zhelper.zhelper.services.security.JwtTokenProvider;
 import ru.zhelper.zhelper.models.dto.JwtResponse;
 import ru.zhelper.zhelper.models.dto.LoginRequest;
 import ru.zhelper.zhelper.models.dto.MessageResponse;
 import ru.zhelper.zhelper.models.dto.SignUpRequest;
+import ru.zhelper.zhelper.models.jwt.JwtUser;
 import ru.zhelper.zhelper.models.users.ERole;
 import ru.zhelper.zhelper.models.users.Role;
 import ru.zhelper.zhelper.models.users.User;
 import ru.zhelper.zhelper.repository.RoleRepository;
 import ru.zhelper.zhelper.repository.UserRepository;
-import ru.zhelper.zhelper.models.jwt.JwtUser;
+import ru.zhelper.zhelper.services.security.JwtTokenProvider;
 
 import java.util.HashSet;
 import java.util.List;
@@ -68,7 +68,7 @@ public class ChromeExtensionAuthController {
         return ResponseEntity.ok(new MessageResponse(SUCCESSFUL_CONNECTION));
     }
 
-    @PostMapping("/signin")
+    @PostMapping({"/signin", "/signin/"})
     public ResponseEntity<?> signIn(@RequestBody LoginRequest loginRequest) {
         if (LOGGER.isDebugEnabled()) {
             LOGGER.debug(AUTHENTICATING, loginRequest.getUserName());
@@ -92,7 +92,7 @@ public class ChromeExtensionAuthController {
                 roles));
     }
 
-    @PostMapping("/signup")
+    @PostMapping({"/signup", "/signup/"})
     public ResponseEntity<?> registerUser(@RequestBody SignUpRequest signupRequest) {
         if (LOGGER.isDebugEnabled()) {
             LOGGER.debug("Create new User with Name {}, email {}", signupRequest.getUserName(), signupRequest.getEmail());

@@ -39,7 +39,7 @@ public class ChromeExtensionController {
         this.service = service;
     }
 
-    @PostMapping(value = "/")
+    @PostMapping({"/",""})
     @Validated
     public ResponseEntity<?> newProcurement(@Valid @RequestBody ProcurementDto procurementDto, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
