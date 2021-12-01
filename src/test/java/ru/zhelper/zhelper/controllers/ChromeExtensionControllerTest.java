@@ -1,6 +1,7 @@
 package ru.zhelper.zhelper.controllers;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.NullAndEmptySource;
@@ -27,8 +28,9 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @WebMvcTest(value = ChromeExtensionController.class)
 @ActiveProfiles("test")
 @AutoConfigureMockMvc(addFilters = false)
+@DisplayName("ChromeExtensionController")
 class ChromeExtensionControllerTest {
-    private final String PATH = "http://localhost:8080/chrome/";
+    private final String PATH = ChromeExtensionController.URL+"/";
     private final ObjectMapper mapper = new ObjectMapper();
     @MockBean
     ProcurementDtoService service;
