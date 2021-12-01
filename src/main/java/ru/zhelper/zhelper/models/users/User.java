@@ -1,5 +1,6 @@
 package ru.zhelper.zhelper.models.users;
 
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.Type;
@@ -23,6 +24,7 @@ import java.util.Set;
                 @UniqueConstraint(columnNames = "telegramUserId")
         })
 @NoArgsConstructor
+@Builder
 public class User extends BaseEntity {
     @NotBlank(message = "Name is mandatory")
     @Size(max = 30)
