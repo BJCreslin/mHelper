@@ -1,5 +1,5 @@
-// const SERVER_URL = "https://zhelper.ru/chrome/";
-const SERVER_URL = "https://localhost:8080/chrome/";
+// const SERVER_URL = "https://zhelper.ru/v1/chrome/";
+const SERVER_URL = "https://localhost:8080/v1/chrome/";
 chrome.runtime.onMessage.addListener(
     function (request, sender, sendResponse) {
         if (request.destination === "background") {

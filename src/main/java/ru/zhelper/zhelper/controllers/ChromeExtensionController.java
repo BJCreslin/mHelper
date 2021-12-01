@@ -7,6 +7,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import ru.zhelper.zhelper.cfg.ApiVersion;
 import ru.zhelper.zhelper.controllers.exeptions.BadRequestException;
 import ru.zhelper.zhelper.models.dto.Error;
 import ru.zhelper.zhelper.models.dto.MessageResponse;
@@ -17,11 +18,15 @@ import ru.zhelper.zhelper.services.exceptions.BadDataParsingException;
 import javax.validation.Valid;
 import java.util.stream.Collectors;
 
+import static ru.zhelper.zhelper.controllers.ChromeExtensionController.URL;
+
 @RestController
-@RequestMapping({"/chrome"})
+@RequestMapping(URL)
 @CrossOrigin(origins = "*", maxAge = 3600)
 public class ChromeExtensionController {
     private static final Logger logger = LoggerFactory.getLogger(ChromeExtensionController.class);
+    public static final String URL = ApiVersion.VERSION_1_0 + "/chrome";
+
     private static final String POST_FROM_IP = "Post from, procurement {}";
     private static final String ERROR_FROM_PARSING = "Error parsing";
     private static final String PROCUREMENT_IS_INVALID = "Procurement is invalid.";
