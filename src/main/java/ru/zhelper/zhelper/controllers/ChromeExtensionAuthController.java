@@ -12,6 +12,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
+import ru.zhelper.zhelper.cfg.ApiVersion;
 import ru.zhelper.zhelper.services.security.JwtTokenProvider;
 import ru.zhelper.zhelper.models.dto.JwtResponse;
 import ru.zhelper.zhelper.models.dto.LoginRequest;
@@ -29,11 +30,15 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import static ru.zhelper.zhelper.controllers.ChromeExtensionAuthController.URL;
+
 @Controller
-@RequestMapping({"/chrome_auth"})
+@RequestMapping(URL)
 @CrossOrigin(origins = "*", maxAge = 3600)
 public class ChromeExtensionAuthController {
     private static final Logger LOGGER = LoggerFactory.getLogger(ChromeExtensionAuthController.class);
+    public static final String URL = ApiVersion.VERSION_1_0 + "/chrome_auth";
+
     public static final String USERNAME_IS_EXIST = "Error: Username is exist";
     public static final String EMAIL_IS_EXIST = "Error: Email is exist";
     public static final String USER_IS_NOT_FOUND = "Error, Role USER is not found";
