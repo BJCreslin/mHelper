@@ -9,6 +9,7 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
+import ru.zhelper.zhelper.controllers.ChromeExtensionController;
 import ru.zhelper.zhelper.models.users.ERole;
 import ru.zhelper.zhelper.services.security.JwtConfigurer;
 import ru.zhelper.zhelper.services.security.JwtTokenProvider;
@@ -18,7 +19,7 @@ import ru.zhelper.zhelper.services.security.JwtTokenProvider;
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(prePostEnabled = true)
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
-    public static final String CHROME_API = "/chrome/**";
+    public static final String CHROME_API = ChromeExtensionController.URL;
     public static final String CHROME_AUTH = "/chrome_auth/**";
     public static final String CHROME_REGISTRATION = "/chrome_registration/**";
 
