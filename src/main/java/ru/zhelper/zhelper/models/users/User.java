@@ -60,4 +60,15 @@ public class User extends BaseEntity {
         this.enabled = true;
         setStatus(BaseStatus.ACTIVE);
     }
+
+    public User(String username, String email, String password, String telegramUserId, boolean enabled, Set<Role> roles, String comment) {
+        super();
+        this.username = username;
+        this.email = email;
+        this.password = password;
+        this.telegramUserId = telegramUserId;
+        this.enabled = enabled;
+        this.roles = roles;
+        this.comment = comment;
+    }
 }
