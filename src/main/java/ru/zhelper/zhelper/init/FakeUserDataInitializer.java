@@ -7,8 +7,8 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
+import ru.zhelper.zhelper.exceptions.DaoException;
 import ru.zhelper.zhelper.models.users.ERole;
-import ru.zhelper.zhelper.models.users.Role;
 import ru.zhelper.zhelper.models.users.User;
 import ru.zhelper.zhelper.repository.RoleRepository;
 import ru.zhelper.zhelper.repository.UserRepository;
@@ -16,8 +16,10 @@ import ru.zhelper.zhelper.repository.UserRepository;
 import java.util.ArrayList;
 import java.util.Set;
 
+import static ru.zhelper.zhelper.exceptions.DaoException.ERROR_GET_ROLE;
+
 @Component
-@Order(2)
+@Order(3)
 public class FakeUserDataInitializer implements CommandLineRunner {
     private static final Logger LOGGER = LoggerFactory.getLogger(FakeUserDataInitializer.class);
     private final boolean enabled;
@@ -42,7 +44,6 @@ public class FakeUserDataInitializer implements CommandLineRunner {
         this.roleRepository = roleRepository;
     }
 
-
     @Override
     @Transactional
     public void run(String... args) {
@@ -58,8 +59,7 @@ public class FakeUserDataInitializer implements CommandLineRunner {
 
     private void createUsers() {
         var users = new ArrayList<User>();
-        var role = new Role(ERole.CHROME_EXTENSION.getName());
-        roleRepository.save(role);
+        var role = roleRepository.findByName(ERole.CHROME_EXTENSION.getName()).orElseThrow(() -> new DaoException(ERROR_GET_ROLE));
         for (int i = 0; i < CHROME_USERS; i++) {
             users.add(User.builder()
                     .username(String.format(USER_NAME, i))
@@ -74,8 +74,7 @@ public class FakeUserDataInitializer implements CommandLineRunner {
     }
 
     private void createAdmin() {
-        var role = new Role(ERole.ROLE_ADMIN.getName());
-        roleRepository.save(role);
+        var role = roleRepository.findByName(ERole.ROLE_ADMIN.getName()).orElseThrow(() -> new DaoException(ERROR_GET_ROLE));
         User user = User.builder()
                 .username(ADMIN_NAME)
                 .email(ADMIN_EMAIL)
