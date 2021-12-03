@@ -69,6 +69,7 @@ public class ChromeExtensionAuthController {
     }
 
     @PostMapping({"/signin", "/signin/"})
+    @ResponseBody
     public ResponseEntity<?> signIn(@RequestBody LoginRequest loginRequest) {
         if (LOGGER.isDebugEnabled()) {
             LOGGER.debug(AUTHENTICATING, loginRequest.getUserName());

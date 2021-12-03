@@ -21,7 +21,7 @@ import ru.zhelper.zhelper.services.security.JwtTokenProvider;
 @EnableGlobalMethodSecurity(prePostEnabled = true)
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
     public static final String CHROME_API = ChromeExtensionController.URL;
-    public static final String CHROME_AUTH = ChromeExtensionAuthController.URL + "/**";
+    public static final String CHROME_AUTH = ChromeExtensionAuthController.URL + "/";
     public static final String CHROME_REGISTRATION = "/chrome_registration/**";
 
     private final JwtTokenProvider jwtTokenProvider;
