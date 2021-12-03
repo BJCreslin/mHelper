@@ -45,7 +45,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers(CHROME_AUTH).permitAll()
                 .antMatchers(CHROME_REGISTRATION).permitAll()
                 .and().authorizeRequests().antMatchers("/h2-console/**").permitAll().filterSecurityInterceptorOncePerRequest(false)
-                .anyRequest().authenticated()
+                .anyRequest().permitAll()
                 .and().formLogin().permitAll()
                 .and().logout().permitAll().and()
                 .apply(new JwtConfigurer(jwtTokenProvider));
