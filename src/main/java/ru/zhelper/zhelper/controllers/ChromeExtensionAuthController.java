@@ -71,6 +71,7 @@ public class ChromeExtensionAuthController {
     @PostMapping({"/signin", "/signin/"})
     @ResponseBody
     public ResponseEntity<?> signIn(@RequestBody LoginRequest loginRequest) {
+        LOGGER.error("8888888888888888888888888888888888");
         if (LOGGER.isDebugEnabled()) {
             LOGGER.debug(AUTHENTICATING, loginRequest.getUserName());
         }

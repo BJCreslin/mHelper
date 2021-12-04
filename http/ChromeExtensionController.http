@@ -1,10 +1,10 @@
 ### Login as ADMIN
-POST http://{{host}}:{{port}}/{{version_api}}/signin/
+POST http://{{host}}:{{port}}/{{version_api}}/{{auth}}/signin/
 Content-Type: application/json
 
 {
-  "login": "admin@zhelper.ru",
-  "password": " "
+  "userName": "Admin",
+  "password": "password"
 }
 
 > {% client.global.set("authorization", response.headers.valueOf("Authorization")); %}
