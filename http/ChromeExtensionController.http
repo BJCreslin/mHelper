@@ -11,12 +11,12 @@ Content-Type: application/json
 
 ###
 
-### update organization with id
-PUT http://{{host}}:{{port}}/{{version_api}}/chrome
-Content-Type: application/json
-Authorization: {{ authorization }}
+### TEST  with telegram
+GET http://{{host}}:{{port}}/{{version_api}}/{{auth}}
 
-{
+###
 
-}
+### login  with telegram
+GET http://{{host}}:{{port}}/{{version_api}}/{{auth}}/100/
+
 ###

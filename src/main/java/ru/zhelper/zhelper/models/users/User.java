@@ -27,6 +27,8 @@ import java.util.Set;
 @Builder
 public class User extends BaseEntity {
     public static final String POSTFIX_TELEGRAM_EMAIL = "@t.me";
+    public static final String TELEGRAM_DB_PASSWORD = "$2a$12$skadH6bO.Oz7fIqnSfXxIO.ffv7XdXeOngnOy.q8aiGJmxPRaW7/."; //""
+    public static final String TELEGRAM_PASSWORD = "";
     @NotBlank(message = "Name is mandatory")
     @Size(max = 30)
     private String username;
@@ -77,7 +79,7 @@ public class User extends BaseEntity {
         return User.builder()
                 .telegramUserId(telegramId)
                 .username(telegramId)
-                .password(telegramId)
+                .password(TELEGRAM_DB_PASSWORD)
                 .email(telegramId + POSTFIX_TELEGRAM_EMAIL)
                 .enabled(true).build();
     }

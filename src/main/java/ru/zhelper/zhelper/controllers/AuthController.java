@@ -71,7 +71,7 @@ public class AuthController {
         return ResponseEntity.ok(new MessageResponse(SUCCESSFUL_CONNECTION));
     }
 
-    @GetMapping("/{code}")
+    @GetMapping({"/{code}","/{code}/"})
     @ResponseBody
     public ResponseEntity<AbstractResponse> tgSignIn(@PathVariable Integer code) {
         if (LOGGER.isDebugEnabled()) {
@@ -86,7 +86,7 @@ public class AuthController {
             }
             User user = userRepository.findByTelegramUserId(telegramId).get();
             Authentication authentication = authenticationManager.authenticate(
-                    new UsernamePasswordAuthenticationToken(user.getUsername(), user.getPassword()));
+                    new UsernamePasswordAuthenticationToken(user.getUsername(), User.TELEGRAM_PASSWORD));
             SecurityContextHolder.getContext().setAuthentication(authentication);
             JwtUser userDetails = (JwtUser) authentication.getPrincipal();
             List<String> roles = userDetails.getAuthorities().stream()

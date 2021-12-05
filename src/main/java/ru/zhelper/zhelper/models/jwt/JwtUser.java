@@ -19,7 +19,7 @@ public class JwtUser implements UserDetails {
     @JsonIgnore
     private final String password;
     private final boolean enabled;
-    private Collection<? extends GrantedAuthority> authorities;
+    private final Collection<? extends GrantedAuthority> authorities;
 
     public JwtUser(Long id, String username, String email, String telegramUserId, String password, boolean enabled, Collection<? extends GrantedAuthority> authorities) {
         this.id = id;
