@@ -20,3 +20,9 @@ GET http://{{host}}:{{port}}/{{version_api}}/{{auth}}
 GET http://{{host}}:{{port}}/{{version_api}}/{{auth}}/100/
 
 ###
+
+### TEST  with telegram
+GET http://{{host}}:{{port}}/{{version_api}}/{{auth}}/test
+Authorization: "Bearer"+"eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ0ZWxlZ3JhbVVzZXIxIiwicm9sZXMiOlsiQ0hST01FX0VYVEVOU0lPTiIsIlRFTEVHUkFNIl0sImlhdCI6MTYzODY5NzMxOCwiZXhwIjoxNjQxMjg5MzE4fQ.eqALqSGcLdeliS1dKpK2sNq75bbuGOSj8IGgYcaNgMA";
+
+###

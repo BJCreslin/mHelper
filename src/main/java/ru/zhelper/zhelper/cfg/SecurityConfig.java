@@ -15,6 +15,8 @@ import ru.zhelper.zhelper.models.users.ERole;
 import ru.zhelper.zhelper.services.security.JwtConfigurer;
 import ru.zhelper.zhelper.services.security.JwtTokenProvider;
 
+import static ru.zhelper.zhelper.controllers.AuthController.TEST_JWT;
+
 @Profile("!test")
 @Configuration
 @EnableWebSecurity
@@ -22,7 +24,9 @@ import ru.zhelper.zhelper.services.security.JwtTokenProvider;
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
     public static final String CHROME_API = ChromeExtensionController.URL;
     public static final String CHROME_AUTH = AuthController.URL + "/";
+    public static final String TEST_CHROME_JWT_AUTH = AuthController.URL + TEST_JWT;
     public static final String CHROME_REGISTRATION = CHROME_AUTH + "**";
+
 
     private final JwtTokenProvider jwtTokenProvider;
 
@@ -43,6 +47,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .authorizeRequests()
                 .antMatchers(CHROME_API).hasAnyRole(ERole.CHROME_EXTENSION.getName(), ERole.ROLE_ADMIN.getName())
                 .antMatchers(CHROME_AUTH).permitAll()
+                .antMatchers(TEST_CHROME_JWT_AUTH).hasAnyRole(ERole.CHROME_EXTENSION.getName())
                 .antMatchers(CHROME_REGISTRATION).permitAll()
                 .and().authorizeRequests().antMatchers("/h2-console/**").permitAll().filterSecurityInterceptorOncePerRequest(false)
                 .anyRequest().permitAll()

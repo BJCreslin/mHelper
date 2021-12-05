@@ -38,6 +38,8 @@ public class AuthController {
     private static final Logger LOGGER = LoggerFactory.getLogger(AuthController.class);
     public static final String URL = ApiVersion.VERSION_1_0 + "/auth";
 
+    public static final String TEST_JWT = "/test";
+
     public static final String USERNAME_IS_EXIST = "Error: Username is exist";
     public static final String EMAIL_IS_EXIST = "Error: Email is exist";
     public static final String USER_IS_NOT_FOUND = "Error, Role USER is not found";
@@ -67,11 +69,17 @@ public class AuthController {
 
     @GetMapping({"", "/"})
     @ResponseBody
-    public ResponseEntity<?> testConnect() {
+    public ResponseEntity<MessageResponse> testConnect() {
         return ResponseEntity.ok(new MessageResponse(SUCCESSFUL_CONNECTION));
     }
 
-    @GetMapping({"/{code}","/{code}/"})
+    @GetMapping({TEST_JWT, TEST_JWT + "/"})
+    @ResponseBody
+    public ResponseEntity<MessageResponse> testAuthConnect() {
+        return ResponseEntity.ok(new MessageResponse(SUCCESSFUL_CONNECTION));
+    }
+
+    @GetMapping({"/{code}", "/{code}/"})
     @ResponseBody
     public ResponseEntity<AbstractResponse> tgSignIn(@PathVariable Integer code) {
         if (LOGGER.isDebugEnabled()) {
@@ -81,7 +89,9 @@ public class AuthController {
             var telegramId = telegramCodeService.getTelegramUserId(code);
             if (!userRepository.existsByTelegramUserId(telegramId)) {
                 var newUser = User.createNewTelegramUser(telegramId);
-                newUser.setRoles(Set.of(roleRepository.findByName(ERole.CHROME_EXTENSION.getName()).get()));
+                newUser.setRoles(
+                        Set.of(roleRepository.findByName(ERole.CHROME_EXTENSION.getName()).get(),
+                                roleRepository.findByName(ERole.ROLE_TELEGRAM.getName()).get()));
                 userRepository.save(newUser);
             }
             User user = userRepository.findByTelegramUserId(telegramId).get();
