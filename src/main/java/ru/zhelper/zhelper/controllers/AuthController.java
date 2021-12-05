@@ -21,7 +21,7 @@ import ru.zhelper.zhelper.models.users.Role;
 import ru.zhelper.zhelper.models.users.User;
 import ru.zhelper.zhelper.repository.RoleRepository;
 import ru.zhelper.zhelper.repository.UserRepository;
-import ru.zhelper.zhelper.services.geting_code.TelegramCode;
+import ru.zhelper.zhelper.services.geting_code.TelegramCodeService;
 import ru.zhelper.zhelper.services.security.JwtTokenProvider;
 
 import java.util.HashSet;
@@ -54,9 +54,9 @@ public class AuthController {
     private final UserRepository userRepository;
     private final RoleRepository roleRepository;
     private final PasswordEncoder passwordEncoder;
-    private final TelegramCode telegramCodeService;
+    private final TelegramCodeService telegramCodeService;
 
-    public AuthController(AuthenticationManager authenticationManager, JwtTokenProvider jwtTokenProvider, UserRepository userRespository, RoleRepository roleRepository, PasswordEncoder passwordEncoder, TelegramCode telegramCodeService) {
+    public AuthController(AuthenticationManager authenticationManager, JwtTokenProvider jwtTokenProvider, UserRepository userRespository, RoleRepository roleRepository, PasswordEncoder passwordEncoder, TelegramCodeService telegramCodeService) {
         this.authenticationManager = authenticationManager;
         this.jwtTokenProvider = jwtTokenProvider;
         this.userRepository = userRespository;

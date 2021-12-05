@@ -9,10 +9,10 @@ import java.util.Map;
 import static ru.zhelper.zhelper.services.exceptions.BadRequest.CODE_NOT_FOUND;
 
 @Service
-public class FakeTelegramCode implements TelegramCode {
+public class FakeTelegramCodeService implements TelegramCodeService {
     private final Map<Integer, String> codeMap;
 
-    public FakeTelegramCode() {
+    public FakeTelegramCodeService() {
         codeMap = new HashMap<>();
         codeMap.put(100, "telegramUser1");
         codeMap.put(200, "telegramUser2");
