@@ -26,6 +26,7 @@ import java.util.Set;
 @NoArgsConstructor
 @Builder
 public class User extends BaseEntity {
+    public static final String POSTFIX_TELEGRAM_EMAIL = "@t.me";
     @NotBlank(message = "Name is mandatory")
     @Size(max = 30)
     private String username;
@@ -70,5 +71,14 @@ public class User extends BaseEntity {
         this.enabled = enabled;
         this.roles = roles;
         this.comment = comment;
+    }
+
+    public static User createNewTelegramUser(String telegramId) {
+        return User.builder()
+                .telegramUserId(telegramId)
+                .username(telegramId)
+                .password(telegramId)
+                .email(telegramId + POSTFIX_TELEGRAM_EMAIL)
+                .enabled(true).build();
     }
 }

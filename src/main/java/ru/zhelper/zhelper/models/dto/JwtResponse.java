@@ -7,7 +7,7 @@ import java.util.List;
 
 @Data
 @NoArgsConstructor
-public class JwtResponse {
+public class JwtResponse extends AbstractResponse{
     private String token;
     private String type = "Bearer";
     private Long id;

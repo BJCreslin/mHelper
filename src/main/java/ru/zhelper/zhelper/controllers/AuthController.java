@@ -3,6 +3,7 @@ package ru.zhelper.zhelper.controllers;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -13,16 +14,14 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import ru.zhelper.zhelper.cfg.ApiVersion;
-import ru.zhelper.zhelper.models.dto.JwtResponse;
-import ru.zhelper.zhelper.models.dto.LoginRequest;
-import ru.zhelper.zhelper.models.dto.MessageResponse;
-import ru.zhelper.zhelper.models.dto.SignUpRequest;
+import ru.zhelper.zhelper.models.dto.*;
 import ru.zhelper.zhelper.models.jwt.JwtUser;
 import ru.zhelper.zhelper.models.users.ERole;
 import ru.zhelper.zhelper.models.users.Role;
 import ru.zhelper.zhelper.models.users.User;
 import ru.zhelper.zhelper.repository.RoleRepository;
 import ru.zhelper.zhelper.repository.UserRepository;
+import ru.zhelper.zhelper.services.geting_code.TelegramCode;
 import ru.zhelper.zhelper.services.security.JwtTokenProvider;
 
 import java.util.HashSet;
@@ -49,18 +48,21 @@ public class AuthController {
     public static final String USER_CREATED = "User CREATED";
     public static final String SUCCESSFUL_CONNECTION = "Successful connection";
     public static final String USER_NOT_FOUND = "User with name %s not found";
+    public static final String CODE_NOT_FOUND = "Code not found";
     private final AuthenticationManager authenticationManager;
     private final JwtTokenProvider jwtTokenProvider;
     private final UserRepository userRepository;
     private final RoleRepository roleRepository;
     private final PasswordEncoder passwordEncoder;
+    private final TelegramCode telegramCodeService;
 
-    public AuthController(AuthenticationManager authenticationManager, JwtTokenProvider jwtTokenProvider, UserRepository userRespository, RoleRepository roleRepository, PasswordEncoder passwordEncoder) {
+    public AuthController(AuthenticationManager authenticationManager, JwtTokenProvider jwtTokenProvider, UserRepository userRespository, RoleRepository roleRepository, PasswordEncoder passwordEncoder, TelegramCode telegramCodeService) {
         this.authenticationManager = authenticationManager;
         this.jwtTokenProvider = jwtTokenProvider;
         this.userRepository = userRespository;
         this.roleRepository = roleRepository;
         this.passwordEncoder = passwordEncoder;
+        this.telegramCodeService = telegramCodeService;
     }
 
     @GetMapping({"", "/"})
@@ -71,14 +73,39 @@ public class AuthController {
 
     @GetMapping("/{code}")
     @ResponseBody
-    public ResponseEntity<?> tgSignIn(@PathVariable Integer code) {
+    public ResponseEntity<AbstractResponse> tgSignIn(@PathVariable Integer code) {
         if (LOGGER.isDebugEnabled()) {
             LOGGER.debug(CODE_AUTHENTICATING, code);
         }
-
+        if (telegramCodeService.existByCode(code)) {
+            var telegramId = telegramCodeService.getTelegramUserId(code);
+            if (!userRepository.existsByTelegramUserId(telegramId)) {
+                var newUser = User.createNewTelegramUser(telegramId);
+                newUser.setRoles(Set.of(roleRepository.findByName(ERole.CHROME_EXTENSION.getName()).get()));
+                userRepository.save(newUser);
+            }
+            User user = userRepository.findByTelegramUserId(telegramId).get();
+            Authentication authentication = authenticationManager.authenticate(
+                    new UsernamePasswordAuthenticationToken(user.getUsername(), user.getPassword()));
+            SecurityContextHolder.getContext().setAuthentication(authentication);
+            JwtUser userDetails = (JwtUser) authentication.getPrincipal();
+            List<String> roles = userDetails.getAuthorities().stream()
+                    .map(GrantedAuthority::getAuthority)
+                    .collect(Collectors.toList());
+            String jwt = jwtTokenProvider.createToken(user.getUsername(), user.getRoles());
+            return ResponseEntity.ok(new JwtResponse(jwt,
+                    userDetails.getId(),
+                    userDetails.getUsername(),
+                    userDetails.getEmail(),
+                    roles));
+        } else {
+            return ResponseEntity.badRequest().body(new MessageResponse(MessageResponse.BAD_TELEGRAM_CODE, CODE_NOT_FOUND));
+        }
     }
 
+
     @GetMapping({"/signin", "/signin/"})
+    @PreAuthorize("hasRole('USER')")
     @ResponseBody
     public ResponseEntity<JwtResponse> signIn(@RequestBody LoginRequest loginRequest) {
         if (LOGGER.isDebugEnabled()) {

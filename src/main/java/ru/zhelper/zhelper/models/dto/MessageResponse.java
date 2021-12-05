@@ -5,9 +5,10 @@ import lombok.NoArgsConstructor;
 
 @NoArgsConstructor
 @Data
-public class MessageResponse {
+public class MessageResponse extends AbstractResponse {
     public static final int FINE_CODE = 1;
     public static final int BAD_CODE = -1;
+    public static final int BAD_TELEGRAM_CODE = -2;
     private int code;
     private String message;
 

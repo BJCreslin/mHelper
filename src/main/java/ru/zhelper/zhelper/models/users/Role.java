@@ -22,6 +22,11 @@ public class Role extends BaseEntity {
         this.name = name;
     }
 
+    public Role(ERole eRole) {
+        super();
+        this.name = eRole.getName();
+    }
+
     public String getName() {
         return name;
     }
