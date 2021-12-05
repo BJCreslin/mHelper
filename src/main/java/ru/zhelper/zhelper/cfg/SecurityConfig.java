@@ -23,8 +23,7 @@ import static ru.zhelper.zhelper.controllers.AuthController.TEST_JWT;
 @Profile("!test")
 @Configuration
 @EnableGlobalMethodSecurity(prePostEnabled = true,
-        securedEnabled = true,
-        jsr250Enabled = true)
+        securedEnabled = true)
 @EnableWebSecurity
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
     public static final String CHROME_API = ChromeExtensionController.URL;

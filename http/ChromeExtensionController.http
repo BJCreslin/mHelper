@@ -19,10 +19,11 @@ GET http://{{host}}:{{port}}/{{version_api}}/{{auth}}
 ### login  with telegram
 GET http://{{host}}:{{port}}/{{version_api}}/{{auth}}/100/
 
+> {% client.global.set("auth_token", response.body.json.token); %}
+
 ###
 
 ### TEST  with telegram
 GET http://{{host}}:{{port}}/{{version_api}}/{{auth}}/test
-Authorization: "Bearer"+"eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ0ZWxlZ3JhbVVzZXIxIiwicm9sZXMiOlsiQ0hST01FX0VYVEVOU0lPTiIsIlRFTEVHUkFNIl0sImlhdCI6MTYzODY5NzMxOCwiZXhwIjoxNjQxMjg5MzE4fQ.eqALqSGcLdeliS1dKpK2sNq75bbuGOSj8IGgYcaNgMA";
-
+Authorization: Bearer_{{auth_token}}
 ###
