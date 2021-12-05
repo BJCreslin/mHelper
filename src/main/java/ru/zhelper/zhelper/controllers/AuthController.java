@@ -30,14 +30,14 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import static ru.zhelper.zhelper.controllers.ChromeExtensionAuthController.URL;
+import static ru.zhelper.zhelper.controllers.AuthController.URL;
 
 @Controller
 @RequestMapping(URL)
 @CrossOrigin(origins = "*", maxAge = 3600)
-public class ChromeExtensionAuthController {
-    private static final Logger LOGGER = LoggerFactory.getLogger(ChromeExtensionAuthController.class);
-    public static final String URL = ApiVersion.VERSION_1_0 + "/chrome_auth";
+public class AuthController {
+    private static final Logger LOGGER = LoggerFactory.getLogger(AuthController.class);
+    public static final String URL = ApiVersion.VERSION_1_0 + "/auth";
 
     public static final String USERNAME_IS_EXIST = "Error: Username is exist";
     public static final String EMAIL_IS_EXIST = "Error: Email is exist";
@@ -45,6 +45,7 @@ public class ChromeExtensionAuthController {
     public static final String ADMIN_IS_NOT_FOUND = "Error, Role ADMIN is not found";
     public static final String CHROME_EXTENSION_IS_NOT_FOUND = "Error, Role CHROME EXTENSION is not found";
     public static final String AUTHENTICATING = "User with UserName {} is authenticating";
+    public static final String CODE_AUTHENTICATING = "User with code {} is authenticating";
     public static final String USER_CREATED = "User CREATED";
     public static final String SUCCESSFUL_CONNECTION = "Successful connection";
     public static final String USER_NOT_FOUND = "User with name %s not found";
@@ -54,7 +55,7 @@ public class ChromeExtensionAuthController {
     private final RoleRepository roleRepository;
     private final PasswordEncoder passwordEncoder;
 
-    public ChromeExtensionAuthController(AuthenticationManager authenticationManager, JwtTokenProvider jwtTokenProvider, UserRepository userRespository, RoleRepository roleRepository, PasswordEncoder passwordEncoder) {
+    public AuthController(AuthenticationManager authenticationManager, JwtTokenProvider jwtTokenProvider, UserRepository userRespository, RoleRepository roleRepository, PasswordEncoder passwordEncoder) {
         this.authenticationManager = authenticationManager;
         this.jwtTokenProvider = jwtTokenProvider;
         this.userRepository = userRespository;
@@ -68,10 +69,18 @@ public class ChromeExtensionAuthController {
         return ResponseEntity.ok(new MessageResponse(SUCCESSFUL_CONNECTION));
     }
 
-    @PostMapping({"/signin", "/signin/"})
+    @GetMapping("/{code}")
     @ResponseBody
-    public ResponseEntity<?> signIn(@RequestBody LoginRequest loginRequest) {
-        LOGGER.error("8888888888888888888888888888888888");
+    public ResponseEntity<?> tgSignIn(@PathVariable Integer code) {
+        if (LOGGER.isDebugEnabled()) {
+            LOGGER.debug(CODE_AUTHENTICATING, code);
+        }
+
+    }
+
+    @GetMapping({"/signin", "/signin/"})
+    @ResponseBody
+    public ResponseEntity<JwtResponse> signIn(@RequestBody LoginRequest loginRequest) {
         if (LOGGER.isDebugEnabled()) {
             LOGGER.debug(AUTHENTICATING, loginRequest.getUserName());
         }
