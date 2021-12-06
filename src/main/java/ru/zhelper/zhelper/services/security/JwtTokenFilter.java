@@ -5,11 +5,13 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.GenericFilterBean;
+import ru.zhelper.zhelper.exceptions.JwtAuthenticationException;
 
 import javax.servlet.FilterChain;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 @Component
 public class JwtTokenFilter extends GenericFilterBean {
@@ -22,15 +24,20 @@ public class JwtTokenFilter extends GenericFilterBean {
 
     @SneakyThrows
     @Override
-    public void doFilter(ServletRequest req, ServletResponse res, FilterChain filterChain)
-            {
+    public void doFilter(ServletRequest req, ServletResponse res, FilterChain filterChain) {
         String token = jwtTokenProvider.resolveToken((HttpServletRequest) req);
-        if (token != null && jwtTokenProvider.validateToken(token)) {
-            Authentication auth = jwtTokenProvider.getAuthentication(token);
+        try {
+            if (token != null && jwtTokenProvider.validateToken(token)) {
+                Authentication auth = jwtTokenProvider.getAuthentication(token);
 
-            if (auth != null) {
-                SecurityContextHolder.getContext().setAuthentication(auth);
+                if (auth != null) {
+                    SecurityContextHolder.getContext().setAuthentication(auth);
+                }
             }
+        } catch (JwtAuthenticationException e) {
+            SecurityContextHolder.clearContext();
+            ((HttpServletResponse) res).sendError(e.getHttpStatus().value());
+            throw new JwtAuthenticationException(JwtAuthenticationException.JWT_IS_INVALID);
         }
         filterChain.doFilter(req, res);
     }
