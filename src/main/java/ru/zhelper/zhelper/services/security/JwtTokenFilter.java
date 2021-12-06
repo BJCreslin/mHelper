@@ -36,7 +36,7 @@ public class JwtTokenFilter extends GenericFilterBean {
             }
         } catch (JwtAuthenticationException e) {
             SecurityContextHolder.clearContext();
-            ((HttpServletResponse) res).sendError(e.getHttpStatus().value());
+            ((HttpServletResponse) res).sendError(HttpServletResponse.SC_UNAUTHORIZED, JwtAuthenticationException.JWT_IS_INVALID);
             throw new JwtAuthenticationException(JwtAuthenticationException.JWT_IS_INVALID);
         }
         filterChain.doFilter(req, res);

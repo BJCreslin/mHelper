@@ -67,6 +67,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers(CHROME_AUTH).permitAll()
                 .antMatchers(TEST_CHROME_JWT_AUTH).hasAnyRole(ERole.CHROME_EXTENSION.getName(), ERole.ROLE_ADMIN.getName())
                 .antMatchers(CHROME_REGISTRATION).permitAll()
+                .antMatchers("/v1/auth/test").hasAnyRole(ERole.CHROME_EXTENSION.getName(), ERole.ROLE_ADMIN.getName())
                 .and().authorizeRequests().antMatchers("/h2-console/**").permitAll().filterSecurityInterceptorOncePerRequest(false)
                 .anyRequest().permitAll()
                 .and().formLogin().permitAll()
