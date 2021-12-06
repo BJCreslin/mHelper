@@ -25,7 +25,7 @@ GET http://{{host}}:{{port}}/{{version_api}}/{{auth}}/100/
 
 ### TEST  with telegram
 GET http://{{host}}:{{port}}/{{version_api}}/{{auth}}/test
-Authorization: eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ0ZWxlZ3JhbVVzZXIxIiwicm9sZXMiOlsiQ0hST01FX0VYVEVOU0lPTiIsIlRFTEVHUkFNIl0sImlhdCI6MTYzODc4NjU0NiwiZXhwIjoxNjQxMzc4NTQ2fQ.cR2AdHOpA614MbjfZPPcJjLiJLcaw8keDCAW8ylNbD8
+Authorization: eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ0ZWxlZ3JhbVVzZXIxIiwicm9sZXMiOlsiVEVMRUdSQU0iLCJDSFJPTUVfRVhURU5TSU9OIl0sImlhdCI6MTYzODc4NzMyMywiZXhwIjoxNjQxMzc5MzIzfQ.HqsFYg0VTvnzwBtakUW1BWWB-iaWLSjETU8egvxr_TQ
 
 ###{{auth_token}}
 ###
