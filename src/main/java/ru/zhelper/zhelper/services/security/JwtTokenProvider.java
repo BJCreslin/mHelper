@@ -42,7 +42,7 @@ public class JwtTokenProvider {
 
     public String createToken(String userName, Set<Role> roles) {
         Claims claims = Jwts.claims().setSubject(userName);
-        claims.put("roles", getRoleNames(roles));
+        claims.put("role", getRoleNames(roles));
 
         Date now = new Date();
         Date validity = new Date(now.getTime() + validityInMilliseconds);
@@ -62,7 +62,6 @@ public class JwtTokenProvider {
     }
 
     public String getUsername(String token) {
-
         return Jwts.parser().setSigningKey(secret).parseClaimsJws(token).getBody().getSubject();
     }
 

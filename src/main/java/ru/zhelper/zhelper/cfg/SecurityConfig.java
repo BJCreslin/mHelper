@@ -11,12 +11,10 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import ru.zhelper.zhelper.controllers.AuthController;
 import ru.zhelper.zhelper.controllers.ChromeExtensionController;
 import ru.zhelper.zhelper.models.users.ERole;
-import ru.zhelper.zhelper.services.security.JwtTokenFilter;
-import ru.zhelper.zhelper.services.security.JwtTokenProvider;
+import ru.zhelper.zhelper.services.security.JwtConfigurer;
 
 import javax.servlet.http.HttpServletResponse;
 
@@ -33,13 +31,12 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     public static final String TEST_CHROME_JWT_AUTH = AuthController.URL + TEST_JWT;
     public static final String CHROME_REGISTRATION = CHROME_AUTH + "**";
 
-    private final JwtTokenProvider jwtTokenProvider;
-    private final JwtTokenFilter jwtTokenFilter;
+    private final JwtConfigurer jwtConfigurer;
 
-    public SecurityConfig(JwtTokenProvider jwtTokenProvider, JwtTokenFilter jwtTokenFilter) {
-        this.jwtTokenProvider = jwtTokenProvider;
-        this.jwtTokenFilter = jwtTokenFilter;
+    public SecurityConfig(JwtConfigurer jwtConfigurer) {
+        this.jwtConfigurer = jwtConfigurer;
     }
+
 
     @Bean
     @Override
@@ -67,15 +64,15 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers(CHROME_AUTH).permitAll()
                 .antMatchers(TEST_CHROME_JWT_AUTH).hasAnyRole(ERole.CHROME_EXTENSION.getName(), ERole.ROLE_ADMIN.getName())
                 .antMatchers(CHROME_REGISTRATION).permitAll()
-                .antMatchers("/v1/auth/test").hasAnyRole(ERole.CHROME_EXTENSION.getName(), ERole.ROLE_ADMIN.getName())
                 .and().authorizeRequests().antMatchers("/h2-console/**").permitAll().filterSecurityInterceptorOncePerRequest(false)
                 .anyRequest().permitAll()
                 .and().formLogin().permitAll()
-                .and().logout().permitAll().and();
-        http.addFilterBefore(
-                jwtTokenFilter,
-                UsernamePasswordAuthenticationFilter.class
-        );
+                .and().logout().permitAll().and()
+                .apply(jwtConfigurer);
+//        http.addFilterBefore(
+//                jwtTokenFilter,
+//                UsernamePasswordAuthenticationFilter.class
+//        );
         //   .apply(new JwtConfigurer(jwtTokenProvider));
         //http.headers().frameOptions().disable();
     }

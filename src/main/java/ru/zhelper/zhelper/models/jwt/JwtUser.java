@@ -75,17 +75,17 @@ public class JwtUser implements UserDetails {
 
     @Override
     public boolean isAccountNonExpired() {
-        return true;
+        return enabled;
     }
 
     @Override
     public boolean isAccountNonLocked() {
-        return true;
+        return enabled;
     }
 
     @Override
     public boolean isCredentialsNonExpired() {
-        return true;
+        return enabled;
     }
 
     @Override

@@ -3,7 +3,6 @@ package ru.zhelper.zhelper.controllers;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -90,24 +89,23 @@ public class AuthController {
             if (!userRepository.existsByTelegramUserId(telegramId)) {
                 var newUser = User.createNewTelegramUser(telegramId);
                 newUser.setRoles(
-                        Set.of(roleRepository.findByName(ERole.CHROME_EXTENSION.getName()).get(),
-                                roleRepository.findByName(ERole.ROLE_TELEGRAM.getName()).get()));
+                        Set.of(roleRepository.findByName(ERole.CHROME_EXTENSION.getName()).get()));
                 userRepository.save(newUser);
             }
             User user = userRepository.findByTelegramUserId(telegramId).get();
             Authentication authentication = authenticationManager.authenticate(
                     new UsernamePasswordAuthenticationToken(user.getUsername(), User.TELEGRAM_PASSWORD));
-            SecurityContextHolder.getContext().setAuthentication(authentication);
-            JwtUser userDetails = (JwtUser) authentication.getPrincipal();
-            List<String> roles = userDetails.getAuthorities().stream()
-                    .map(GrantedAuthority::getAuthority)
-                    .collect(Collectors.toList());
+            //  SecurityContextHolder.getContext().setAuthentication(authentication);
+//            JwtUser userDetails = (JwtUser) authentication.getPrincipal();
+//            List<String> roles = userDetails.getAuthorities().stream()
+//                    .map(GrantedAuthority::getAuthority)
+//                    .collect(Collectors.toList());
             String jwt = jwtTokenProvider.createToken(user.getUsername(), user.getRoles());
             return ResponseEntity.ok(new JwtResponse(jwt,
-                    userDetails.getId(),
-                    userDetails.getUsername(),
-                    userDetails.getEmail(),
-                    roles));
+                    user.getId(),
+                    user.getUsername(),
+                    user.getEmail(),
+                    user.getRoles().stream().map(Role::getName).collect(Collectors.toList())));
         } else {
             return ResponseEntity.badRequest().body(new MessageResponse(MessageResponse.BAD_TELEGRAM_CODE, CODE_NOT_FOUND));
         }
@@ -115,7 +113,6 @@ public class AuthController {
 
 
     @GetMapping({"/signin", "/signin/"})
-    @PreAuthorize("hasRole('USER')")
     @ResponseBody
     public ResponseEntity<JwtResponse> signIn(@RequestBody LoginRequest loginRequest) {
         if (LOGGER.isDebugEnabled()) {
