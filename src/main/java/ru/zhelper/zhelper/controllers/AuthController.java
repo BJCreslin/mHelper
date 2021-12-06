@@ -6,7 +6,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -141,7 +140,7 @@ public class AuthController {
                 roles));
     }
 
-    @PostMapping({"/signup", "/signup/"})
+    @PostMapping(value = {"/signup", "/signup/"}, consumes = {"application/json"})
     public ResponseEntity<?> registerUser(@RequestBody SignUpRequest signupRequest) {
         if (LOGGER.isDebugEnabled()) {
             LOGGER.debug("Create new User with Name {}, email {}", signupRequest.getUserName(), signupRequest.getEmail());
