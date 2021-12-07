@@ -13,6 +13,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import ru.zhelper.zhelper.cfg.ApiVersion;
+import ru.zhelper.zhelper.controllers.exeptions.BadRequestException;
 import ru.zhelper.zhelper.models.dto.*;
 import ru.zhelper.zhelper.models.jwt.JwtUser;
 import ru.zhelper.zhelper.models.users.ERole;
@@ -30,6 +31,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 import static ru.zhelper.zhelper.controllers.AuthController.URL;
+import static ru.zhelper.zhelper.controllers.exeptions.BadRequestException.ROLE_NOT_FOUND;
 
 @Controller
 @RequestMapping(URL)
@@ -91,19 +93,14 @@ public class AuthController {
             if (!userRepository.existsByTelegramUserId(telegramId)) {
                 var newUser = User.createNewTelegramUser(telegramId);
                 newUser.setRoles(
-                        Set.of(roleRepository.findByName(ERole.CHROME_EXTENSION.getName()).get()));
+                        Set.of(roleRepository.findByName(ERole.CHROME_EXTENSION.getName()).orElseThrow(() -> new BadRequestException(ROLE_NOT_FOUND)),
+                                roleRepository.findByName(ERole.ROLE_TELEGRAM.getName()).orElseThrow(() -> new BadRequestException(ROLE_NOT_FOUND))));
                 userRepository.save(newUser);
             }
-            User user = userRepository.findByTelegramUserId(telegramId).get();
-            Authentication authentication = authenticationManager.authenticate(
-                    new UsernamePasswordAuthenticationToken(user.getUsername(), User.TELEGRAM_PASSWORD));
-            //  SecurityContextHolder.getContext().setAuthentication(authentication);
-//            JwtUser userDetails = (JwtUser) authentication.getPrincipal();
-//            List<String> roles = userDetails.getAuthorities().stream()
-//                    .map(GrantedAuthority::getAuthority)
-//                    .collect(Collectors.toList());
+            User user = userRepository.findByTelegramUserId(telegramId).orElseThrow(() -> new BadRequestException(USER_NOT_FOUND));
             String jwt = jwtTokenProvider.createToken(user.getUsername(), user.getRoles());
-            return ResponseEntity.ok(new JwtResponse(jwt,
+            return ResponseEntity.ok(new JwtResponse(
+                    jwt,
                     user.getId(),
                     user.getUsername(),
                     user.getEmail(),
@@ -112,7 +109,6 @@ public class AuthController {
             return ResponseEntity.badRequest().body(new MessageResponse(MessageResponse.BAD_TELEGRAM_CODE, CODE_NOT_FOUND));
         }
     }
-
 
     @PostMapping({"/signin", "/signin/"})
     @ResponseBody
@@ -140,7 +136,7 @@ public class AuthController {
     }
 
     @PostMapping(value = {"/signup", "/signup/"}, consumes = {"application/json"})
-    public ResponseEntity<?> registerUser(@RequestBody SignUpRequest signupRequest) {
+    public ResponseEntity<AbstractResponse> registerUser(@RequestBody SignUpRequest signupRequest) {
         if (LOGGER.isDebugEnabled()) {
             LOGGER.debug("Create new User with Name {}, email {}", signupRequest.getUserName(), signupRequest.getEmail());
         }
