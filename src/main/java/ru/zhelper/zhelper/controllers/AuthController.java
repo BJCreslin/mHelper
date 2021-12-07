@@ -23,6 +23,7 @@ import ru.zhelper.zhelper.repository.UserRepository;
 import ru.zhelper.zhelper.services.geting_code.TelegramCodeService;
 import ru.zhelper.zhelper.services.security.JwtTokenProvider;
 
+import javax.annotation.security.RolesAllowed;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -72,13 +73,14 @@ public class AuthController {
         return ResponseEntity.ok(new MessageResponse(SUCCESSFUL_CONNECTION));
     }
 
+    @RolesAllowed({"ADMIN", "CHROME_EXTENSION"})
     @GetMapping({TEST_JWT, TEST_JWT + "/"})
     @ResponseBody
     public ResponseEntity<MessageResponse> testAuthConnect() {
         return ResponseEntity.ok(new MessageResponse(SUCCESSFUL_CONNECTION));
     }
 
-    @GetMapping({"/{code}", "/{code}/"})
+    @GetMapping({"/code/{code}", "/code/{code}/"})
     @ResponseBody
     public ResponseEntity<AbstractResponse> tgSignIn(@PathVariable Integer code) {
         if (LOGGER.isDebugEnabled()) {
@@ -112,7 +114,7 @@ public class AuthController {
     }
 
 
-    @GetMapping({"/signin", "/signin/"})
+    @PostMapping({"/signin", "/signin/"})
     @ResponseBody
     public ResponseEntity<JwtResponse> signIn(@RequestBody LoginRequest loginRequest) {
         if (LOGGER.isDebugEnabled()) {

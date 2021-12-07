@@ -9,23 +9,19 @@ Content-Type: application/json
 
 > {% client.global.set("authorization", response.headers.valueOf("Authorization")); %}
 
-###
 
 ### TEST  with telegram
 GET http://{{host}}:{{port}}/{{version_api}}/{{auth}}
 
-###
 
 ### login  with telegram
-GET http://{{host}}:{{port}}/{{version_api}}/{{auth}}/100/
+GET http://{{host}}:{{port}}/{{version_api}}/{{auth}}/code/100
 
 > {% client.global.set("auth_token", response.body.json.token); %}
 
-###
-
-### TEST  with telegram
+### TEST  with token
 GET http://{{host}}:{{port}}/{{version_api}}/{{auth}}/test
-Authorization: eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ0ZWxlZ3JhbVVzZXIxIiwicm9sZXMiOlsiQ0hST01FX0VYVEVOU0lPTiIsIlRFTEVHUkFNIl0sImlhdCI6MTYzODgwMzk0MCwiZXhwIjoxNjQxMzk1OTQwfQ._CL4U8Rn0VrVK7fKrGawG_I4GIhZ9dDDeJtvLUDHKLY
+Authorization: eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ0ZWxlZ3JhbVVzZXIxIiwicm9sZSI6WyJDSFJPTUVfRVhURU5TSU9OIl0sImlhdCI6MTYzODg3MzI4MCwiZXhwIjoxNjQxNDY1MjgwfQ.Oc4F549B_Ju8csX7qWKQVyvpI4iA3KpRBY-p0OzRYyY
 
 ###{{auth_token}}
 ###

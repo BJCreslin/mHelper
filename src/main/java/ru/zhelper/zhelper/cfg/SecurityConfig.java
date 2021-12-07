@@ -28,7 +28,7 @@ import static ru.zhelper.zhelper.controllers.AuthController.TEST_JWT;
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
     public static final String CHROME_API = ChromeExtensionController.URL;
     public static final String CHROME_AUTH = AuthController.URL + "/";
-    public static final String TEST_CHROME_JWT_AUTH = AuthController.URL + TEST_JWT;
+    public static final String TEST_CHROME_JWT_AUTH = AuthController.URL + TEST_JWT + "/";
     public static final String CHROME_REGISTRATION = CHROME_AUTH + "**";
 
     private final JwtConfigurer jwtConfigurer;
@@ -36,7 +36,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     public SecurityConfig(JwtConfigurer jwtConfigurer) {
         this.jwtConfigurer = jwtConfigurer;
     }
-
 
     @Bean
     @Override
@@ -61,11 +60,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .and();
         http.authorizeRequests()
                 .antMatchers(CHROME_API).hasAnyRole(ERole.CHROME_EXTENSION.getName(), ERole.ROLE_ADMIN.getName())
-                .antMatchers(CHROME_AUTH).permitAll()
-                .antMatchers(TEST_CHROME_JWT_AUTH).hasAnyRole(ERole.CHROME_EXTENSION.getName(), ERole.ROLE_ADMIN.getName())
-                .antMatchers(CHROME_REGISTRATION).permitAll()
-                .and().authorizeRequests().antMatchers("/h2-console/**").permitAll().filterSecurityInterceptorOncePerRequest(false)
-                .anyRequest().permitAll()
+                .antMatchers(TEST_CHROME_JWT_AUTH).hasAnyRole("Admin", "CHROME_EXTENSION")
+                .antMatchers("/v1/auth/code/***").permitAll()
+                .antMatchers("/h2-console/**").permitAll().filterSecurityInterceptorOncePerRequest(false)
+                .anyRequest().authenticated()
                 .and().formLogin().permitAll()
                 .and().logout().permitAll().and()
                 .apply(jwtConfigurer);
