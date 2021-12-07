@@ -33,5 +33,8 @@ public class RoleInitializer implements CommandLineRunner {
                 repository.save(role);
             }
         });
+        if (LOGGER.isDebugEnabled()) {
+            LOGGER.debug("Roles were initiated");
+        }
     }
 }
