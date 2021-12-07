@@ -5,9 +5,11 @@ import org.jsoup.nodes.Element;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
+import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.test.context.ActiveProfiles;
 import ru.zhelper.zhelper.models.procurements.ProcedureType;
 import ru.zhelper.zhelper.models.procurements.Stage;
@@ -25,7 +27,7 @@ import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 
 @SpringBootTest
-@ActiveProfiles("test")
+@ActiveProfiles("serviceTest")
 class ZakupkiParser615FzTest {
     private static final String DATE_TIME_FORMATTER = "dd.MM.yyyy HH:mm";
     private static final String fileName = "classpath:206520000012100111.html";

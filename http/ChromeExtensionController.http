@@ -1,0 +1,34 @@
+### Login as ADMIN
+POST http://{{host}}:{{port}}/{{version_api}}/{{auth}}/signin/
+Content-Type: application/json
+
+{
+  "userName": "Admin",
+  "password": "password"
+}
+
+> {% client.global.set("authorization", response.headers.valueOf("Authorization")); %}
+
+
+### TEST  with telegram
+GET http://{{host}}:{{port}}/{{version_api}}/{{auth}}
+
+
+### login  with telegram
+GET http://{{host}}:{{port}}/{{version_api}}/{{auth}}/code/100
+
+> {% client.global.set("auth_token", response.body.json.token); %}
+
+### TEST  with token
+GET http://{{host}}:{{port}}/{{version_api}}/{{auth}}/test
+Authorization: eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ0ZWxlZ3JhbVVzZXIxIiwicm9sZSI6WyJDSFJPTUVfRVhURU5TSU9OIiwiVEVMRUdSQU0iXSwiaWF0IjoxNjM4ODg0NjQ1LCJleHAiOjE2NDE0NzY2NDV9.sbiy8PUavGgPaqBXu0l4eX9I6wEMD18v35LPO_vMs3E
+
+### Post new procurement
+POST http://{{host}}:{{port}}/{{version_api}}/chrome
+Authorization: eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ0ZWxlZ3JhbVVzZXIxIiwicm9sZSI6WyJURUxFR1JBTSIsIkNIUk9NRV9FWFRFTlNJT04iXSwiaWF0IjoxNjM4ODg1Mjg3LCJleHAiOjE2NDE0NzcyODd9.GjnX4aavivAaNa_jy0v_2k3R601_se2hNw7LhvfLKRU
+Content-Type: application/json
+
+{
+}
+
+

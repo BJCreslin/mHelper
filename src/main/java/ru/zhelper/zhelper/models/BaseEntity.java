@@ -1,8 +1,9 @@
 package ru.zhelper.zhelper.models;
 
 import lombok.Data;
-import org.springframework.data.annotation.CreatedDate;
-import org.springframework.data.annotation.LastModifiedDate;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.Type;
+import org.hibernate.annotations.UpdateTimestamp;
 
 import javax.persistence.*;
 import java.util.Date;
@@ -14,15 +15,20 @@ public class BaseEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @CreatedDate
+    @CreationTimestamp
     @Column(name = "created")
     private Date created;
 
-    @LastModifiedDate
+    @UpdateTimestamp
     @Column(name = "updated")
     private Date updated;
 
-    @Column(name="status")
+    @Column(name = "status")
     @Enumerated(EnumType.STRING)
     private BaseStatus status;
+
+    @Lob
+    @Column(length = 10000)
+    @Type(type = "org.hibernate.type.TextType")
+    private String comment;
 }

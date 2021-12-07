@@ -1,23 +1,55 @@
 package ru.zhelper.zhelper.models.users;
 
-import lombok.Data;
 import ru.zhelper.zhelper.models.BaseEntity;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Table;
+import java.util.Objects;
 
 @Entity
 @Table(name = "roles")
-@Data
 public class Role extends BaseEntity {
-
-    @Enumerated(EnumType.STRING)
-    @Column(length = 20)
-    private ERole name;
+    @Column(name = "name")
+    private String name;
 
     public Role() {
+        super();
     }
 
-    public Role(ERole name) {
+    public Role(String name) {
+        super();
         this.name = name;
+    }
+
+    public Role(ERole eRole) {
+        super();
+        this.name = eRole.getName();
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        if (!super.equals(o)) return false;
+
+        Role role = (Role) o;
+
+        return Objects.equals(name, role.name);
+    }
+
+    @Override
+    public int hashCode() {
+        int result = super.hashCode();
+        result = 31 * result + (name != null ? name.hashCode() : 0);
+        return result;
     }
 }
