@@ -27,7 +27,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     public static final String CHROME_API = ChromeExtensionController.URL;
     public static final String CHROME_AUTH = AuthController.URL + "/";
     public static final String TEST_CHROME_JWT_AUTH = AuthController.URL + TEST_JWT + "/";
-    public static final String CHROME_REGISTRATION = CHROME_AUTH + "**";
+    public static final String CHROME_REGISTRATION = CHROME_AUTH + "code/***";
 
     private final JwtConfigurer jwtConfigurer;
 
@@ -47,8 +47,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         http = http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and();
         http.authorizeRequests()
                 .antMatchers(CHROME_API).hasAnyRole(ERole.CHROME_EXTENSION.getName(), ERole.ROLE_ADMIN.getName())
-                .antMatchers(TEST_CHROME_JWT_AUTH).hasAnyRole("Admin", "CHROME_EXTENSION")
-                .antMatchers("/v1/auth/code/***").permitAll()
+                .antMatchers(TEST_CHROME_JWT_AUTH).hasAnyRole(ERole.ROLE_ADMIN.getName(), ERole.CHROME_EXTENSION.getName())
+                .antMatchers(CHROME_REGISTRATION).permitAll()
                 .antMatchers("/h2-console/**").permitAll().filterSecurityInterceptorOncePerRequest(false)
                 .anyRequest().authenticated()
                 .and().formLogin().permitAll()
