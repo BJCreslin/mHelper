@@ -24,7 +24,7 @@ import static ru.zhelper.zhelper.controllers.AuthController.TEST_JWT;
         securedEnabled = true)
 @EnableWebSecurity
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
-    public static final String CHROME_API = ChromeExtensionController.URL;
+    public static final String CHROME_API = ChromeExtensionController.URL+"/***";
     public static final String CHROME_AUTH = AuthController.URL + "/";
     public static final String TEST_CHROME_JWT_AUTH = AuthController.URL + TEST_JWT + "/";
     public static final String CHROME_REGISTRATION = CHROME_AUTH + "code/***";

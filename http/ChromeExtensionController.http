@@ -21,7 +21,14 @@ GET http://{{host}}:{{port}}/{{version_api}}/{{auth}}/code/100
 
 ### TEST  with token
 GET http://{{host}}:{{port}}/{{version_api}}/{{auth}}/test
-Authorization: eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ0ZWxlZ3JhbVVzZXIxIiwicm9sZSI6WyJDSFJPTUVfRVhURU5TSU9OIl0sImlhdCI6MTYzODg3MzI4MCwiZXhwIjoxNjQxNDY1MjgwfQ.Oc4F549B_Ju8csX7qWKQVyvpI4iA3KpRBY-p0OzRYyY
+Authorization: eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ0ZWxlZ3JhbVVzZXIxIiwicm9sZSI6WyJDSFJPTUVfRVhURU5TSU9OIiwiVEVMRUdSQU0iXSwiaWF0IjoxNjM4ODg0NjQ1LCJleHAiOjE2NDE0NzY2NDV9.sbiy8PUavGgPaqBXu0l4eX9I6wEMD18v35LPO_vMs3E
 
-###{{auth_token}}
-###
+### Post new procurement
+POST http://{{host}}:{{port}}/{{version_api}}/chrome
+Authorization: eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ0ZWxlZ3JhbVVzZXIxIiwicm9sZSI6WyJURUxFR1JBTSIsIkNIUk9NRV9FWFRFTlNJT04iXSwiaWF0IjoxNjM4ODg1Mjg3LCJleHAiOjE2NDE0NzcyODd9.GjnX4aavivAaNa_jy0v_2k3R601_se2hNw7LhvfLKRU
+Content-Type: application/json
+
+{
+}
+
+
