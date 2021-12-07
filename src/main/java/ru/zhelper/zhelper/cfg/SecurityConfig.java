@@ -16,8 +16,6 @@ import ru.zhelper.zhelper.controllers.ChromeExtensionController;
 import ru.zhelper.zhelper.models.users.ERole;
 import ru.zhelper.zhelper.services.security.JwtConfigurer;
 
-import javax.servlet.http.HttpServletResponse;
-
 import static ru.zhelper.zhelper.controllers.AuthController.TEST_JWT;
 
 @Profile("!test")
@@ -47,17 +45,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         http = http.cors().and().csrf().disable();
         http = http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and();
-        http = http
-                .exceptionHandling()
-                .authenticationEntryPoint(
-                        (request, response, ex) -> {
-                            response.sendError(
-                                    HttpServletResponse.SC_UNAUTHORIZED,
-                                    ex.getMessage()
-                            );
-                        }
-                )
-                .and();
         http.authorizeRequests()
                 .antMatchers(CHROME_API).hasAnyRole(ERole.CHROME_EXTENSION.getName(), ERole.ROLE_ADMIN.getName())
                 .antMatchers(TEST_CHROME_JWT_AUTH).hasAnyRole("Admin", "CHROME_EXTENSION")
@@ -67,12 +54,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .and().formLogin().permitAll()
                 .and().logout().permitAll().and()
                 .apply(jwtConfigurer);
-//        http.addFilterBefore(
-//                jwtTokenFilter,
-//                UsernamePasswordAuthenticationFilter.class
-//        );
-        //   .apply(new JwtConfigurer(jwtTokenProvider));
-        //http.headers().frameOptions().disable();
     }
 
     @Bean

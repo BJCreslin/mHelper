@@ -1,8 +1,6 @@
 package ru.zhelper.zhelper.services.security;
 
 import lombok.SneakyThrows;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
@@ -17,7 +15,6 @@ import javax.servlet.http.HttpServletResponse;
 
 @Component
 public class JwtTokenFilter extends GenericFilterBean {
-    private static final Logger LOGGER = LoggerFactory.getLogger(JwtTokenFilter.class);
     public static final String LOGING_WITH_TOKEN_NAME_S = "Loging with token name: %s";
     public static final String LOGING_WITH_TOKEN = "Loging with token: %s";
 
@@ -31,9 +28,8 @@ public class JwtTokenFilter extends GenericFilterBean {
     @Override
     public void doFilter(ServletRequest req, ServletResponse res, FilterChain filterChain) {
         String token = jwtTokenProvider.resolveToken((HttpServletRequest) req);
-        LOGGER.error(String.format(LOGING_WITH_TOKEN, token));
-        if (LOGGER.isDebugEnabled()) {
-            LOGGER.debug(String.format(LOGING_WITH_TOKEN, token));
+        if (logger.isDebugEnabled()) {
+            logger.debug(String.format(LOGING_WITH_TOKEN, token));
         }
         try {
             if (token != null && jwtTokenProvider.validateToken(token)) {
@@ -41,10 +37,9 @@ public class JwtTokenFilter extends GenericFilterBean {
 
                 if (auth != null) {
                     SecurityContextHolder.getContext().setAuthentication(auth);
-                    if (LOGGER.isDebugEnabled()) {
-                        LOGGER.debug(String.format(LOGING_WITH_TOKEN_NAME_S , jwtTokenProvider.getUsername(token)));
+                    if (logger.isDebugEnabled()) {
+                        logger.debug(String.format(LOGING_WITH_TOKEN_NAME_S, jwtTokenProvider.getUsername(token)));
                     }
-                    LOGGER.error(String.format(LOGING_WITH_TOKEN_NAME_S , jwtTokenProvider.getUsername(token)));
                 }
             }
         } catch (JwtAuthenticationException e) {
