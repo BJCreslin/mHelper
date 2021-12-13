@@ -7,7 +7,7 @@
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>2.5.3</version>
+        <version>2.6.1</version>
         <relativePath/>
     </parent>
     <groupId>ru.zhelper</groupId>
@@ -22,7 +22,7 @@
         <JSoupVersion>1.14.3</JSoupVersion>
         <serFireVersion>3.0.0-M5</serFireVersion>
         <postgresVersion>42.3.1</postgresVersion>
-        <H2Version>1.4.200</H2Version>
+        <H2Version>2.0.202</H2Version>
         <MavenCompilerVersion>3.3.1</MavenCompilerVersion>
         <jsonwebtoken.version>0.9.1</jsonwebtoken.version>
     </properties>

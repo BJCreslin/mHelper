@@ -189,7 +189,7 @@ function insertButton(className) {
     buttonToZhelper.onclick = function () {
         chrome.runtime.sendMessage(
             {
-                destination: "background",
+                destination: "sender",
                 data: dataAboutProcurement
             },
             function (response) {
