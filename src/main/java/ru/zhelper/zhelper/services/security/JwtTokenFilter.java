@@ -15,8 +15,8 @@ import javax.servlet.http.HttpServletResponse;
 
 @Component
 public class JwtTokenFilter extends GenericFilterBean {
-    public static final String LOGING_WITH_TOKEN_NAME_S = "Loging with token name: %s";
-    public static final String LOGING_WITH_TOKEN = "Loging with token: %s";
+    public static final String LOGGING_WITH_TOKEN_NAME_S = "Logging with token name: %s";
+    public static final String LOGGING_WITH_TOKEN = "Logging with token: %s";
 
     private final JwtTokenProvider jwtTokenProvider;
 
@@ -29,7 +29,7 @@ public class JwtTokenFilter extends GenericFilterBean {
     public void doFilter(ServletRequest req, ServletResponse res, FilterChain filterChain) {
         String token = jwtTokenProvider.resolveToken((HttpServletRequest) req);
         if (logger.isDebugEnabled()) {
-            logger.debug(String.format(LOGING_WITH_TOKEN, token));
+            logger.debug(String.format(LOGGING_WITH_TOKEN, token));
         }
         try {
             if (token != null && jwtTokenProvider.validateToken(token)) {
@@ -38,7 +38,7 @@ public class JwtTokenFilter extends GenericFilterBean {
                 if (auth != null) {
                     SecurityContextHolder.getContext().setAuthentication(auth);
                     if (logger.isDebugEnabled()) {
-                        logger.debug(String.format(LOGING_WITH_TOKEN_NAME_S, jwtTokenProvider.getUsername(token)));
+                        logger.debug(String.format(LOGGING_WITH_TOKEN_NAME_S, jwtTokenProvider.getUsername(token)));
                     }
                 }
             }
