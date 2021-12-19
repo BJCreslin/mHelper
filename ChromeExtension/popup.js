@@ -19,3 +19,12 @@ x.addEventListener("change", function () {
         })
 });
 tag.appendChild(x);
+chrome.runtime.sendMessage(
+    {
+        destination: "isConnected",
+        data: {}
+    },
+    function (response) {
+        console.log("resp:" + response);
+    });
+

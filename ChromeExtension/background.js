@@ -3,7 +3,7 @@ const SERVER_URL = "http://localhost:8080/";
 const POST_PROCUREMENT_URL = SERVER_URL + "v1/chrome/"
 const TEST_SERVER_URL = SERVER_URL + "v1/auth/";
 const CHROME_REGISTRATION = SERVER_URL + "v1/auth/code/"
-let isConnected = false;
+let connected = false;
 let token;
 chrome.runtime.onMessage.addListener(
     function (request, sender, sendResponse) {
@@ -35,20 +35,20 @@ chrome.runtime.onMessage.addListener(
                 return response.json();
             })
                 .then(function (json) {
-                    isConnected = true;
-                    console.log(json);
+                    connected = true;
                     token = json.token;
-                    console.log(token);
+                    console.log("token: " + token);
                 })
             return true;
         }
         if (request.destination === "sender") {
+            console.log("token: " + token);
             fetch(POST_PROCUREMENT_URL, {
                 method: 'POST',
                 headers: {
-                    'Accept': 'application/json, application/xml, text/plain, text/html, *.*',
+                    'Accept': 'application/json',
                     'Content-Type': 'application/json; charset=utf-8',
-                    '${jwt.header}': token
+                    'Authorization': token
                 },
                 body: JSON.stringify(request.data)
             }).then((response) => {
@@ -59,6 +59,9 @@ chrome.runtime.onMessage.addListener(
                 }
             })
             return true;
+        }
+        if (request.destination === "isConnected") {
+            return connected;
         }
     }
 );
