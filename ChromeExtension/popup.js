@@ -1,4 +1,3 @@
-// document.head.title = "zHelper";
 const tag = document.createElement("p");
 tag.setAttribute("className", "check_tg_number");
 tag.innerHTML = "Введите код из Телеграмм";
@@ -19,12 +18,5 @@ x.addEventListener("change", function () {
         })
 });
 tag.appendChild(x);
-chrome.runtime.sendMessage(
-    {
-        destination: "isConnected",
-        data: {}
-    },
-    function (response) {
-        console.log("resp:" + response);
-    });
+
 

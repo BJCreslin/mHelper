@@ -60,8 +60,5 @@ chrome.runtime.onMessage.addListener(
             })
             return true;
         }
-        if (request.destination === "isConnected") {
-            return connected;
-        }
     }
 );
