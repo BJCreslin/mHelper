@@ -195,8 +195,7 @@ function insertButton(className) {
             function (response) {
                 console.log(response);
             })
-    }
-    ;
+    };
     buttonPlace.appendChild(buttonToZhelper);
 }
 
