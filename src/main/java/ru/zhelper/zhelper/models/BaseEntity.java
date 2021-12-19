@@ -2,7 +2,6 @@ package ru.zhelper.zhelper.models;
 
 import lombok.Data;
 import org.hibernate.annotations.CreationTimestamp;
-import org.hibernate.annotations.Type;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import javax.persistence.*;
@@ -12,7 +11,8 @@ import java.util.Date;
 @Data
 public class BaseEntity {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    @Column(nullable = false)
     private Long id;
 
     @CreationTimestamp
@@ -28,7 +28,6 @@ public class BaseEntity {
     private BaseStatus status;
 
     @Lob
-    @Column(length = 10000)
-    @Type(type = "org.hibernate.type.TextType")
+    @Column(length = 1000)
     private String comment;
 }

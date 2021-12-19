@@ -101,8 +101,7 @@ public class Procurement extends BaseEntity implements Serializable {
     //ОБЩАЯ ИНФОРМАЦИЯ О ЗАКУПКЕ -> Наименование объекта закупки
     //ОБЩИЕ СВЕДЕНИЯ О ЗАКУПКЕ -> Наименование закупки
     @Lob
-    @Column(name = "object_of", length = 100000)
-    @Type(type = "org.hibernate.type.TextType")
+    @Column(name = "object_of")
     private String objectOf;
 
     //Поле нужно чтобы отслеживать на сайте закупок необходимость обновить данные
