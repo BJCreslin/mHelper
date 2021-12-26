@@ -7,7 +7,7 @@
     <groupId>ru.zhelper</groupId>
     <artifactId>zhelper</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <name>zhelper_backend</name>
+    <name>zhelper</name>
     <description>Website automation service zakupki.gov.ru</description>
 
     <properties>
@@ -21,6 +21,31 @@
         <MavenCompilerVersion>3.3.1</MavenCompilerVersion>
         <jsonwebtoken.version>0.9.1</jsonwebtoken.version>
     </properties>
+
+    <profiles>
+        <profile>
+            <id>dev</id>
+            <activation>
+                <activeByDefault>true</activeByDefault>
+            </activation>
+            <properties>
+                <activeProfile>dev</activeProfile>
+            </properties>
+        </profile>
+        <profile>
+            <id>ci</id>
+            <properties>
+                <activeProfile>ci</activeProfile>
+            </properties>
+            <dependencies>
+                <dependency>
+                    <groupId>org.springframework.boot</groupId>
+                    <artifactId>spring-boot-starter-tomcat</artifactId>
+                    <scope>provided</scope>
+                </dependency>
+            </dependencies>
+        </profile>
+    </profiles>
 
 
     <dependencyManagement>
