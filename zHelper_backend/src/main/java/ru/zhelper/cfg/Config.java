@@ -9,7 +9,7 @@ import ru.zhelper.exceptions.DaoException;
 import javax.naming.NamingException;
 import javax.sql.DataSource;
 
-@Configuration
+//@Configuration
 //@EnableTransactionManagement
 //@Profile("ci")
 public class Config {
