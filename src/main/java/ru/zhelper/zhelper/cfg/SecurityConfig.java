@@ -13,6 +13,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import ru.zhelper.zhelper.controllers.AuthController;
 import ru.zhelper.zhelper.controllers.ChromeExtensionController;
+import ru.zhelper.zhelper.controllers.SimpleController;
 import ru.zhelper.zhelper.models.users.ERole;
 import ru.zhelper.zhelper.services.security.JwtConfigurer;
 
@@ -53,6 +54,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers(CHROME_AUTH).permitAll()
                 .antMatchers("/swagger-ui/**").permitAll()
                 .antMatchers("/h2-console/**").permitAll().filterSecurityInterceptorOncePerRequest(false)
+                .antMatchers(SimpleController.INDEX_PAGE_NAME).permitAll()
                 .anyRequest().authenticated()
                 .and().formLogin().permitAll()
                 .and().logout().permitAll().and()

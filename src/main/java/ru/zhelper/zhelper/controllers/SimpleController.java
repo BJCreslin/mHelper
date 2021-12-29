@@ -15,13 +15,15 @@ import ru.zhelper.zhelper.services.exceptions.BadDataParsingException;
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
+import static ru.zhelper.zhelper.controllers.SimpleController.INDEX_PAGE_NAME;
+
 @Controller
-@RequestMapping({"/","/zhelper"})
+@RequestMapping({"/",INDEX_PAGE_NAME})
 @CrossOrigin
 public class SimpleController {
     private static final Logger logger = LoggerFactory.getLogger(SimpleController.class);
 
-    private static final String INDEX_PAGE_NAME = "/zHelper";
+    public static final String INDEX_PAGE_NAME = "/zHelper";
     private static final String COMMA_SEPARATOR = ",";
     private static final String HEADER_X_FORWARD = "X-Forwarded-For";
     private static final String GET_FROM_IP = "Get from ip {}";
