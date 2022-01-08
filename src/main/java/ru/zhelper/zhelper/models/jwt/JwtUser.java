@@ -15,13 +15,13 @@ public class JwtUser implements UserDetails {
     private final Long id;
     private final String username;
     private final String email;
-    private final String telegramUserId;
+    private final Long telegramUserId;
     @JsonIgnore
     private final String password;
     private final boolean enabled;
     private final Collection<? extends GrantedAuthority> authorities;
 
-    public JwtUser(Long id, String username, String email, String telegramUserId, String password, boolean enabled, Collection<? extends GrantedAuthority> authorities) {
+    public JwtUser(Long id, String username, String email, Long telegramUserId, String password, boolean enabled, Collection<? extends GrantedAuthority> authorities) {
         this.id = id;
         this.username = username;
         this.email = email;
@@ -69,7 +69,7 @@ public class JwtUser implements UserDetails {
         return email;
     }
 
-    public String getTelegramUserId() {
+    public Long getTelegramUserId() {
         return telegramUserId;
     }
 

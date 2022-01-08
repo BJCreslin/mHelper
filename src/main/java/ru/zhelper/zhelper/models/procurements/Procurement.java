@@ -1,12 +1,13 @@
 package ru.zhelper.zhelper.models.procurements;
 
 
-import lombok.AllArgsConstructor;
 import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import org.hibernate.annotations.Type;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
+import org.hibernate.Hibernate;
 import ru.zhelper.zhelper.models.BaseEntity;
+import ru.zhelper.zhelper.models.users.User;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -14,11 +15,14 @@ import java.math.BigDecimal;
 import java.net.URL;
 import java.time.LocalDate;
 import java.time.ZonedDateTime;
+import java.util.HashSet;
+import java.util.Objects;
+import java.util.Set;
 
 @Entity
-@Data
-@NoArgsConstructor
-@AllArgsConstructor
+@Getter
+@Setter
+@ToString
 @Builder
 @Table(name = "procurements")
 public class Procurement extends BaseEntity implements Serializable {
@@ -120,4 +124,46 @@ public class Procurement extends BaseEntity implements Serializable {
     //Дата и время аукциона
     @Column
     private ZonedDateTime dateOfAuction;
+
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(name = "users_procurements",
+            joinColumns = @JoinColumn(name = "procurement_id"),
+            inverseJoinColumns = @JoinColumn(name = "user_id"))
+    private Set<User> users = new HashSet<>();
+
+    public Procurement() {
+    }
+
+    public Procurement(Stage stage, String uin, int fzNumber, ZonedDateTime applicationDeadline, BigDecimal contractPrice, ProcedureType procedureType, String publisherName, String restrictions, URL linkOnPlacement, String applicationSecure, String contractSecure, String objectOf, LocalDate lastUpdatedFromEIS, LocalDate dateTimeLastUpdated, LocalDate dateOfPlacement, ZonedDateTime dateOfAuction, Set<User> users) {
+        this.stage = stage;
+        this.uin = uin;
+        this.fzNumber = fzNumber;
+        this.applicationDeadline = applicationDeadline;
+        this.contractPrice = contractPrice;
+        this.procedureType = procedureType;
+        this.publisherName = publisherName;
+        this.restrictions = restrictions;
+        this.linkOnPlacement = linkOnPlacement;
+        this.applicationSecure = applicationSecure;
+        this.contractSecure = contractSecure;
+        this.objectOf = objectOf;
+        this.lastUpdatedFromEIS = lastUpdatedFromEIS;
+        this.dateTimeLastUpdated = dateTimeLastUpdated;
+        this.dateOfPlacement = dateOfPlacement;
+        this.dateOfAuction = dateOfAuction;
+        this.users = users;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || Hibernate.getClass(this) != Hibernate.getClass(o)) return false;
+        Procurement that = (Procurement) o;
+        return getId() != null && Objects.equals(getId(), that.getId());
+    }
+
+    @Override
+    public int hashCode() {
+        return getClass().hashCode();
+    }
 }

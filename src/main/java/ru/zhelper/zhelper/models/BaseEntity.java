@@ -9,7 +9,7 @@ import java.util.Date;
 
 @MappedSuperclass
 @Data
-public class BaseEntity {
+public abstract class BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(nullable = false)
@@ -30,4 +30,7 @@ public class BaseEntity {
     @Lob
     @Column(length = 1000)
     private String comment;
+
+    protected BaseEntity() {
+    }
 }
