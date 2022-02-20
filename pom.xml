@@ -21,10 +21,12 @@
         <maven.compiler.target>11</maven.compiler.target>
         <JSoupVersion>1.14.3</JSoupVersion>
         <serFireVersion>3.0.0-M5</serFireVersion>
-        <postgresVersion>42.3.1</postgresVersion>
-        <H2Version>2.0.204</H2Version>
+        <postgresVersion>42.3.3</postgresVersion>
+        <H2Version>2.1.210</H2Version>
         <MavenCompilerVersion>3.3.1</MavenCompilerVersion>
         <jsonwebtoken.version>0.9.1</jsonwebtoken.version>
+        <sonar.organization>bjcreslin</sonar.organization>
+        <sonar.host.url>https://sonarcloud.io</sonar.host.url>
     </properties>
     <profiles>
         <profile>
