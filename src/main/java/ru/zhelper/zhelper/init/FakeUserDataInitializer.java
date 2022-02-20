@@ -29,7 +29,7 @@ public class FakeUserDataInitializer implements CommandLineRunner {
     public static final String ADMIN_NAME = "Admin";
     public static final String ADMIN_EMAIL = "admin@zhelper.ru";
     public static final String ADMIN_PASSWORD = "$2a$12$LfwRzy/Qan/QDEoA3.LbHe1bvU7ZoZQpykuPF7P2EGe/dAkn4Td3C";// password
-    public static final String ADMIN_TELEGRAM = "ADMIN_TELEGRAM";
+    public static final Long ADMIN_TELEGRAM = 800000L;
 
     public static final String USER_NAME = "User%d";
     public static final String USER_EMAIL = "user%d@zhelper.ru";
@@ -80,7 +80,7 @@ public class FakeUserDataInitializer implements CommandLineRunner {
                 .email(ADMIN_EMAIL)
                 .password(ADMIN_PASSWORD)
                 .enabled(true)
-                .telegramUserId(ADMIN_TELEGRAM)
+                .telegramUserId(ADMIN_TELEGRAM-100)
                 .roles(Set.of(role)).build();
         userRepository.save(user);
     }

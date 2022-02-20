@@ -25,6 +25,8 @@
         <H2Version>2.0.202</H2Version>
         <MavenCompilerVersion>3.3.1</MavenCompilerVersion>
         <jsonwebtoken.version>0.9.1</jsonwebtoken.version>
+        <sonar.organization>bjcreslin</sonar.organization>
+        <sonar.host.url>https://sonarcloud.io</sonar.host.url>
     </properties>
     <profiles>
         <profile>
@@ -119,8 +121,15 @@
             <artifactId>jjwt</artifactId>
             <version>${jsonwebtoken.version}</version>
         </dependency>
+        <dependency>
+            <groupId>org.telegram</groupId>
+            <artifactId>telegrambots-spring-boot-starter</artifactId>
+            <version>5.6.0</version>
+        </dependency>
+
     </dependencies>
     <build>
+        <finalName>zHelper</finalName>
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
