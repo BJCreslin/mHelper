@@ -24,13 +24,21 @@ public class SimpleController {
     private static final Logger logger = LoggerFactory.getLogger(SimpleController.class);
 
     public static final String INDEX_PAGE_NAME = "/zHelper";
+
     private static final String COMMA_SEPARATOR = ",";
+
     private static final String HEADER_X_FORWARD = "X-Forwarded-For";
+
     private static final String GET_FROM_IP = "Get from ip {}";
+
     private static final String POST_FROM_IP = "Post from ip {}, procurement {}";
+
     private static final String POSTED_PROCUREMENT = "Procurement {} posted.";
+
     private static final String ERROR_FROM_PARSING = "Error parsing";
+
     private static final String EMPTY_ADDRESS = "";
+
     private final ProcurementRepo repo;
     private final ProcurementService service;
 

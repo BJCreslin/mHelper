@@ -37,22 +37,35 @@ import static ru.zhelper.zhelper.controllers.exeptions.BadRequestException.ROLE_
 @RequestMapping(URL)
 @CrossOrigin(origins = "*", maxAge = 3600)
 public class AuthController {
+
     private static final Logger LOGGER = LoggerFactory.getLogger(AuthController.class);
+
     public static final String URL = ApiVersion.VERSION_1_0 + "/auth";
 
     public static final String TEST_JWT = "/test";
 
     public static final String USERNAME_IS_EXIST = "Error: Username is exist";
+
     public static final String EMAIL_IS_EXIST = "Error: Email is exist";
+
     public static final String USER_IS_NOT_FOUND = "Error, Role USER is not found";
+
     public static final String ADMIN_IS_NOT_FOUND = "Error, Role ADMIN is not found";
+
     public static final String CHROME_EXTENSION_IS_NOT_FOUND = "Error, Role CHROME EXTENSION is not found";
+
     public static final String AUTHENTICATING = "User with UserName {} is authenticating";
+
     public static final String CODE_AUTHENTICATING = "User with code {} is authenticating";
+
     public static final String USER_CREATED = "User CREATED";
+
     public static final String SUCCESSFUL_CONNECTION = "Successful connection";
+
     public static final String USER_NOT_FOUND = "User with name %s not found";
+
     public static final String CODE_NOT_FOUND = "Code not found";
+
     private final AuthenticationManager authenticationManager;
     private final JwtTokenProvider jwtTokenProvider;
     private final UserRepository userRepository;

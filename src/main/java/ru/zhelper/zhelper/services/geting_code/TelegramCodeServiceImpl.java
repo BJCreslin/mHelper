@@ -16,25 +16,36 @@ import static ru.zhelper.zhelper.services.geting_code.ErrorGettingCode.TOO_MANY_
 @Service("TelegramCodeService")
 @Primary
 public class TelegramCodeServiceImpl implements TelegramCodeService {
-    private final static Logger LOGGER = LoggerFactory.getLogger(TelegramCodeServiceImpl.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(TelegramCodeServiceImpl.class);
 
-    private final static Map<Integer, UserIdTimed> storage = new HashMap<>();
+    private static final Map<Integer, UserIdTimed> storage = new HashMap<>();
 
-    private final static Random random = new Random();
+    private static final Random random = new Random();
+
     public static final String ENTERING_THE_CODE_NUMBER = "Entering the code number: %d";
+
     public static final String FIND_USER = "Find user: %d";
+
     public static final String CREATED_NEW_CODE_D_FOR_USER = "Created new code %d for user %d";
 
+    public static final String CHECK_CODE_EXIST = "Check for code %d. %b";
+
+    public static final String GET_ALL_CODES = "Get all codes: %s";
+
     @Value("${bot.time}")
-    private int ACTION_TIME;
+    private int lifetime;
 
     @Value("${bot.max_attempts}")
-    private int MAX_ATTEMPTS;
+    private int maxAttempts;
 
     @Override
     public boolean existByCode(Integer code) {
         removeOldValue();
-        if (storage.isEmpty()) {
+        final boolean exist = storage.isEmpty();
+        if (LOGGER.isDebugEnabled()) {
+            LOGGER.debug(String.format(CHECK_CODE_EXIST, code, exist));
+        }
+        if (exist) {
             return false;
         }
         return storage.containsKey(code);
@@ -70,6 +81,24 @@ public class TelegramCodeServiceImpl implements TelegramCodeService {
         return code;
     }
 
+
+    public Map<Integer, UserIdTimed> getAllCodes() {
+        removeOldValue();
+        if (LOGGER.isDebugEnabled()) {
+            LOGGER.debug(String.format(GET_ALL_CODES, storageToString()));
+        }
+        return storage;
+    }
+
+    public String storageToString() {
+        StringBuilder text = new StringBuilder();
+        if (storage.isEmpty()) {
+            return "";
+        }
+        storage.forEach((x, y) -> text.append("{").append(x.intValue()).append(", ").append(y.getUserId()).append(", ").append(y.getTimeCreated()).append("}").append("\n"));
+        return text.toString();
+    }
+
     private int generateCode() {
         int count = 0;
         int code;
@@ -79,7 +108,7 @@ public class TelegramCodeServiceImpl implements TelegramCodeService {
             if (!storage.containsKey(code)) {
                 break;
             }
-            if (count > MAX_ATTEMPTS) {
+            if (count > maxAttempts) {
                 throw new ErrorGettingCode(TOO_MANY_ATTEMPTS);
             }
         }
@@ -87,6 +116,6 @@ public class TelegramCodeServiceImpl implements TelegramCodeService {
     }
 
     private void removeOldValue() {
-        storage.entrySet().stream().filter(x -> x.getValue().getTimeCreated().plusMinutes(ACTION_TIME).isBefore(LocalTime.now())).forEach(x -> storage.remove(x.getKey()));
+        storage.entrySet().stream().filter(x -> x.getValue().getTimeCreated().plusMinutes(lifetime).isBefore(LocalTime.now())).forEach(x -> storage.remove(x.getKey()));
     }
 }
