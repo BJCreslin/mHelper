@@ -1,5 +1,6 @@
 package ru.zhelper.zhelper.controllers.admin;
 
+import io.swagger.annotations.Api;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -18,6 +19,7 @@ import static ru.zhelper.zhelper.controllers.AuthController.URL;
 @RestController
 @RequestMapping(URL)
 @CrossOrigin(origins = "*", maxAge = 3600)
+@Api(description = "Тестовый контроллер")
 public class CodeController {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(CodeController.class);
