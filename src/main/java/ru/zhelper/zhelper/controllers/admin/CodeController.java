@@ -34,7 +34,7 @@ public class CodeController {
         this.telegramCodeService = telegramCodeService;
     }
 
-    @GetMapping({"codes", "codes/"})
+    @GetMapping({"/codes", "/codes/"})
     public Map<Integer, UserIdTimed> getAll() {
         if (LOGGER.isDebugEnabled()) {
             LOGGER.debug(GET_ALL_CODES);

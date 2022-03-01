@@ -24,6 +24,7 @@ import static ru.zhelper.zhelper.controllers.ChromeExtensionController.URL;
 @RequestMapping(URL)
 @CrossOrigin(origins = "*", maxAge = 3600)
 public class ChromeExtensionController {
+
     private static final Logger logger = LoggerFactory.getLogger(ChromeExtensionController.class);
     public static final String URL = ApiVersion.VERSION_1_0 + "/chrome";
 

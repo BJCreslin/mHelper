@@ -51,7 +51,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers(TEST_CHROME_JWT_AUTH).hasAnyRole(ERole.ROLE_ADMIN.getName(), ERole.CHROME_EXTENSION.getName())
                 .antMatchers(CHROME_REGISTRATION).permitAll()
                 .antMatchers(CHROME_AUTH).permitAll()
-                .antMatchers("/swagger-ui/**").permitAll().filterSecurityInterceptorOncePerRequest(false)
                 .antMatchers("/h2-console/**").permitAll().filterSecurityInterceptorOncePerRequest(false)
                 .antMatchers(SimpleController.INDEX_PAGE_NAME).permitAll()
                 .anyRequest().authenticated()

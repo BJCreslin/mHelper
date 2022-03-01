@@ -21,6 +21,7 @@ import static ru.zhelper.zhelper.controllers.SimpleController.INDEX_PAGE_NAME;
 @RequestMapping({"/",INDEX_PAGE_NAME})
 @CrossOrigin
 public class SimpleController {
+
     private static final Logger logger = LoggerFactory.getLogger(SimpleController.class);
 
     public static final String INDEX_PAGE_NAME = "/zHelper";
