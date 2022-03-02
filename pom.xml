@@ -10,10 +10,10 @@
         <version>2.6.1</version>
         <relativePath/>
     </parent>
-    <groupId>ru.zhelper</groupId>
-    <artifactId>zhelper</artifactId>
+    <groupId>ru.mhelper</groupId>
+    <artifactId>mhelper</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <name>zhelper</name>
+    <name>mhelper</name>
     <description>Website automation service zakupki.gov.ru</description>
     <properties>
         <java.version>11</java.version>
