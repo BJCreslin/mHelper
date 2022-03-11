@@ -23,7 +23,7 @@ public abstract class BaseEntity {
     @Column(name = "updated")
     private Date updated;
 
-    @Column(name = "status")
+    @Column(name = "status", columnDefinition = "varchar(255) default 'ACTIVE'")
     @Enumerated(EnumType.STRING)
     private BaseStatus status;
 

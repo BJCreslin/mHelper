@@ -2,7 +2,6 @@ package ru.mhelper.models.users;
 
 import lombok.Builder;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 import ru.mhelper.models.BaseEntity;
 import ru.mhelper.models.BaseStatus;
 import ru.mhelper.models.procurements.Procurement;
@@ -18,9 +17,9 @@ import java.util.Set;
 @Entity
 @Data
 @Table(name = "users")
-@NoArgsConstructor
 @Builder
 public class User extends BaseEntity {
+
     public static final String POSTFIX_TELEGRAM_EMAIL = "@t.me";
     public static final String PREFIX_TELEGRAM_NAME = "tlgrm";
     public static final String TELEGRAM_DB_PASSWORD = "$2a$12$skadH6bO.Oz7fIqnSfXxIO.ffv7XdXeOngnOy.q8aiGJmxPRaW7/."; //""
@@ -40,8 +39,12 @@ public class User extends BaseEntity {
     @Column(name = "password")
     private String password;
 
-    @Column(name = "telegram_user", unique = true)
+    @Column(name = "tg_user", unique = true)
     private Long telegramUserId;
+
+    @Column(name = "tg_statement", columnDefinition = "varchar(255) default 'NO STATEMENT'")
+    @Enumerated(EnumType.STRING)
+    private TelegramStateType telegramStateType;
 
     @NotNull
     @Column(name = "enabled")
@@ -63,12 +66,14 @@ public class User extends BaseEntity {
             inverseJoinColumns = @JoinColumn(name = "procurement_id"))
     private Set<Procurement> procurements = new HashSet<>();
 
+    public User() {
+    }
+
     public User(String userName, String email, String password) {
         this.username = userName;
         this.email = email;
         this.password = password;
         this.enabled = true;
-        setStatus(BaseStatus.ACTIVE);
     }
 
     public User(String username, String email, String password, Long telegramUserId, boolean enabled, String comment, Set<Role> roles, Set<Procurement> procurements) {

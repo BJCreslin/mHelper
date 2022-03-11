@@ -8,27 +8,32 @@ import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.Update;
+import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
+import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKeyboardButton;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 import ru.mhelper.services.geting_code.ErrorGettingCode;
 import ru.mhelper.services.geting_code.TelegramCodeService;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import static ru.mhelper.services.telegram.TelegramBotServiceException.ERROR_SEND_MESSAGE;
 
 @Service
 public class Bot extends TelegramLongPollingBot {
-    private final Logger LOGGER = LoggerFactory.getLogger(Bot.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(Bot.class);
 
-    private final static String NUMBER_MESSAGE = "Полученный код: ";
-    private final static String NUMBER_ERROR = "Ошибка получения кода. Попробуйте повторить позже.";
+    private static final String NUMBER_MESSAGE = "Полученный код: ";
+    private static final String NUMBER_ERROR = "Ошибка получения кода. Попробуйте повторить позже.";
 
-    private final static String NUMBER_OPERATION = "number";
-    private final static String START_OPERATION = "/start";
+    private static final String NUMBER_OPERATION = "number";
+    private static final String START_OPERATION = "/start";
 
     @Value("${bot.name}")
-    private String BOT_NAME;
+    private String botName;
 
     @Value("${bot.token}")
-    private String BOT_TOKEN;
+    private String botToken;
 
     private final TelegramCodeService telegramCodeService;
 
@@ -38,12 +43,12 @@ public class Bot extends TelegramLongPollingBot {
 
     @Override
     public String getBotUsername() {
-        return BOT_NAME;
+        return botName;
     }
 
     @Override
     public String getBotToken() {
-        return BOT_TOKEN;
+        return botToken;
     }
 
     @Override
@@ -59,8 +64,10 @@ public class Bot extends TelegramLongPollingBot {
                     text = NUMBER_MESSAGE + telegramCodeService.createCode(chatId);
                 } catch (ErrorGettingCode e) {
                     LOGGER.error(ErrorGettingCode.TOO_MANY_ATTEMPTS);
-                    text=NUMBER_ERROR;
+                    text = NUMBER_ERROR;
                 }
+            } else if (text.equals("menu")) {
+                response = sendInlineKeyBoardMessage(chatId);
             }
             response.setText(text);
             try {
@@ -70,6 +77,42 @@ public class Bot extends TelegramLongPollingBot {
                 LOGGER.error(eMessage);
                 throw new TelegramBotServiceException(eMessage, ex);
             }
+        } else if (update.hasCallbackQuery()) {
+            try {
+                SendMessage response = new SendMessage();
+                Long chatId = update.getCallbackQuery().getMessage().getChatId();
+                response.setChatId(String.valueOf(chatId));
+                response.setText(update.getCallbackQuery().getData());
+                response.setChatId(String.valueOf(chatId));
+                execute(response);
+            } catch (TelegramApiException e) {
+                e.printStackTrace();
+            }
         }
+
+    }
+
+    public static SendMessage sendInlineKeyBoardMessage(long chatId) {
+        InlineKeyboardMarkup inlineKeyboardMarkup = new InlineKeyboardMarkup();
+        InlineKeyboardButton inlineKeyboardButton1 = new InlineKeyboardButton();
+        InlineKeyboardButton inlineKeyboardButton2 = new InlineKeyboardButton();
+        inlineKeyboardButton1.setText("Алтайский край");
+        inlineKeyboardButton1.setCallbackData("Алтайский край");
+        inlineKeyboardButton2.setText("Амурская область");
+        inlineKeyboardButton2.setCallbackData("Амурская область");
+        List<InlineKeyboardButton> keyboardButtonsRow1 = new ArrayList<>();
+        List<InlineKeyboardButton> keyboardButtonsRow2 = new ArrayList<>();
+        keyboardButtonsRow1.add(inlineKeyboardButton1);
+        keyboardButtonsRow2.add(inlineKeyboardButton2);
+        List<List<InlineKeyboardButton>> rowList = new ArrayList<>();
+        rowList.add(keyboardButtonsRow1);
+        rowList.add(keyboardButtonsRow2);
+        inlineKeyboardMarkup.setKeyboard(rowList);
+        SendMessage response = new SendMessage();
+        response.setChatId(String.valueOf(chatId));
+        response.setText("Выберите область");
+        response.setReplyMarkup(inlineKeyboardMarkup);
+
+        return response;
     }
 }
