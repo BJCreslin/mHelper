@@ -76,11 +76,12 @@ public class User extends BaseEntity {
         this.enabled = true;
     }
 
-    public User(String username, String email, String password, Long telegramUserId, boolean enabled, String comment, Set<Role> roles, Set<Procurement> procurements) {
+    public User(String username, String email, String password, Long telegramUserId, TelegramStateType telegramStateType, boolean enabled, String comment, Set<Role> roles, Set<Procurement> procurements) {
         this.username = username;
         this.email = email;
         this.password = password;
         this.telegramUserId = telegramUserId;
+        this.telegramStateType = telegramStateType;
         this.enabled = enabled;
         this.comment = comment;
         this.roles = roles;
