@@ -13,7 +13,7 @@
     <groupId>ru.mhelper</groupId>
     <artifactId>mhelper</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <name>mhelper</name>
+    <name>mHelper</name>
     <description>Website automation service zakupki.gov.ru</description>
     <properties>
         <java.version>11</java.version>
@@ -50,6 +50,16 @@
                     <scope>provided</scope>
                 </dependency>
             </dependencies>
+            <build>
+                <finalName>mHelper</finalName>
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-surefire-plugin</artifactId>
+                        <version>${serFireVersion}</version>
+                    </plugin>
+                </plugins>
+            </build>
         </profile>
     </profiles>
     <dependencies>
@@ -133,7 +143,7 @@
         </dependency>
     </dependencies>
     <build>
-        <finalName>zHelper</finalName>
+        <finalName>mHelper</finalName>
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -143,11 +153,6 @@
                     <failOnMissingWebXml>false</failOnMissingWebXml>
                 </configuration>
             </plugin>
-            <!--            <plugin>-->
-            <!--                <groupId>org.apache.maven.plugins</groupId>-->
-            <!--                <artifactId>maven-surefire-plugin</artifactId>-->
-            <!--                <version>${serFireVersion}</version>-->
-            <!--            </plugin>-->
         </plugins>
     </build>
 </project>
