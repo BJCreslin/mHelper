@@ -1,6 +1,5 @@
 package ru.mhelper.controllers.admin;
 
-import io.swagger.annotations.Api;
 import io.swagger.v3.oas.annotations.OpenAPIDefinition;
 import io.swagger.v3.oas.annotations.info.Info;
 import org.slf4j.Logger;
