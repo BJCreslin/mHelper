@@ -1,6 +1,8 @@
 package ru.mhelper.controllers.admin;
 
 import io.swagger.annotations.Api;
+import io.swagger.v3.oas.annotations.OpenAPIDefinition;
+import io.swagger.v3.oas.annotations.info.Info;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -18,7 +20,7 @@ import static ru.mhelper.controllers.AuthController.URL;
 @RestController
 @RequestMapping(URL)
 @CrossOrigin(origins = "*", maxAge = 3600)
-@Api(description = "Тестовый контроллер")
+@OpenAPIDefinition(info = @Info(title = "Telegram code API", version = "1.0", description = "Telegram codes Information"))
 public class CodeController {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(CodeController.class);

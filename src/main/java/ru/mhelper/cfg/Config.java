@@ -12,6 +12,7 @@ import javax.sql.DataSource;
 //@EnableTransactionManagement
 //@Profile("ci")
 public class Config {
+
     private static final Logger LOGGER = LoggerFactory.getLogger(Config.class);
     private static final String ENV_JDBC = "java:comp/env/jdbc/zhelperdb";
     private static final String NAMING_EXCEPTION_FOR = "NamingException for ";

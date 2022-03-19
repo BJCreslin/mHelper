@@ -11,7 +11,7 @@ import static org.springframework.security.config.http.SessionCreationPolicy.STA
 
 @Configuration
 @Order(3)
-public class SwaggerSecurityConfig  extends WebSecurityConfigurerAdapter {
+public class SwaggerSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
@@ -21,7 +21,7 @@ public class SwaggerSecurityConfig  extends WebSecurityConfigurerAdapter {
             .sessionManagement().sessionCreationPolicy(STATELESS)
             .and()
             .authorizeRequests()
-            .antMatchers("/**").permitAll();
+            .antMatchers("/**", "/swagger-ui/**").permitAll();
     }
 
     @Override
