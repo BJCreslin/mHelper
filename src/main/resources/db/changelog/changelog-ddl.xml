@@ -5,7 +5,7 @@
         xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
                       http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.3.xsd">
 
-    <changeSet id="1" author="Alexander Kamyhin">
+    <changeSet id="17092021-1" author="Alexander Kamyhin">
         <preConditions onFail="MARK_RAN">
             <not>
                 <tableExists tableName="users"/>
@@ -50,11 +50,11 @@
             COMMENT ON COLUMN users.password IS 'Пароль';
             COMMENT ON COLUMN users.tg_user IS 'Telegram user id';
             COMMENT ON COLUMN users.tg_statement IS 'Состояние чата телеграмм';
-            COMMENT ON COLUMN users.is_enabled IS 'Включена ли запись';
+            COMMENT ON COLUMN users.enabled IS 'Включена ли запись';
         </sql>
     </changeSet>
 
-    <changeSet id="2" author="Alexander Kamyhin">
+    <changeSet id="17092021-2" author="Alexander Kamyhin">
         <preConditions onFail="MARK_RAN">
             <not>
                 <tableExists tableName="roles"/>
@@ -84,7 +84,7 @@
         </sql>
     </changeSet>
 
-    <changeSet id="3" author="Alexander Kamyhin">
+    <changeSet id="17092021-3" author="Alexander Kamyhin">
         <preConditions onFail="MARK_RAN">
             <not>
                 <tableExists tableName="procurements"/>
