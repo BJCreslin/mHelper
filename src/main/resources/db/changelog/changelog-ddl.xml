@@ -38,19 +38,31 @@
             ALTER TABLE users
                 ADD CONSTRAINT uc_users_username UNIQUE (username);
 
-            COMMENT ON TABLE users IS 'Список пользователей';
+            COMMENT
+            ON TABLE users IS 'Список пользователей';
 
-            COMMENT ON COLUMN users.id IS 'Уникальный идентификатор';
-            COMMENT ON COLUMN users.created IS 'Дата создания записи';
-            COMMENT ON COLUMN users.updated IS 'Дата изменения записи';
-            COMMENT ON COLUMN users.status IS 'Состояние учетной записи пользователя';
-            COMMENT ON COLUMN users.comment IS 'Комментарий';
-            COMMENT ON COLUMN users.username IS 'Имя пользователя';
-            COMMENT ON COLUMN users.email IS 'Email пользователя';
-            COMMENT ON COLUMN users.password IS 'Пароль';
-            COMMENT ON COLUMN users.tg_user IS 'Telegram user id';
-            COMMENT ON COLUMN users.tg_statement IS 'Состояние чата телеграмм';
-            COMMENT ON COLUMN users.enabled IS 'Включена ли запись';
+            COMMENT
+            ON COLUMN users.id IS 'Уникальный идентификатор';
+            COMMENT
+            ON COLUMN users.created IS 'Дата создания записи';
+            COMMENT
+            ON COLUMN users.updated IS 'Дата изменения записи';
+            COMMENT
+            ON COLUMN users.status IS 'Состояние учетной записи пользователя';
+            COMMENT
+            ON COLUMN users.comment IS 'Комментарий';
+            COMMENT
+            ON COLUMN users.username IS 'Имя пользователя';
+            COMMENT
+            ON COLUMN users.email IS 'Email пользователя';
+            COMMENT
+            ON COLUMN users.password IS 'Пароль';
+            COMMENT
+            ON COLUMN users.tg_user IS 'Telegram user id';
+            COMMENT
+            ON COLUMN users.tg_statement IS 'Состояние чата телеграмм';
+            COMMENT
+            ON COLUMN users.enabled IS 'Включена ли запись';
         </sql>
     </changeSet>
 
@@ -64,23 +76,30 @@
         <sql>
             CREATE TABLE roles
             (
-                id      BIGINT NOT NULL,
-                created TIMESTAMP WITHOUT TIME ZONE,
-                updated TIMESTAMP WITHOUT TIME ZONE,
-                status  VARCHAR(255) DEFAULT 'ACTIVE',
-                comment TEXT,
-                name    VARCHAR(255),
+                id       BIGINT NOT NULL,
+                created  TIMESTAMP WITHOUT TIME ZONE,
+                updated  TIMESTAMP WITHOUT TIME ZONE,
+                status   VARCHAR(255) DEFAULT 'ACTIVE',
+                comment  TEXT,
+                rolename VARCHAR(255),
                 CONSTRAINT pk_roles PRIMARY KEY (id)
             );
 
-            COMMENT ON TABLE roles IS 'Список ролей пользователей';
+            COMMENT
+            ON TABLE roles IS 'Список ролей пользователей';
 
-            COMMENT ON COLUMN roles.id IS 'ID роли';
-            COMMENT ON COLUMN roles.created IS 'Дата создания записи';
-            COMMENT ON COLUMN roles.updated IS 'Дата изменения записи';
-            COMMENT ON COLUMN roles.status IS 'Состояние роли';
-            COMMENT ON COLUMN roles.comment IS 'Комментарий';
-            COMMENT ON COLUMN roles.role IS 'Имя роли';
+            COMMENT
+            ON COLUMN roles.id IS 'ID роли';
+            COMMENT
+            ON COLUMN roles.created IS 'Дата создания записи';
+            COMMENT
+            ON COLUMN roles.updated IS 'Дата изменения записи';
+            COMMENT
+            ON COLUMN roles.status IS 'Состояние роли';
+            COMMENT
+            ON COLUMN roles.comment IS 'Комментарий';
+            COMMENT
+            ON COLUMN roles.rolename IS 'Имя роли';
         </sql>
     </changeSet>
 
@@ -123,29 +142,51 @@
 
             CREATE UNIQUE INDEX users_uin_u_idx ON procurements (uin);
 
-            COMMENT ON TABLE procurements IS 'Список закупок';
+            COMMENT
+            ON TABLE procurements IS 'Список закупок';
 
-            COMMENT ON COLUMN procurements.id IS 'Уникальный идентификатор';
-            COMMENT ON COLUMN procurements.created IS 'Дата создания записи';
-            COMMENT ON COLUMN procurements.updated IS 'Дата изменения записи';
-            COMMENT ON COLUMN procurements.status IS 'Состояние записи';
-            COMMENT ON COLUMN procurements.comment IS 'Комментарий';
-            COMMENT ON COLUMN procurements.stage IS 'Этап закупки';
-            COMMENT ON COLUMN procurements.uin IS 'Уникальный идентификатор закупки';
-            COMMENT ON COLUMN procurements.fz_number IS 'Номер федерального закона';
-            COMMENT ON COLUMN procurements.application_deadline IS 'Дата и время окончания срока подачи заявок';
-            COMMENT ON COLUMN procurements.contract_price IS 'Начальная (максимальная) цена договора';
-            COMMENT ON COLUMN procurements.procedure_type IS 'Тип закупки';
-            COMMENT ON COLUMN procurements.publisher_name IS 'Наименование организации, осуществляющей размещение заявки';
-            COMMENT ON COLUMN procurements.restrictions IS 'Ограничения и запреты';
-            COMMENT ON COLUMN procurements.link_on_placement IS 'Ссылка на закупку на площадке размещения';
-            COMMENT ON COLUMN procurements.application_secure IS 'Обеспечение заявки';
-            COMMENT ON COLUMN procurements.contract_secure IS 'Обеспечение контракта';
-            COMMENT ON COLUMN procurements.object_of IS 'Наименование закупки';
-            COMMENT ON COLUMN procurements.last_updated_from_eis IS 'Дата размещения текущей редакции извещения';
-            COMMENT ON COLUMN procurements.date_time_last_updated IS '';
-            COMMENT ON COLUMN procurements.date_of_placement IS 'Дата размещения процедуры';
-            COMMENT ON COLUMN procurements.date_of_auction IS 'Дата и время аукциона';
+            COMMENT
+            ON COLUMN procurements.id IS 'Уникальный идентификатор';
+            COMMENT
+            ON COLUMN procurements.created IS 'Дата создания записи';
+            COMMENT
+            ON COLUMN procurements.updated IS 'Дата изменения записи';
+            COMMENT
+            ON COLUMN procurements.status IS 'Состояние записи';
+            COMMENT
+            ON COLUMN procurements.comment IS 'Комментарий';
+            COMMENT
+            ON COLUMN procurements.stage IS 'Этап закупки';
+            COMMENT
+            ON COLUMN procurements.uin IS 'Уникальный идентификатор закупки';
+            COMMENT
+            ON COLUMN procurements.fz_number IS 'Номер федерального закона';
+            COMMENT
+            ON COLUMN procurements.application_deadline IS 'Дата и время окончания срока подачи заявок';
+            COMMENT
+            ON COLUMN procurements.contract_price IS 'Начальная (максимальная) цена договора';
+            COMMENT
+            ON COLUMN procurements.procedure_type IS 'Тип закупки';
+            COMMENT
+            ON COLUMN procurements.publisher_name IS 'Наименование организации, осуществляющей размещение заявки';
+            COMMENT
+            ON COLUMN procurements.restrictions IS 'Ограничения и запреты';
+            COMMENT
+            ON COLUMN procurements.link_on_placement IS 'Ссылка на закупку на площадке размещения';
+            COMMENT
+            ON COLUMN procurements.application_secure IS 'Обеспечение заявки';
+            COMMENT
+            ON COLUMN procurements.contract_secure IS 'Обеспечение контракта';
+            COMMENT
+            ON COLUMN procurements.object_of IS 'Наименование закупки';
+            COMMENT
+            ON COLUMN procurements.last_updated_from_eis IS 'Дата размещения текущей редакции извещения';
+            COMMENT
+            ON COLUMN procurements.date_time_last_updated IS '';
+            COMMENT
+            ON COLUMN procurements.date_of_placement IS 'Дата размещения процедуры';
+            COMMENT
+            ON COLUMN procurements.date_of_auction IS 'Дата и время аукциона';
         </sql>
     </changeSet>
 
