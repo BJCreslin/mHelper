@@ -45,11 +45,7 @@
 
     <changeSet id="17092021-06" author="Alexander Kamyhin" context="dev">
         <preConditions onFail="MARK_RAN">
-            <and>
-                <sqlCheck expectedResult="0">
-                    SELECT count(*) FROM procurements;
-                </sqlCheck>
-            </and>
+
         </preConditions>
         <comment>Заполнение таблицы "Закупки" тестовыми данными</comment>
         <sql>
