@@ -16,6 +16,7 @@ import java.util.Arrays;
 @Component
 @Order(2)
 public class RoleInitializer implements CommandLineRunner {
+
     private static final Logger LOGGER = LoggerFactory.getLogger(RoleInitializer.class);
     private final RoleRepository repository;
 
@@ -25,7 +26,7 @@ public class RoleInitializer implements CommandLineRunner {
 
     @Override
     @Transactional
-    public void run(String... args) throws Exception {
+    public void run(String... args) {
         Arrays.stream(ERole.values()).forEach(x -> {
             if (repository.findByName(x.getName()).isEmpty()) {
                 var role = new Role(x.getName());
