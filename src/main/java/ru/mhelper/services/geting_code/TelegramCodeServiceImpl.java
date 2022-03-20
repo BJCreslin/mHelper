@@ -16,6 +16,7 @@ import static ru.mhelper.services.geting_code.ErrorGettingCode.TOO_MANY_ATTEMPTS
 @Service("TelegramCodeService")
 @Primary
 public class TelegramCodeServiceImpl implements TelegramCodeService {
+
     private static final Logger LOGGER = LoggerFactory.getLogger(TelegramCodeServiceImpl.class);
 
     private static final Map<Integer, UserIdTimed> storage = new HashMap<>();
@@ -58,7 +59,8 @@ public class TelegramCodeServiceImpl implements TelegramCodeService {
             LOGGER.debug(String.format(ENTERING_THE_CODE_NUMBER, code));
         }
         if (storage.isEmpty()) {
-            return null;
+            LOGGER.info(ErrorGettingCode.NO_CODES);
+            throw new ErrorGettingCode(ErrorGettingCode.NO_CODES);
         }
         if (storage.containsKey(code)) {
             Long userId = storage.get(code).getUserId();
@@ -67,7 +69,9 @@ public class TelegramCodeServiceImpl implements TelegramCodeService {
             }
             return userId;
         }
-        return null;
+        final String noCode = String.format(ErrorGettingCode.NO_CURRENT_CODE, code);
+        LOGGER.info(noCode);
+        throw new ErrorGettingCode(noCode);
     }
 
     @Override
@@ -103,7 +107,7 @@ public class TelegramCodeServiceImpl implements TelegramCodeService {
         int count = 0;
         int code;
         while (true) {
-            code = random.nextInt(1000000);
+            code = random.nextInt(900000) + 100000;
             count++;
             if (!storage.containsKey(code)) {
                 break;
