@@ -15,7 +15,7 @@
         <sql>
             CREATE TABLE users
             (
-                id           BIGINT NOT NULL,
+                id           BIGINT AUTO_INCREMENT NOT NULL,
                 created      TIMESTAMP WITHOUT TIME ZONE,
                 updated      TIMESTAMP WITHOUT TIME ZONE,
                 status       VARCHAR(255) DEFAULT 'ACTIVE',
@@ -26,7 +26,7 @@
                 tg_user      BIGINT,
                 tg_statement VARCHAR(255) DEFAULT 'NO STATEMENT',
                 enabled      BOOLEAN,
-                CONSTRAINT pk_users AUTO_INCREMENT PRIMARY KEY (id)
+                CONSTRAINT   pk_users PRIMARY KEY (id)
             );
 
             ALTER TABLE users
@@ -76,13 +76,13 @@
         <sql>
             CREATE TABLE roles
             (
-                id       BIGINT NOT NULL,
+                id       BIGINT AUTO_INCREMENT NOT NULL,
                 created  TIMESTAMP WITHOUT TIME ZONE,
                 updated  TIMESTAMP WITHOUT TIME ZONE,
                 status   VARCHAR(255) DEFAULT 'ACTIVE',
                 comment  TEXT,
                 rolename VARCHAR(255),
-                CONSTRAINT pk_roles AUTO_INCREMENT PRIMARY KEY (id)
+                CONSTRAINT pk_roles PRIMARY KEY (id)
             );
 
             COMMENT
@@ -113,7 +113,7 @@
         <sql>
             CREATE TABLE procurements
             (
-                id                     BIGINT       NOT NULL,
+                id                     BIGINT AUTO_INCREMENT NOT NULL,
                 created                TIMESTAMP WITHOUT TIME ZONE,
                 updated                TIMESTAMP WITHOUT TIME ZONE,
                 status                 VARCHAR(255) DEFAULT 'ACTIVE',
@@ -134,7 +134,7 @@
                 date_time_last_updated date,
                 date_of_placement      date,
                 date_of_auction        TIMESTAMP with time zone,
-                CONSTRAINT pk_procurements AUTO_INCREMENT PRIMARY KEY (id)
+                CONSTRAINT pk_procurements PRIMARY KEY (id)
             );
 
             ALTER TABLE procurements
