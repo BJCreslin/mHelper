@@ -26,8 +26,9 @@
                 tg_user      BIGINT,
                 tg_statement VARCHAR(255) DEFAULT 'NO STATEMENT',
                 enabled      BOOLEAN,
-                CONSTRAINT   pk_users PRIMARY KEY (id)
+                CONSTRAINT pk_users PRIMARY KEY (id)
             );
+
 
             ALTER TABLE users
                 ADD CONSTRAINT uc_users_email UNIQUE (email);
@@ -189,4 +190,50 @@
             ON COLUMN procurements.date_of_auction IS 'Дата и время аукциона';
         </sql>
     </changeSet>
+
+    <changeSet id="20032022-1" author="BJCreslin">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists tableName="procurements"/>
+            </not>
+        </preConditions>
+        <comment>Создание таблицы USER-ROLES</comment>
+        <sql>
+            CREATE TABLE user_roles
+            (
+                user_id BIGINT NOT NULL,
+                role_id BIGINT NOT NULL,
+                PRIMARY KEY (user_id, role_id),
+                CONSTRAINT FK_user_roles_user FOREIGN KEY (user_id) REFERENCES users (id),
+                CONSTRAINT FK_user_roles_role FOREIGN KEY (role_id) REFERENCES roles (id)
+            );
+        </sql>
+    </changeSet>
+
+    <changeSet id="20032022-2" author="BJCreslin">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists tableName="procurements"/>
+            </not>
+        </preConditions>
+        <comment>Создание таблицы USERS-PROCUREMENTS</comment>
+        <sql>
+            CREATE TABLE users_procurements
+            (
+                user_id        BIGINT NOT NULL,
+                procurement_id BIGINT NOT NULL,
+                PRIMARY KEY (user_id, procurement_id),
+                CONSTRAINT FK_users_procurements_user FOREIGN KEY (user_id) REFERENCES users (id),
+                CONSTRAINT FK_users_procurements_procurement FOREIGN KEY (procurement_id) REFERENCES procurements (id)
+            );
+        </sql>
+
+
+    </changeSet>
+    <changeSet id="20032022-3" author="bjcreslin">
+        <createIndex tableName="users" indexName="username">
+            <column name="username"/>
+        </createIndex>
+    </changeSet>
+
 </databaseChangeLog>
