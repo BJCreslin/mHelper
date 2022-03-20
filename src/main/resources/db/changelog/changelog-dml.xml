@@ -72,7 +72,7 @@
         </sql>
     </changeSet>
 
-    <changeSet id="20032022-01" author="BJCreslin" context="dev">
+    <changeSet id="20032022-07" author="BJCreslin" context="dev">
         <preConditions onFail="MARK_RAN">
             <and>
                 <sqlCheck expectedResult="0">
@@ -84,11 +84,11 @@
         <sql>
             INSERT INTO user_roles
                 (user_id, role_id)
-            VALUES (1, 2)
+            VALUES (select id from users where username= 'admin', select id from roles where rolename= 'ADMIN')
         </sql>
     </changeSet>
 
-    <changeSet id="20032022-02" author="BJCreslin" context="dev">
+    <changeSet id="20032022-08" author="BJCreslin" context="dev">
         <preConditions onFail="MARK_RAN">
             <and>
                 <sqlCheck expectedResult="0">
@@ -100,7 +100,7 @@
         <sql>
             INSERT INTO users_procurements
                 (user_id, procurement_id)
-            VALUES (1, 1)
+            VALUES (select id from users where username= 'admin', select id from procurements LIMIT 1;)
         </sql>
     </changeSet>
 
