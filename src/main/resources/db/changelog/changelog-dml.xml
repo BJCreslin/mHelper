@@ -43,7 +43,7 @@
         </sql>
     </changeSet>
 
-    <changeSet id="20032022-07" author="BJCreslin" context="dev">
+    <changeSet id="20032022-07" author="BJCreslin">
         <preConditions onFail="MARK_RAN">
             <and>
                 <sqlCheck expectedResult="0">
@@ -59,7 +59,7 @@
         </sql>
     </changeSet>
 
-    <changeSet id="17092021-08" author="Alexander Kamyhin" context="dev">
+    <changeSet id="17092021-08" author="Alexander Kamyhin">
         <preConditions onFail="MARK_RAN">
             <and>
                 <sqlCheck expectedResult="0">
@@ -87,7 +87,7 @@
         </sql>
     </changeSet>
 
-    <changeSet id="20032022-09" author="BJCreslin" context="dev">
+    <changeSet id="20032022-09" author="BJCreslin">
         <preConditions onFail="MARK_RAN">
             <and>
                 <sqlCheck expectedResult="0">
