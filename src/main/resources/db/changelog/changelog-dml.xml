@@ -34,7 +34,7 @@
         <comment>Заполнение таблицы "Роли" первоначальными данными</comment>
         <sql>
             INSERT INTO roles
-                (id, role)
+                (id, rolename)
             VALUES (1, 'USER'),
                    (2, 'ADMIN'),
                    (3, 'CHROME_EXTENSION'),
