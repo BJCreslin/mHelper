@@ -194,7 +194,7 @@
     <changeSet id="20032022-1" author="BJCreslin">
         <preConditions onFail="MARK_RAN">
             <not>
-                <tableExists tableName="procurements"/>
+                <tableExists tableName="user_roles"/>
             </not>
         </preConditions>
         <comment>Создание таблицы USER-ROLES</comment>
@@ -213,7 +213,7 @@
     <changeSet id="20032022-2" author="BJCreslin">
         <preConditions onFail="MARK_RAN">
             <not>
-                <tableExists tableName="procurements"/>
+                <tableExists tableName="users_procurements"/>
             </not>
         </preConditions>
         <comment>Создание таблицы USERS-PROCUREMENTS</comment>
@@ -227,13 +227,5 @@
                 CONSTRAINT FK_users_procurements_procurement FOREIGN KEY (procurement_id) REFERENCES procurements (id)
             );
         </sql>
-
-
     </changeSet>
-    <changeSet id="20032022-3" author="bjcreslin">
-        <createIndex tableName="users" indexName="username">
-            <column name="username"/>
-        </createIndex>
-    </changeSet>
-
 </databaseChangeLog>
