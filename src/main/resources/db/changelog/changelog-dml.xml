@@ -55,7 +55,8 @@
         <sql>
             INSERT INTO user_roles
                 (user_id, role_id)
-            VALUES (select id from users where username= 'admin', select id from roles where rolename= 'ADMIN');
+            VALUES (1, 2),
+                   (2, 1);
         </sql>
     </changeSet>
 
@@ -99,7 +100,7 @@
         <sql>
             INSERT INTO users_procurements
                 (user_id, procurement_id)
-            VALUES (select id from users where username= 'admin', select id from procurements LIMIT 1);
+            VALUES (2, 1);
         </sql>
     </changeSet>
 
