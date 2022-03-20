@@ -15,7 +15,7 @@
         <sql>
             CREATE TABLE users
             (
-                id           BIGINT AUTO_INCREMENT NOT NULL,
+                id           SERIAL,
                 created      TIMESTAMP WITHOUT TIME ZONE,
                 updated      TIMESTAMP WITHOUT TIME ZONE,
                 status       VARCHAR(255) DEFAULT 'ACTIVE',
@@ -76,7 +76,7 @@
         <sql>
             CREATE TABLE roles
             (
-                id       BIGINT AUTO_INCREMENT NOT NULL,
+                id       SERIAL NOT NULL,
                 created  TIMESTAMP WITHOUT TIME ZONE,
                 updated  TIMESTAMP WITHOUT TIME ZONE,
                 status   VARCHAR(255) DEFAULT 'ACTIVE',
@@ -113,7 +113,7 @@
         <sql>
             CREATE TABLE procurements
             (
-                id                     BIGINT AUTO_INCREMENT NOT NULL,
+                id                     SERIAL NOT NULL,
                 created                TIMESTAMP WITHOUT TIME ZONE,
                 updated                TIMESTAMP WITHOUT TIME ZONE,
                 status                 VARCHAR(255) DEFAULT 'ACTIVE',
@@ -189,5 +189,4 @@
             ON COLUMN procurements.date_of_auction IS 'Дата и время аукциона';
         </sql>
     </changeSet>
-
 </databaseChangeLog>
