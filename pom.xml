@@ -19,12 +19,13 @@
         <java.version>11</java.version>
         <maven.compiler.source>11</maven.compiler.source>
         <maven.compiler.target>11</maven.compiler.target>
-        <JSoupVersion>1.14.3</JSoupVersion>
-        <serFireVersion>3.0.0-M5</serFireVersion>
-        <postgresVersion>42.3.3</postgresVersion>
-        <H2Version>2.1.210</H2Version>
-        <MavenCompilerVersion>3.3.1</MavenCompilerVersion>
+        <JSoup.version>1.14.3</JSoup.version>
+        <serFire.version>3.0.0-M5</serFire.version>
+        <postgres.version>42.3.3</postgres.version>
+        <H2.version>2.1.210</H2.version>
+        <MavenCompiler.version>3.3.1</MavenCompiler.version>
         <jsonwebtoken.version>0.9.1</jsonwebtoken.version>
+        <liquibase.version>4.9.0</liquibase.version>
         <sonar.organization>bjcreslin</sonar.organization>
         <sonar.host.url>https://sonarcloud.io</sonar.host.url>
     </properties>
@@ -56,7 +57,7 @@
                     <plugin>
                         <groupId>org.apache.maven.plugins</groupId>
                         <artifactId>maven-surefire-plugin</artifactId>
-                        <version>${serFireVersion}</version>
+                        <version>${serFire.version}</version>
                         <configuration>
                             <suiteXmlFiles>testing.xml</suiteXmlFiles>
                         </configuration>
@@ -89,13 +90,13 @@
         <dependency>
             <groupId>org.postgresql</groupId>
             <artifactId>postgresql</artifactId>
-            <version>${postgresVersion}</version>
+            <version>${postgres.version}</version>
             <scope>runtime</scope>
         </dependency>
         <dependency>
             <groupId>com.h2database</groupId>
             <artifactId>h2</artifactId>
-            <version>${H2Version}</version>
+            <version>${H2.version}</version>
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -111,7 +112,7 @@
         <dependency>
             <groupId>org.jsoup</groupId>
             <artifactId>jsoup</artifactId>
-            <version>${JSoupVersion}</version>
+            <version>${JSoup.version}</version>
         </dependency>
         <dependency>
             <groupId>org.projectlombok</groupId>
@@ -121,10 +122,11 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-validation</artifactId>
         </dependency>
-        <!--        <dependency>-->
-        <!--            <groupId>org.liquibase</groupId>-->
-        <!--            <artifactId>liquibase-core</artifactId>-->
-        <!--        </dependency>-->
+        <dependency>
+            <groupId>org.liquibase</groupId>
+            <artifactId>liquibase-core</artifactId>
+            <version>${liquibase.version}</version>
+        </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-security</artifactId>
@@ -137,7 +139,7 @@
         <dependency>
             <groupId>org.telegram</groupId>
             <artifactId>telegrambots-spring-boot-starter</artifactId>
-            <version>5.6.0</version>
+            <version>5.7.1</version>
         </dependency>
         <dependency>
             <groupId>io.springfox</groupId>
@@ -151,7 +153,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-war-plugin</artifactId>
-                <version>${MavenCompilerVersion}</version>
+                <version>${MavenCompiler.version}</version>
                 <configuration>
                     <failOnMissingWebXml>false</failOnMissingWebXml>
                 </configuration>

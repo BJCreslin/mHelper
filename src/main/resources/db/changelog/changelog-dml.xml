@@ -15,11 +15,11 @@
         <comment>Заполнение таблицы "Пользователи" первоначальными данными</comment>
         <sql>
             INSERT INTO users
-            (username, email, telegramId, password, is_activate, created_at, created_by)
-            VALUES ('admin', 'admin@mail.com', '@zHelperAdmin',
-                    '$2a$10$kyorAysQRzjzn8DK.3uzCeLNBf5LTbP8.9JuAD3wzOGI2R02p6cvm', true, NOW(), 1),
-                   ('user', 'user@mail.com', '@zHelperUser',
-                    '$2a$10$nmtRYLpUCxBngpcDC6DB..gGgqxpaULORVEBw.tQG7AuWbTt2Euue', true, NOW(), 1);
+                (username, email, password, enabled)
+            VALUES ('admin', 'admin@mhelper.ru',
+                    '$2a$12$QS4hLJ9.IsMteiKhKduqXeIf5aLxOEVkxvJPyHWjx2D3heM.udptq', true),
+                   ('user', 'user@mhelper.ru',
+                    '$2a$12$GC7mTGYCrTItKTwzu9rj7.HfmnPeNFR0lojHl8s58qMHcSZVjiYiK', true);
         </sql>
     </changeSet>
 
@@ -35,9 +35,11 @@
         <sql>
             INSERT INTO roles
                 (user_id, role)
-            VALUES (1, 'ROLE_ADMIN'),
-                   (1, 'ROLE_USER'),
-                   (2, 'ROLE_USER');
+            VALUES (1, 'USER'),
+                   (2, 'ADMIN'),
+                   (3, 'CHROME_EXTENSION'),
+                   (4, 'EMAIL'),
+                   (5, 'TELEGRAM');
         </sql>
     </changeSet>
 

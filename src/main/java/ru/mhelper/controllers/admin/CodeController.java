@@ -12,6 +12,7 @@ import ru.mhelper.cfg.ApiVersion;
 import ru.mhelper.services.geting_code.TelegramCodeServiceImpl;
 import ru.mhelper.services.geting_code.UserIdTimed;
 
+import javax.annotation.security.RolesAllowed;
 import java.util.Map;
 
 import static ru.mhelper.controllers.AuthController.URL;
@@ -35,6 +36,7 @@ public class CodeController {
     }
 
     @GetMapping({"/codes", "/codes/"})
+    @RolesAllowed("ADMIN")
     public Map<Integer, UserIdTimed> getAll() {
         if (LOGGER.isDebugEnabled()) {
             LOGGER.debug(GET_ALL_CODES);

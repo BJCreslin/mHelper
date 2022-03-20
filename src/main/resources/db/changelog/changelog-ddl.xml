@@ -5,7 +5,7 @@
         xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
                       http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.3.xsd">
 
-    <changeSet id="17092021-01" author="Alexander Kamyhin">
+    <changeSet id="1" author="Alexander Kamyhin">
         <preConditions onFail="MARK_RAN">
             <not>
                 <tableExists tableName="users"/>
@@ -15,40 +15,46 @@
         <sql>
             CREATE TABLE users
             (
-                id                                     SERIAL PRIMARY KEY,
-                username                               VARCHAR(30)  NOT NULL,
-                email                                  VARCHAR(50)  NOT NULL,
-                password                               VARCHAR(60)  NOT NULL,
-                telegramId                             VARCHAR(60)  NOT NULL,
-                is_activate                            BOOL         NOT NULL DEFAULT false,
-                is_subscription_email_notifications    BOOL         NOT NULL DEFAULT true,
-                is_subscription_telegram_notifications BOOL         NOT NULL DEFAULT true,
-                created_at                             TIMESTAMP(0) NOT NULL,
-                created_by                             INT          NOT NULL,
-                updated_at                             TIMESTAMP(0)
+                id           BIGINT NOT NULL,
+                created      TIMESTAMP WITHOUT TIME ZONE,
+                updated      TIMESTAMP WITHOUT TIME ZONE,
+                status       VARCHAR(255) DEFAULT 'ACTIVE',
+                comment      TEXT,
+                username     VARCHAR(255),
+                email        VARCHAR(255),
+                password     VARCHAR(255),
+                tg_user      BIGINT,
+                tg_statement VARCHAR(255) DEFAULT 'NO STATEMENT',
+                enabled      BOOLEAN,
+                CONSTRAINT pk_users PRIMARY KEY (id)
             );
 
-            CREATE UNIQUE INDEX users_username_u_idx ON users (username);
-            CREATE UNIQUE INDEX users_email_u_idx ON users (email);
-            CREATE UNIQUE INDEX users_telegramId_u_idx ON users (telegramId);
+            ALTER TABLE users
+                ADD CONSTRAINT uc_users_email UNIQUE (email);
+
+            ALTER TABLE users
+                ADD CONSTRAINT uc_users_tg_user UNIQUE (tg_user);
+
+            ALTER TABLE users
+                ADD CONSTRAINT uc_users_username UNIQUE (username);
 
             COMMENT ON TABLE users IS 'Список пользователей';
 
             COMMENT ON COLUMN users.id IS 'Уникальный идентификатор';
+            COMMENT ON COLUMN users.created IS 'Дата создания записи';
+            COMMENT ON COLUMN users.updated IS 'Дата изменения записи';
+            COMMENT ON COLUMN users.status IS 'Состояние учетной записи пользователя';
+            COMMENT ON COLUMN users.comment IS 'Комментарий';
             COMMENT ON COLUMN users.username IS 'Имя пользователя';
             COMMENT ON COLUMN users.email IS 'Email пользователя';
             COMMENT ON COLUMN users.password IS 'Пароль';
-            COMMENT ON COLUMN users.telegramId IS 'Telegram user id';
-            COMMENT ON COLUMN users.is_activate IS 'Активация учетной записи пользователя';
-            COMMENT ON COLUMN users.is_subscription_email_notifications IS 'Подписка на уведомления через email';
-            COMMENT ON COLUMN users.is_subscription_telegram_notifications IS 'Подписка на уведомления через telegram';
-            COMMENT ON COLUMN users.created_at IS 'Дата создания записи';
-            COMMENT ON COLUMN users.created_by IS 'ID пользователя создавшего запись';
-            COMMENT ON COLUMN users.updated_at IS 'Дата изменения записи';
+            COMMENT ON COLUMN users.tg_user IS 'Telegram user id';
+            COMMENT ON COLUMN users.tg_statement IS 'Состояние чата телеграмм';
+            COMMENT ON COLUMN users.is_enabled IS 'Включена ли запись';
         </sql>
     </changeSet>
 
-    <changeSet id="17092021-02" author="Alexander Kamyhin">
+    <changeSet id="2" author="Alexander Kamyhin">
         <preConditions onFail="MARK_RAN">
             <not>
                 <tableExists tableName="roles"/>
@@ -58,18 +64,27 @@
         <sql>
             CREATE TABLE roles
             (
-                user_id INT REFERENCES users (id),
-                role    VARCHAR(50) NOT NULL
+                id      BIGINT NOT NULL,
+                created TIMESTAMP WITHOUT TIME ZONE,
+                updated TIMESTAMP WITHOUT TIME ZONE,
+                status  VARCHAR(255) DEFAULT 'ACTIVE',
+                comment TEXT,
+                name    VARCHAR(255),
+                CONSTRAINT pk_roles PRIMARY KEY (id)
             );
 
             COMMENT ON TABLE roles IS 'Список ролей пользователей';
 
-            COMMENT ON COLUMN roles.user_id IS 'ID пользователя';
+            COMMENT ON COLUMN roles.id IS 'ID роли';
+            COMMENT ON COLUMN roles.created IS 'Дата создания записи';
+            COMMENT ON COLUMN roles.updated IS 'Дата изменения записи';
+            COMMENT ON COLUMN roles.status IS 'Состояние роли';
+            COMMENT ON COLUMN roles.comment IS 'Комментарий';
             COMMENT ON COLUMN roles.role IS 'Имя роли';
         </sql>
     </changeSet>
 
-    <changeSet id="17092021-03" author="Alexander Kamyhin">
+    <changeSet id="3" author="Alexander Kamyhin">
         <preConditions onFail="MARK_RAN">
             <not>
                 <tableExists tableName="procurements"/>
@@ -79,30 +94,42 @@
         <sql>
             CREATE TABLE procurements
             (
-                id                     SERIAL PRIMARY KEY,
-                stage                  VARCHAR(50)    NOT NULL,
-                uin                    VARCHAR(30)    NOT NULL,
-                fz_number              INT            NOT NULL,
-                application_deadline   TIMESTAMP(0)   NOT NULL,
-                contract_price         NUMERIC(19, 2) NOT NULL,
-                procedure_type         VARCHAR(50)    NOT NULL,
-                publisher_name         VARCHAR(500)   NOT NULL,
-                restrictions           VARCHAR(4000)  NOT NULL,
-                link_on_placement      VARCHAR(254)   NOT NULL,
-                application_secure     VARCHAR(50)    NOT NULL,
-                contract_secure        VARCHAR(50)    NOT NULL,
-                object_of              VARCHAR(10000) NOT NULL,
-                last_updated_from_eis  TIMESTAMP(0),
-                date_time_last_updated TIMESTAMP(0),
-                date_of_placement      TIMESTAMP(0),
-                date_of_auction        TIMESTAMP(0)
+                id                     BIGINT       NOT NULL,
+                created                TIMESTAMP WITHOUT TIME ZONE,
+                updated                TIMESTAMP WITHOUT TIME ZONE,
+                status                 VARCHAR(255) DEFAULT 'ACTIVE',
+                comment                TEXT,
+                stage                  VARCHAR(255),
+                uin                    VARCHAR(30)  NOT NULL,
+                fz_number              INTEGER      NOT NULL,
+                application_deadline   TIMESTAMP with time zone,
+                contract_price         DECIMAL,
+                procedure_type         VARCHAR(255),
+                publisher_name         VARCHAR(255) NOT NULL,
+                restrictions           VARCHAR(255),
+                link_on_placement      VARCHAR(255) NOT NULL,
+                application_secure     VARCHAR(255),
+                contract_secure        VARCHAR(255),
+                object_of              TEXT,
+                last_updated_from_eis  date,
+                date_time_last_updated date,
+                date_of_placement      date,
+                date_of_auction        TIMESTAMP with time zone,
+                CONSTRAINT pk_procurements PRIMARY KEY (id)
             );
+
+            ALTER TABLE procurements
+                ADD CONSTRAINT uc_procurements_uin UNIQUE (uin);
 
             CREATE UNIQUE INDEX users_uin_u_idx ON procurements (uin);
 
             COMMENT ON TABLE procurements IS 'Список закупок';
 
             COMMENT ON COLUMN procurements.id IS 'Уникальный идентификатор';
+            COMMENT ON COLUMN procurements.created IS 'Дата создания записи';
+            COMMENT ON COLUMN procurements.updated IS 'Дата изменения записи';
+            COMMENT ON COLUMN procurements.status IS 'Состояние записи';
+            COMMENT ON COLUMN procurements.comment IS 'Комментарий';
             COMMENT ON COLUMN procurements.stage IS 'Этап закупки';
             COMMENT ON COLUMN procurements.uin IS 'Уникальный идентификатор закупки';
             COMMENT ON COLUMN procurements.fz_number IS 'Номер федерального закона';

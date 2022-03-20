@@ -10,6 +10,7 @@ import java.util.Collection;
 import java.util.stream.Collectors;
 
 public class JwtUser implements UserDetails {
+
     private static final long serialVersionUID = -4603089111149819076L;
 
     private final Long id;

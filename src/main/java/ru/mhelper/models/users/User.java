@@ -27,7 +27,7 @@ public class User extends BaseEntity {
 
     @NotBlank(message = "Name is mandatory")
     @Size(max = 30)
-    @Column(name = "name", unique = true)
+    @Column(name = "username", unique = true)
     private String username;
 
     @Size(max = 50)
