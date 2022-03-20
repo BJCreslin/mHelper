@@ -43,31 +43,6 @@
         </sql>
     </changeSet>
 
-    <changeSet id="17092021-06" author="Alexander Kamyhin" context="dev">
-        <preConditions onFail="MARK_RAN">
-
-        </preConditions>
-        <comment>Заполнение таблицы "Закупки" тестовыми данными</comment>
-        <sql>
-            INSERT INTO procurements
-            (stage, uin, fz_number, application_deadline, contract_price,
-             procedure_type,
-             publisher_name,
-             restrictions,
-             link_on_placement, application_secure, contract_secure,
-             object_of,
-             last_updated_from_eis, date_time_last_updated, date_of_placement, date_of_auction, created,
-             updated)
-            VALUES ('PROCUREMENT_ENDED', '202320000012100320', 615, '2021-09-08 04:00:00', '5127116.82',
-                    'ELECTRONIC_AUCTION',
-                    'НЕКОММЕРЧЕСКАЯ ОРГАНИЗАЦИЯ "ФОНД КАПИТАЛЬНОГО РЕМОНТА МНОГОКВАРТИРНЫХ ДОМОВ АМУРСКОЙ ОБЛАСТИ"',
-                    'Порядок расчётов осуществляется в соответствии с главой 3 Раздела «VI. Проект договора на выполнение работ по капитальному ремонту общего имущества многоквартирного дома',
-                    'http://www.rts-tender.ru', 25635.58, 512711.68,
-                    'Выполнение работ по капитальному ремонту общего имущества многоквартирного дома, расположенного по адресу: Амурская область, Архаринский район, пгт. Архара, ул. Октябрьская, дом 58 – капитальный ремонт внутридомовых инженерных систем.',
-                    '2021-09-17 00:00:00', '2021-09-17 00:00:00', now(), now(), now(), now());
-        </sql>
-    </changeSet>
-
     <changeSet id="20032022-07" author="BJCreslin" context="dev">
         <preConditions onFail="MARK_RAN">
             <and>
@@ -84,7 +59,35 @@
         </sql>
     </changeSet>
 
-    <changeSet id="20032022-08" author="BJCreslin" context="dev">
+    <changeSet id="17092021-08" author="Alexander Kamyhin" context="dev">
+        <preConditions onFail="MARK_RAN">
+            <and>
+                <sqlCheck expectedResult="0">
+                    SELECT count(*) FROM procurements;
+                </sqlCheck>
+            </and>
+        </preConditions>
+        <comment>Заполнение таблицы "Закупки" тестовыми данными</comment>
+        <sql>
+            INSERT INTO procurements
+            (stage, uin, fz_number, application_deadline, contract_price,
+             procedure_type,
+             publisher_name,
+             restrictions,
+             link_on_placement, application_secure, contract_secure,
+             object_of,
+             last_updated_from_eis, date_time_last_updated, date_of_placement, date_of_auction, created, updated)
+            VALUES ('PROCUREMENT_ENDED', '202320000012100320', 615, '2021-09-08 04:00:00', '5127116.82',
+                    'ELECTRONIC_AUCTION',
+                    'НЕКОММЕРЧЕСКАЯ ОРГАНИЗАЦИЯ "ФОНД КАПИТАЛЬНОГО РЕМОНТА МНОГОКВАРТИРНЫХ ДОМОВ АМУРСКОЙ ОБЛАСТИ"',
+                    'Порядок расчётов осуществляется в соответствии с главой 3 Раздела «VI. Проект договора на выполнение работ по капитальному ремонту общего имущества многоквартирного дома',
+                    'http://www.rts-tender.ru', 25635.58, 512711.68,
+                    'Выполнение работ по капитальному ремонту общего имущества многоквартирного дома, расположенного по адресу: Амурская область, Архаринский район, пгт. Архара, ул. Октябрьская, дом 58 – капитальный ремонт внутридомовых инженерных систем.',
+                    '2021-09-17 00:00:00', '2021-09-17 00:00:00', now(), now(), now(), now());
+        </sql>
+    </changeSet>
+
+    <changeSet id="20032022-09" author="BJCreslin" context="dev">
         <preConditions onFail="MARK_RAN">
             <and>
                 <sqlCheck expectedResult="0">
