@@ -29,7 +29,7 @@ public class SimpleController {
 
     private static final Logger logger = LoggerFactory.getLogger(SimpleController.class);
 
-    public static final String INDEX_PAGE_NAME = "/zHelper";
+    public static final String INDEX_PAGE_NAME = "/mHelper";
 
     private static final String GET_FROM_IP = "Get from ip {}";
 
