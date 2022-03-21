@@ -23,7 +23,7 @@ import java.util.List;
 import static ru.mhelper.controllers.SimpleController.INDEX_PAGE_NAME;
 
 @Controller
-@RequestMapping({"/", INDEX_PAGE_NAME})
+@RequestMapping({"", INDEX_PAGE_NAME})
 @CrossOrigin
 public class SimpleController {
 
@@ -54,7 +54,7 @@ public class SimpleController {
         this.ipService = ipService;
     }
 
-    @GetMapping("/")
+    @GetMapping("")
     public String get(HttpServletRequest request, Model model) {
         if (logger.isDebugEnabled()) {
             logger.debug(GET_FROM_IP, ipService.getIpFromRequest(request));
@@ -65,7 +65,7 @@ public class SimpleController {
         return INDEX_PAGE_NAME;
     }
 
-    @PostMapping("/")
+    @PostMapping("")
     public String post(HttpServletRequest request, Model model, @ModelAttribute("address") ProcurementAddress address) {
         if (logger.isDebugEnabled()) {
             logger.debug(POST_FROM_IP, ipService.getIpFromRequest(request), address);

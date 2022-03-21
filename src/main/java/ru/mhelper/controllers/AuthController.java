@@ -88,20 +88,20 @@ public class AuthController {
         this.telegramCodeService = telegramCodeService;
     }
 
-    @GetMapping({"", "/"})
+    @GetMapping({""})
     @ResponseBody
     public ResponseEntity<MessageResponse> testConnect() {
         return ResponseEntity.ok(new MessageResponse(SUCCESSFUL_CONNECTION));
     }
 
     @RolesAllowed({"ADMIN", "CHROME_EXTENSION"})
-    @GetMapping({TEST_JWT, TEST_JWT + "/"})
+    @GetMapping({TEST_JWT})
     @ResponseBody
     public ResponseEntity<MessageResponse> testAuthConnect() {
         return ResponseEntity.ok(new MessageResponse(SUCCESSFUL_CONNECTION));
     }
 
-    @GetMapping({"/code/{code}", "/code/{code}/"})
+    @GetMapping({"/code/{code}"})
     @ResponseBody
     @StopSpam
     public ResponseEntity<AbstractResponse> tgSignIn(@PathVariable Integer code, HttpServletRequest request) {
@@ -130,7 +130,7 @@ public class AuthController {
         }
     }
 
-    @PostMapping({"/signin", "/signin/"})
+    @PostMapping({"/signin"})
     @ResponseBody
     public ResponseEntity<JwtResponse> signIn(@RequestBody LoginRequest loginRequest) {
         if (LOGGER.isDebugEnabled()) {
@@ -155,7 +155,7 @@ public class AuthController {
             roles));
     }
 
-    @PostMapping(value = {"/signup", "/signup/"}, consumes = {"application/json"})
+    @PostMapping(value = {"/signup"}, consumes = {"application/json"})
     public ResponseEntity<AbstractResponse> registerUser(@RequestBody SignUpRequest signupRequest) {
         if (LOGGER.isDebugEnabled()) {
             LOGGER.debug("Create new User with Name {}, email {}", signupRequest.getUserName(), signupRequest.getEmail());

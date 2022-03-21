@@ -26,12 +26,17 @@ import static ru.mhelper.controllers.ChromeExtensionController.URL;
 public class ChromeExtensionController {
 
     private static final Logger logger = LoggerFactory.getLogger(ChromeExtensionController.class);
+
     public static final String URL = ApiVersion.VERSION_1_0 + "/chrome";
 
     private static final String POST_FROM_IP = "Post from, procurement {}";
+
     private static final String ERROR_FROM_PARSING = "Error parsing";
+
     private static final String PROCUREMENT_IS_INVALID = "Procurement is invalid.";
+
     private static final String PROCUREMENT_WAS_SAVED = "Procurement was saved";
+
     public static final String SUCCESSFUL_CONNECTION = "Successful connection";
 
     private final ProcurementDtoService service;
@@ -40,7 +45,7 @@ public class ChromeExtensionController {
         this.service = service;
     }
 
-    @PostMapping(value = {"/", ""}, consumes = {"application/json"})
+    @PostMapping(value = {""}, consumes = {"application/json"})
     @Validated
     public ResponseEntity<?> newProcurement(@Valid @RequestBody ProcurementDto procurementDto, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
@@ -68,7 +73,7 @@ public class ChromeExtensionController {
         }
     }
 
-    @GetMapping({"", "/"})
+    @GetMapping({""})
     @ResponseBody
     public ResponseEntity<?> testConnect() {
         return ResponseEntity.ok(new MessageResponse(SUCCESSFUL_CONNECTION));
