@@ -12,6 +12,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
+import ru.mhelper.aspect.stop_spam.StopSpam;
 import ru.mhelper.cfg.ApiVersion;
 import ru.mhelper.controllers.exeptions.BadRequestException;
 import ru.mhelper.models.dto.*;
@@ -25,6 +26,7 @@ import ru.mhelper.services.geting_code.TelegramCodeService;
 import ru.mhelper.services.security.JwtTokenProvider;
 
 import javax.annotation.security.RolesAllowed;
+import javax.servlet.http.HttpServletRequest;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -66,10 +68,15 @@ public class AuthController {
     public static final String CODE_NOT_FOUND = "Code not found";
 
     private final AuthenticationManager authenticationManager;
+
     private final JwtTokenProvider jwtTokenProvider;
+
     private final UserRepository userRepository;
+
     private final RoleRepository roleRepository;
+
     private final PasswordEncoder passwordEncoder;
+
     private final TelegramCodeService telegramCodeService;
 
     public AuthController(AuthenticationManager authenticationManager, JwtTokenProvider jwtTokenProvider, UserRepository userRespository, RoleRepository roleRepository, PasswordEncoder passwordEncoder, TelegramCodeService telegramCodeService) {
@@ -96,7 +103,8 @@ public class AuthController {
 
     @GetMapping({"/code/{code}", "/code/{code}/"})
     @ResponseBody
-    public ResponseEntity<AbstractResponse> tgSignIn(@PathVariable Integer code) {
+    @StopSpam
+    public ResponseEntity<AbstractResponse> tgSignIn(@PathVariable Integer code, HttpServletRequest request) {
         if (LOGGER.isDebugEnabled()) {
             LOGGER.debug(CODE_AUTHENTICATING, code);
         }
@@ -105,18 +113,18 @@ public class AuthController {
             if (!userRepository.existsByTelegramUserId(telegramId)) {
                 var newUser = User.createNewTelegramUser(telegramId);
                 newUser.setRoles(
-                        Set.of(roleRepository.findByName(ERole.CHROME_EXTENSION.getName()).orElseThrow(() -> new BadRequestException(BadRequestException.ROLE_NOT_FOUND)),
-                                roleRepository.findByName(ERole.ROLE_TELEGRAM.getName()).orElseThrow(() -> new BadRequestException(BadRequestException.ROLE_NOT_FOUND))));
+                    Set.of(roleRepository.findByName(ERole.CHROME_EXTENSION.getName()).orElseThrow(() -> new BadRequestException(BadRequestException.ROLE_NOT_FOUND)),
+                        roleRepository.findByName(ERole.ROLE_TELEGRAM.getName()).orElseThrow(() -> new BadRequestException(BadRequestException.ROLE_NOT_FOUND))));
                 userRepository.save(newUser);
             }
             User user = userRepository.findByTelegramUserId(telegramId).orElseThrow(() -> new BadRequestException(USER_NOT_FOUND));
             String jwt = jwtTokenProvider.createToken(user.getUsername(), user.getRoles());
             return ResponseEntity.ok(new JwtResponse(
-                    jwt,
-                    user.getId(),
-                    user.getUsername(),
-                    user.getEmail(),
-                    user.getRoles().stream().map(Role::getName).collect(Collectors.toList())));
+                jwt,
+                user.getId(),
+                user.getUsername(),
+                user.getEmail(),
+                user.getRoles().stream().map(Role::getName).collect(Collectors.toList())));
         } else {
             return ResponseEntity.badRequest().body(new MessageResponse(MessageResponse.BAD_TELEGRAM_CODE, CODE_NOT_FOUND));
         }
@@ -129,22 +137,22 @@ public class AuthController {
             LOGGER.debug(AUTHENTICATING, loginRequest.getUserName());
         }
         Authentication authentication = authenticationManager
-                .authenticate(new UsernamePasswordAuthenticationToken(
-                        loginRequest.getUserName(),
-                        loginRequest.getPassword()));
+            .authenticate(new UsernamePasswordAuthenticationToken(
+                loginRequest.getUserName(),
+                loginRequest.getPassword()));
         SecurityContextHolder.getContext().setAuthentication(authentication);
         User user = userRepository.findByUsername(loginRequest.getUserName()).
-                orElseThrow(() -> new UsernameNotFoundException(String.format(USER_NOT_FOUND, loginRequest.getUserName())));
+            orElseThrow(() -> new UsernameNotFoundException(String.format(USER_NOT_FOUND, loginRequest.getUserName())));
         JwtUser userDetails = (JwtUser) authentication.getPrincipal();
         List<String> roles = userDetails.getAuthorities().stream()
-                .map(GrantedAuthority::getAuthority)
-                .collect(Collectors.toList());
+            .map(GrantedAuthority::getAuthority)
+            .collect(Collectors.toList());
         String jwt = jwtTokenProvider.createToken(user.getUsername(), user.getRoles());
         return ResponseEntity.ok(new JwtResponse(jwt,
-                userDetails.getId(),
-                userDetails.getUsername(),
-                userDetails.getEmail(),
-                roles));
+            userDetails.getId(),
+            userDetails.getUsername(),
+            userDetails.getEmail(),
+            roles));
     }
 
     @PostMapping(value = {"/signup", "/signup/"}, consumes = {"application/json"})
@@ -155,51 +163,51 @@ public class AuthController {
         if (userRepository.existsByUsername(signupRequest.getUserName())) {
             LOGGER.error(USERNAME_IS_EXIST);
             return ResponseEntity
-                    .badRequest()
-                    .body(new MessageResponse(MessageResponse.BAD_CODE, USERNAME_IS_EXIST));
+                .badRequest()
+                .body(new MessageResponse(MessageResponse.BAD_CODE, USERNAME_IS_EXIST));
         }
 
         if (userRepository.existsByEmail(signupRequest.getEmail())) {
             LOGGER.error(EMAIL_IS_EXIST);
             return ResponseEntity
-                    .badRequest()
-                    .body(new MessageResponse(MessageResponse.BAD_CODE, EMAIL_IS_EXIST));
+                .badRequest()
+                .body(new MessageResponse(MessageResponse.BAD_CODE, EMAIL_IS_EXIST));
         }
 
         User user = new User(signupRequest.getUserName(),
-                signupRequest.getEmail(),
-                passwordEncoder.encode(signupRequest.getPassword()));
+            signupRequest.getEmail(),
+            passwordEncoder.encode(signupRequest.getPassword()));
 
         Set<String> reqRoles = signupRequest.getRoles();
         Set<Role> roles = new HashSet<>();
 
         if (reqRoles == null) {
             Role userRole = roleRepository
-                    .findByName(ERole.ROLE_USER.getName())
-                    .orElseThrow(() -> new RuntimeException(USER_IS_NOT_FOUND));
+                .findByName(ERole.ROLE_USER.getName())
+                .orElseThrow(() -> new RuntimeException(USER_IS_NOT_FOUND));
             roles.add(userRole);
         } else {
             reqRoles.forEach(r -> {
                 switch (r) {
                     case "admin":
                         Role adminRole = roleRepository
-                                .findByName(ERole.ROLE_ADMIN.getName())
-                                .orElseThrow(() -> new RuntimeException(ADMIN_IS_NOT_FOUND));
+                            .findByName(ERole.ROLE_ADMIN.getName())
+                            .orElseThrow(() -> new RuntimeException(ADMIN_IS_NOT_FOUND));
                         roles.add(adminRole);
 
                         break;
                     case "chrome":
                         Role modRole = roleRepository
-                                .findByName(ERole.CHROME_EXTENSION.getName())
-                                .orElseThrow(() -> new RuntimeException(CHROME_EXTENSION_IS_NOT_FOUND));
+                            .findByName(ERole.CHROME_EXTENSION.getName())
+                            .orElseThrow(() -> new RuntimeException(CHROME_EXTENSION_IS_NOT_FOUND));
                         roles.add(modRole);
 
                         break;
 
                     default:
                         Role userRole = roleRepository
-                                .findByName(ERole.ROLE_USER.getName())
-                                .orElseThrow(() -> new RuntimeException(USER_IS_NOT_FOUND));
+                            .findByName(ERole.ROLE_USER.getName())
+                            .orElseThrow(() -> new RuntimeException(USER_IS_NOT_FOUND));
                         roles.add(userRole);
                 }
             });

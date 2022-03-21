@@ -4,13 +4,18 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 import ru.mhelper.controllers.exeptions.BadRequestException;
-import ru.mhelper.models.procurements.Procurement;
 import ru.mhelper.models.dto.ProcurementAddress;
+import ru.mhelper.models.procurements.Procurement;
 import ru.mhelper.repository.ProcurementRepo;
 import ru.mhelper.services.ProcurementService;
 import ru.mhelper.services.exceptions.BadDataParsingException;
+import ru.mhelper.services.ip_service.IpService;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
@@ -18,17 +23,13 @@ import java.util.List;
 import static ru.mhelper.controllers.SimpleController.INDEX_PAGE_NAME;
 
 @Controller
-@RequestMapping({"/",INDEX_PAGE_NAME})
+@RequestMapping({"/", INDEX_PAGE_NAME})
 @CrossOrigin
 public class SimpleController {
 
     private static final Logger logger = LoggerFactory.getLogger(SimpleController.class);
 
     public static final String INDEX_PAGE_NAME = "/zHelper";
-
-    private static final String COMMA_SEPARATOR = ",";
-
-    private static final String HEADER_X_FORWARD = "X-Forwarded-For";
 
     private static final String GET_FROM_IP = "Get from ip {}";
 
@@ -41,18 +42,22 @@ public class SimpleController {
     private static final String EMPTY_ADDRESS = "";
 
     private final ProcurementRepo repo;
+
     private final ProcurementService service;
 
+    private final IpService ipService;
 
-    public SimpleController(ProcurementRepo repo, ProcurementService service) {
+
+    public SimpleController(ProcurementRepo repo, ProcurementService service, IpService ipService) {
         this.repo = repo;
         this.service = service;
+        this.ipService = ipService;
     }
 
     @GetMapping("/")
     public String get(HttpServletRequest request, Model model) {
         if (logger.isDebugEnabled()) {
-            logger.debug(GET_FROM_IP, getIpFromRequest(request));
+            logger.debug(GET_FROM_IP, ipService.getIpFromRequest(request));
         }
         List<Procurement> procurements = repo.findAll();
         model.addAttribute("procurements", procurements);
@@ -63,7 +68,7 @@ public class SimpleController {
     @PostMapping("/")
     public String post(HttpServletRequest request, Model model, @ModelAttribute("address") ProcurementAddress address) {
         if (logger.isDebugEnabled()) {
-            logger.debug(POST_FROM_IP, getIpFromRequest(request), address);
+            logger.debug(POST_FROM_IP, ipService.getIpFromRequest(request), address);
         }
         try {
             service.action(address);
@@ -78,20 +83,5 @@ public class SimpleController {
             logger.debug(POSTED_PROCUREMENT, address);
         }
         return INDEX_PAGE_NAME;
-    }
-
-    private String getIpFromRequest(HttpServletRequest request) {
-        String ip;
-        if (request.getHeader(HEADER_X_FORWARD) != null) {
-            String xForwardedFor = request.getHeader(HEADER_X_FORWARD);
-            if (xForwardedFor.contains(COMMA_SEPARATOR)) {
-                ip = xForwardedFor.substring(xForwardedFor.lastIndexOf(COMMA_SEPARATOR) + 2);
-            } else {
-                ip = xForwardedFor;
-            }
-        } else {
-            ip = request.getRemoteAddr();
-        }
-        return ip;
     }
 }

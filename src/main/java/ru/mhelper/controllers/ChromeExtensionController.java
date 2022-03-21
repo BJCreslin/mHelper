@@ -47,10 +47,10 @@ public class ChromeExtensionController {
             var errors = bindingResult.getFieldErrors();
             var responseObject = new Error();
             responseObject.setCode(MessageResponse.BAD_CODE);
-            var message = errors.stream().map(error -> "@" + error.getField().toUpperCase() + ": " + error.getDefaultMessage()).collect(Collectors.toList());
+            var message = errors.stream().map(error -> "@" + error.getField().toUpperCase() + ": " + error.getDefaultMessage()).collect(Collectors.toList()).toString();
             responseObject.setMessage(PROCUREMENT_IS_INVALID);
-            responseObject.setCause(message.toString());
-            logger.error(message.toString());
+            responseObject.setCause(message);
+            logger.error(message);
             return new ResponseEntity<>(responseObject, HttpStatus.BAD_REQUEST);
         }
         if (logger.isDebugEnabled()) {
