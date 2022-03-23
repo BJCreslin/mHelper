@@ -35,7 +35,7 @@ public class CodeController {
         this.telegramCodeService = telegramCodeService;
     }
 
-    @GetMapping({"/codes", "/codes/"})
+    @GetMapping({"/codes"})
     @RolesAllowed("ADMIN")
     public Map<Integer, UserIdTimed> getAll() {
         if (LOGGER.isDebugEnabled()) {
