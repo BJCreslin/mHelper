@@ -21,7 +21,7 @@ import static ru.mhelper.exceptions.DaoException.ERROR_GET_ROLE;
 
 @Component
 @Order(3)
-@Profile("test")
+@Profile("!ci")
 public class FakeUserDataInitializer implements CommandLineRunner {
     private static final Logger LOGGER = LoggerFactory.getLogger(FakeUserDataInitializer.class);
     private final boolean enabled;
