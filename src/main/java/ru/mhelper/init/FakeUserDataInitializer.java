@@ -29,13 +29,13 @@ public class FakeUserDataInitializer implements CommandLineRunner {
     public static final int CHROME_USERS = 3;
 
     public static final String ADMIN_NAME = "Admin";
-    public static final String ADMIN_EMAIL = "admin@zhelper.ru";
+    public static final String ADMIN_EMAIL = "admin@mhelper.ru";
     public static final String ADMIN_PASSWORD = "$2a$12$LfwRzy/Qan/QDEoA3.LbHe1bvU7ZoZQpykuPF7P2EGe/dAkn4Td3C";// password
     public static final Long ADMIN_TELEGRAM = 800000L;
 
     public static final String USER_NAME = "User%d";
-    public static final String USER_EMAIL = "user%d@zhelper.ru";
-    public static final String USER_PASSWORD = "$$2a$12$tFQ3a5wnxoSX9p90FtDxse6BUuHoT/v1QumMdAtSnxTnEdpASNYkW";// password1
+    public static final String USER_EMAIL = "user%d@mhelper.ru";
+    public static final String USER_PASSWORD = "$2a$12$tFQ3a5wnxoSX9p90FtDxse6BUuHoT/v1QumMdAtSnxTnEdpASNYkW";// password1
 
     private final UserRepository userRepository;
     private final RoleRepository roleRepository;
