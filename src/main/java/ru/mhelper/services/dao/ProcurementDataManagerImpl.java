@@ -7,9 +7,9 @@ import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import ru.mhelper.models.procurements.Procurement;
 import ru.mhelper.repository.ProcurementRepo;
 import ru.mhelper.services.exceptions.DataManagerException;
-import ru.mhelper.models.procurements.Procurement;
 
 import javax.persistence.EntityNotFoundException;
 import java.time.LocalDate;
@@ -20,7 +20,12 @@ import java.util.stream.Collectors;
 
 @Service
 public class ProcurementDataManagerImpl implements ProcurementDataManager {
+
     private static final Logger LOGGER = LoggerFactory.getLogger(ProcurementDataManagerImpl.class);
+
+    public static final String CREATED_BEFORE = "PROCUREMENTS CREATED BEFORE {}";
+
+    public static final String ALL_PROCUREMENTS_NUMBER = "Load all procurements. Number: {}.";
 
     private ProcurementRepo repository;
 
@@ -33,7 +38,7 @@ public class ProcurementDataManagerImpl implements ProcurementDataManager {
     public Procurement loadById(Long idToLoad) {
         if (idToLoad == null) {
             throw new DataManagerException(
-                    DataManagerException.COULD_NOT_LOAD_PROCUREMENT_NULL_DATA, null);
+                DataManagerException.COULD_NOT_LOAD_PROCUREMENT_NULL_DATA, null);
         }
 
         Procurement procurement;
@@ -44,7 +49,7 @@ public class ProcurementDataManagerImpl implements ProcurementDataManager {
             }
         } catch (EntityNotFoundException e) {
             String msg = String.format(
-                    DataManagerException.NON_EXISTING_LOAD_OR_DELETE_EXCEPTION, idToLoad);
+                DataManagerException.NON_EXISTING_LOAD_OR_DELETE_EXCEPTION, idToLoad);
             LOGGER.error(msg);
             throw new DataManagerException(msg, e);
         }
@@ -60,7 +65,7 @@ public class ProcurementDataManagerImpl implements ProcurementDataManager {
     public Procurement save(Procurement procurement) {
         if (procurement == null) {
             throw new DataManagerException(
-                    DataManagerException.COULD_NOT_SAVE_PROCUREMENT_NULL_DATA, null);
+                DataManagerException.COULD_NOT_SAVE_PROCUREMENT_NULL_DATA, null);
         }
         try {
             if (LOGGER.isInfoEnabled()) {
@@ -77,7 +82,7 @@ public class ProcurementDataManagerImpl implements ProcurementDataManager {
     public void delete(Procurement procurement) {
         if (procurement == null) {
             throw new DataManagerException(
-                    DataManagerException.COULD_NOT_DELETE_PROCUREMENT_NULL_DATA, null);
+                DataManagerException.COULD_NOT_DELETE_PROCUREMENT_NULL_DATA, null);
         }
         try {
             if (LOGGER.isInfoEnabled()) {
@@ -86,7 +91,7 @@ public class ProcurementDataManagerImpl implements ProcurementDataManager {
             repository.delete(procurement);
         } catch (EntityNotFoundException e) {
             String msg = String.format(
-                    DataManagerException.NON_EXISTING_LOAD_OR_DELETE_EXCEPTION, procurement.getId());
+                DataManagerException.NON_EXISTING_LOAD_OR_DELETE_EXCEPTION, procurement.getId());
             LOGGER.error(msg);
             throw new DataManagerException(msg, e);
         }
@@ -101,7 +106,7 @@ public class ProcurementDataManagerImpl implements ProcurementDataManager {
             repository.deleteById(idToDelete);
         } catch (EntityNotFoundException | EmptyResultDataAccessException e) {
             String msg = String.format(
-                    DataManagerException.NON_EXISTING_LOAD_OR_DELETE_EXCEPTION, idToDelete);
+                DataManagerException.NON_EXISTING_LOAD_OR_DELETE_EXCEPTION, idToDelete);
             LOGGER.error(msg);
             throw new DataManagerException(msg, e);
         }
@@ -113,7 +118,7 @@ public class ProcurementDataManagerImpl implements ProcurementDataManager {
             return Collections.emptyList();
         }
         var filtered = repository.findAll().stream().filter(proc -> fzNumber.equals(proc.getFzNumber()))
-                .collect(Collectors.toList());
+            .collect(Collectors.toList());
         if (LOGGER.isInfoEnabled()) {
             LOGGER.info(" >>>>>>>>>> PROCUREMENTS WITH fzNumber {}:", fzNumber);
         }
@@ -122,10 +127,10 @@ public class ProcurementDataManagerImpl implements ProcurementDataManager {
     }
 
     @Override
-    public Page<Procurement> loadCreatedBeforeDate(LocalDate date, Pageable pageable) {
+    public Page<Procurement> loadPageableCreatedBeforeDate(LocalDate date, Pageable pageable) {
         var result = repository.findByLessThanDate(date, pageable);
         if (LOGGER.isInfoEnabled()) {
-            LOGGER.info(" >>>>>>>>>> PROCUREMENTS CREATED BEFORE 01.02.2021:");
+            LOGGER.info(CREATED_BEFORE, LocalDate.now());
         }
         result.stream().forEach(procurement -> LOGGER.info(procurement.toString()));
         return result;
@@ -140,12 +145,20 @@ public class ProcurementDataManagerImpl implements ProcurementDataManager {
         if (LOGGER.isInfoEnabled()) {
             LOGGER.info("Find PROCUREMENT by UIN: {}", uin);
         }
-
         return repository.getByUin(uin);
     }
 
     @Override
     public Page<Procurement> loadAll(Pageable pageable) {
         return repository.findAll(pageable);
+    }
+
+    @Override
+    public List<Procurement> loadAll() {
+        List<Procurement> result = repository.findAll();
+        if (LOGGER.isInfoEnabled()) {
+            LOGGER.info(ALL_PROCUREMENTS_NUMBER, result.size());
+        }
+        return result;
     }
 }

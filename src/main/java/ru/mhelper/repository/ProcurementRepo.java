@@ -20,4 +20,5 @@ public interface ProcurementRepo extends JpaRepository<Procurement, Long> {
 
     @Query("select p from Procurement p where p.dateOfPlacement < :date")
     Page<Procurement> findByLessThanDate(LocalDate date, Pageable page);
+
 }

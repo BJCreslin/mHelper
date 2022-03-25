@@ -209,7 +209,7 @@ class ProcurementDataManagerImplTest {
     @Test
     @Transactional
     void testLoadCreatedBeforeDate() {
-        Page<Procurement> result = procurementDataManager.loadCreatedBeforeDate(
+        Page<Procurement> result = procurementDataManager.loadPageableCreatedBeforeDate(
                 LocalDate.of(2021, 2, 1), firstPageWithFiveElements);
         Assertions.assertEquals(1, result.stream().count());
     }

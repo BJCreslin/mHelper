@@ -24,7 +24,9 @@ public interface ProcurementDataManager {
 
     Page<Procurement> loadByIdList(List<Long> idsToLoad, Pageable pageable);
 
-    Page<Procurement> loadCreatedBeforeDate(LocalDate date, Pageable pageable);
+    Page<Procurement> loadPageableCreatedBeforeDate(LocalDate date, Pageable pageable);
 
     Optional<Procurement> loadByUin(String uin);
+
+    List<Procurement> loadAll();
 }
