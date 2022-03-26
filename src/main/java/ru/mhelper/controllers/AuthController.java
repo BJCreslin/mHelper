@@ -45,6 +45,8 @@ public class AuthController {
 
     public static final String TEST_JWT = "/test";
 
+    public static final String CODE_URL = "/code/";
+
     public static final String USERNAME_IS_EXIST = "Error: Username is exist";
 
     public static final String EMAIL_IS_EXIST = "Error: Email is exist";
@@ -101,7 +103,7 @@ public class AuthController {
         return ResponseEntity.ok(new MessageResponse(SUCCESSFUL_CONNECTION));
     }
 
-    @GetMapping({"/code/{code}"})
+    @GetMapping({CODE_URL + "{code}"})
     @ResponseBody
     @StopSpam
     public ResponseEntity<AbstractResponse> tgSignIn(@PathVariable Integer code, HttpServletRequest request) {

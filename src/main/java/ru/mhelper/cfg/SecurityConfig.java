@@ -26,9 +26,10 @@ import static ru.mhelper.controllers.AuthController.TEST_JWT;
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     public static final String CHROME_API = ChromeExtensionController.URL + "/***";
+
     public static final String CHROME_AUTH = AuthController.URL + "/";
+
     public static final String TEST_CHROME_JWT_AUTH = AuthController.URL + TEST_JWT + "/";
-    public static final String CHROME_REGISTRATION = CHROME_AUTH + "code/***";
 
     private final JwtConfigurer jwtConfigurer;
 
@@ -48,16 +49,15 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         http.headers().frameOptions().disable();
         http = http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and();
         http.authorizeRequests()
-                .antMatchers(CHROME_API).hasAnyRole(ERole.CHROME_EXTENSION.getName(), ERole.ROLE_ADMIN.getName())
-                .antMatchers(TEST_CHROME_JWT_AUTH).hasAnyRole(ERole.ROLE_ADMIN.getName(), ERole.CHROME_EXTENSION.getName())
-                .antMatchers(CHROME_REGISTRATION).permitAll()
-                .antMatchers(CHROME_AUTH).permitAll()
-                .antMatchers("/h2-console/**").permitAll().filterSecurityInterceptorOncePerRequest(false)
-                .antMatchers(SimpleController.INDEX_PAGE_NAME).permitAll()
-                .anyRequest().authenticated()
-                .and().formLogin().permitAll()
-                .and().logout().permitAll().and()
-                .apply(jwtConfigurer);
+            .antMatchers(CHROME_API).hasAnyRole(ERole.CHROME_EXTENSION.getName(), ERole.ROLE_ADMIN.getName())
+            .antMatchers(TEST_CHROME_JWT_AUTH).hasAnyRole(ERole.ROLE_ADMIN.getName(), ERole.CHROME_EXTENSION.getName())
+            .antMatchers(CHROME_AUTH).permitAll()
+            .antMatchers("/h2-console/**").permitAll().filterSecurityInterceptorOncePerRequest(false)
+            .antMatchers(SimpleController.INDEX_PAGE_NAME).permitAll()
+            .anyRequest().authenticated()
+            .and().formLogin().permitAll()
+            .and().logout().permitAll().and()
+            .apply(jwtConfigurer);
     }
 
     @Bean

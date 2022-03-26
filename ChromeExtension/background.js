@@ -1,4 +1,4 @@
-// const SERVER_URL = "https://zhelper.ru/";
+// const SERVER_URL = "https://mhelper.ru/";
 const SERVER_URL = "http://localhost:8080/";
 const POST_PROCUREMENT_URL = SERVER_URL + "v1/chrome/"
 const TEST_SERVER_URL = SERVER_URL + "v1/auth/";

@@ -3,11 +3,13 @@ package ru.mhelper.services.geting_code;
 import org.springframework.stereotype.Service;
 import ru.mhelper.services.exceptions.BadRequest;
 
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
 @Service
 public class FakeTelegramCodeService implements TelegramCodeService {
+
     private final Map<Integer, Long> codeMap;
 
     public FakeTelegramCodeService() {
@@ -32,5 +34,10 @@ public class FakeTelegramCodeService implements TelegramCodeService {
     @Override
     public Integer createCode(Long userId) {
         return 100;
+    }
+
+    @Override
+    public Map<Integer, UserIdTimed> getAllCodes() {
+        return Collections.emptyMap();
     }
 }

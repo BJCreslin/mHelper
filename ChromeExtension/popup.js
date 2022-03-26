@@ -1,7 +1,7 @@
 const tag = document.createElement("a");
 tag.setAttribute("className", "check_tg_number");
-tag.setAttribute("href", "https://telegram.me/zHelperTestBot");
-tag.innerText = "Перейдите в телеграмм t.me/zHelperTestBot. Введите полученный код";
+tag.setAttribute("href", "https://telegram.me/mHelperTestBot");
+tag.innerText = "Перейдите в телеграмм t.me/mHelperTestBot. Введите полученный код";
 const start_div = document.getElementById("start-js");
 document.body.insertBefore(tag, start_div);
 const x = document.createElement("INPUT");

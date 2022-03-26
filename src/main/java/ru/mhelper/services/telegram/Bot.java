@@ -11,23 +11,30 @@ import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKeyboardButton;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
-import ru.mhelper.services.geting_code.ErrorGettingCode;
 import ru.mhelper.services.geting_code.TelegramCodeService;
+import ru.mhelper.services.telegram.actions.text.TelegramTextAction;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
+import java.util.Map;
 
 import static ru.mhelper.services.telegram.TelegramBotServiceException.ERROR_SEND_MESSAGE;
 
 @Service
 public class Bot extends TelegramLongPollingBot {
+
     private static final Logger LOGGER = LoggerFactory.getLogger(Bot.class);
 
-    private static final String NUMBER_MESSAGE = "Полученный код: ";
-    private static final String NUMBER_ERROR = "Ошибка получения кода. Попробуйте повторить позже.";
-
     private static final String NUMBER_OPERATION = "number";
+
     private static final String START_OPERATION = "/start";
+
+    public static final String GET_CODE = "Code";
+
+    public static final String SHOW_ALL_CODE = "All code";
+
+    public static final String THERE_ARE_NO_CODES = "There are no codes.";
 
     @Value("${bot.name}")
     private String botName;
@@ -37,8 +44,11 @@ public class Bot extends TelegramLongPollingBot {
 
     private final TelegramCodeService telegramCodeService;
 
-    public Bot(TelegramCodeService telegramCodeService) {
+    private final Map<String, TelegramTextAction> textActions;
+
+    public Bot(TelegramCodeService telegramCodeService, Map<String, TelegramTextAction> textActions) {
         this.telegramCodeService = telegramCodeService;
+        this.textActions = textActions;
     }
 
     @Override
@@ -59,13 +69,8 @@ public class Bot extends TelegramLongPollingBot {
             Long chatId = message.getChatId();
             response.setChatId(String.valueOf(chatId));
             String text = message.getText();
-            if (text.equals(NUMBER_OPERATION) || text.equals(START_OPERATION)) {
-                try {
-                    text = NUMBER_MESSAGE + telegramCodeService.createCode(chatId);
-                } catch (ErrorGettingCode e) {
-                    LOGGER.error(ErrorGettingCode.TOO_MANY_ATTEMPTS);
-                    text = NUMBER_ERROR;
-                }
+            if (textActions.containsKey(text.toLowerCase(Locale.ROOT))) {
+                text = textActions.get(text.toLowerCase(Locale.ROOT)).action(chatId, text);
             } else if (text.equals("menu")) {
                 response = sendInlineKeyBoardMessage(chatId);
             }
@@ -82,8 +87,9 @@ public class Bot extends TelegramLongPollingBot {
                 SendMessage response = new SendMessage();
                 Long chatId = update.getCallbackQuery().getMessage().getChatId();
                 response.setChatId(String.valueOf(chatId));
-                response.setText(update.getCallbackQuery().getData());
-                response.setChatId(String.valueOf(chatId));
+                String text = update.getCallbackQuery().getData();
+                text = getMenuMessageText(chatId, text);
+                response.setText(text);
                 execute(response);
             } catch (TelegramApiException e) {
                 e.printStackTrace();
@@ -92,14 +98,31 @@ public class Bot extends TelegramLongPollingBot {
 
     }
 
+    private String getMenuMessageText(Long chatId, String text) {
+        if (text.equals(GET_CODE)) {
+            text = textActions.get(NUMBER_OPERATION).action(chatId, text);
+        }
+        if (text.equals(SHOW_ALL_CODE)) {
+            var codes = telegramCodeService.getAllCodes();
+            if (codes.isEmpty()) {
+                text = THERE_ARE_NO_CODES;
+            } else {
+                StringBuilder textBuilder = new StringBuilder();
+                telegramCodeService.getAllCodes().forEach((k, v) -> textBuilder.append(k).append(" ").append(v.getUserId()).append(" ").append(v.getTimeCreated()).append("\n"));
+                text = textBuilder.toString();
+            }
+        }
+        return text;
+    }
+
     public static SendMessage sendInlineKeyBoardMessage(long chatId) {
         InlineKeyboardMarkup inlineKeyboardMarkup = new InlineKeyboardMarkup();
         InlineKeyboardButton inlineKeyboardButton1 = new InlineKeyboardButton();
         InlineKeyboardButton inlineKeyboardButton2 = new InlineKeyboardButton();
-        inlineKeyboardButton1.setText("Алтайский край");
-        inlineKeyboardButton1.setCallbackData("Алтайский край");
-        inlineKeyboardButton2.setText("Амурская область");
-        inlineKeyboardButton2.setCallbackData("Амурская область");
+        inlineKeyboardButton1.setText("Get new code");
+        inlineKeyboardButton1.setCallbackData(GET_CODE);
+        inlineKeyboardButton2.setText("Show all codes");
+        inlineKeyboardButton2.setCallbackData(SHOW_ALL_CODE);
         List<InlineKeyboardButton> keyboardButtonsRow1 = new ArrayList<>();
         List<InlineKeyboardButton> keyboardButtonsRow2 = new ArrayList<>();
         keyboardButtonsRow1.add(inlineKeyboardButton1);
@@ -110,9 +133,8 @@ public class Bot extends TelegramLongPollingBot {
         inlineKeyboardMarkup.setKeyboard(rowList);
         SendMessage response = new SendMessage();
         response.setChatId(String.valueOf(chatId));
-        response.setText("Выберите область");
+        response.setText("Выберите пункт меню");
         response.setReplyMarkup(inlineKeyboardMarkup);
-
         return response;
     }
 }

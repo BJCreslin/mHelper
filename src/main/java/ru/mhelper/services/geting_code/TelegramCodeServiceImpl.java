@@ -120,6 +120,8 @@ public class TelegramCodeServiceImpl implements TelegramCodeService {
     }
 
     private void removeOldValue() {
-        storage.entrySet().stream().filter(x -> x.getValue().getTimeCreated().plusMinutes(lifetime).isBefore(LocalTime.now())).forEach(x -> storage.remove(x.getKey()));
+        if (!storage.isEmpty()) {
+            storage.entrySet().stream().filter(x -> x.getValue().getTimeCreated().plusMinutes(lifetime).isBefore(LocalTime.now())).forEach(x -> storage.remove(x.getKey()));
+        }
     }
 }
