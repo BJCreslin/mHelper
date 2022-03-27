@@ -16,7 +16,7 @@ import java.util.Arrays;
 
 @Component
 @Order(2)
-@Profile("!ci")
+@Profile("dev")
 public class RoleInitializer implements CommandLineRunner {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(RoleInitializer.class);

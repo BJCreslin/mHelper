@@ -17,4 +17,3 @@ src/main/resources/db/changelog.
 src/main/resources/application-dev.properties) пользователь: sa , пароль: password .     
 Пользователи системы ( создаются в сервисе src/main/java/ru/mhelper/init ). Имя/пароль : Admin:password User0:password1
 User1:password1 User2:password2 .
-
