@@ -13,8 +13,10 @@ import ru.mhelper.services.ip_service.IpService;
 
 import javax.servlet.http.HttpServletRequest;
 import java.time.LocalTime;
-import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 
 @Aspect
 @Component
@@ -22,7 +24,7 @@ public class SpamStopperAspect {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(SpamStopperAspect.class);
 
-    private static final Map<String, LocalTime> ipTable = new HashMap<>();
+    private static final Map<String, LocalTime> ipTable = new ConcurrentHashMap<>();
 
     public static final String ATTEMPTS = "Too many attempts from ip %s";
 
@@ -63,7 +65,12 @@ public class SpamStopperAspect {
         if (ipTable.isEmpty()) {
             return;
         }
-        ipTable.entrySet().stream().filter(x -> x.getValue().plusSeconds(spamProtectedRange).isBefore(LocalTime.now())).forEach(x -> ipTable.remove(x.getKey()));
+        Set<String> ipsForDelete = new HashSet<>();
+        ipTable.entrySet().stream().filter(x -> x.getValue().plusSeconds(spamProtectedRange).isBefore(LocalTime.now())).forEach(x -> ipsForDelete.add(x.getKey()));
+        if (ipsForDelete.isEmpty()) {
+            return;
+        }
+        ipsForDelete.forEach(ipTable::remove);
     }
 
     private HttpServletRequest getHttpServletRequest(JoinPoint joinPoint) {
