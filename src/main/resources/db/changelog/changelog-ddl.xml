@@ -216,4 +216,15 @@
             );
         </sql>
     </changeSet>
+
+    <changeSet id="27032022-01" author="BJCreslin">
+        <createSequence catalogName="cat"
+                        cycle="true"
+                        incrementBy="1"
+                        minValue="10"
+                        ordered="true"
+                        schemaName="public"
+                        sequenceName="user_seq"
+                        startValue="1"/>
+    </changeSet>
 </databaseChangeLog>
