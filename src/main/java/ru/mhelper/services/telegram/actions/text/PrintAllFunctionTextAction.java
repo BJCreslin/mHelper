@@ -6,6 +6,7 @@ import java.util.Map;
 
 @Service("help")
 public class PrintAllFunctionTextAction implements TelegramTextAction {
+
     private final Map<String, TelegramTextAction> telegramServices;
 
     public PrintAllFunctionTextAction(Map<String, TelegramTextAction> telegramServices) {
