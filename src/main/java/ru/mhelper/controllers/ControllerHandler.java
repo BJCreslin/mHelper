@@ -13,7 +13,7 @@ public class ControllerHandler extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler({SQLGrammarException.class})
     protected ResponseEntity<Object> handleSQLGramarEx(SQLGrammarException ex, WebRequest request) {
-        ApiError apiError = new ApiError("Error database", ex.getMessage());
+        ApiError apiError = new ApiError("Error database", ex.getMessage() + " " + ex.getSQL());
         return new ResponseEntity<>(apiError, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 }
