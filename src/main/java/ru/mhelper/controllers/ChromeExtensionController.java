@@ -50,11 +50,11 @@ public class ChromeExtensionController {
     public ResponseEntity<?> newProcurement(@Valid @RequestBody ProcurementDto procurementDto, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             var errors = bindingResult.getFieldErrors();
-            var responseObject = new Error();
-            responseObject.setCode(MessageResponse.BAD_CODE);
             var message = errors.stream().map(error -> "@" + error.getField().toUpperCase() + ": " + error.getDefaultMessage()).collect(Collectors.toList()).toString();
-            responseObject.setMessage(PROCUREMENT_IS_INVALID);
-            responseObject.setCause(message);
+            var responseObject = Error.builder()
+                .code(MessageResponse.BAD_CODE)
+                .message(PROCUREMENT_IS_INVALID)
+                .cause(message).build();
             logger.error(message);
             return new ResponseEntity<>(responseObject, HttpStatus.BAD_REQUEST);
         }
