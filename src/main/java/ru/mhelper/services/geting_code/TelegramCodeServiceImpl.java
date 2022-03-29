@@ -7,7 +7,9 @@ import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalTime;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Random;
 
@@ -29,7 +31,7 @@ public class TelegramCodeServiceImpl implements TelegramCodeService {
 
     public static final String CREATED_NEW_CODE_D_FOR_USER = "Created new code %d for user %d";
 
-    public static final String CHECK_CODE_EXIST = "Check for code %d. %b";
+    public static final String CHECK_CODE_EXIST = "Check for code %d.";
 
     public static final String GET_ALL_CODES = "Get all codes: %s";
 
@@ -42,11 +44,10 @@ public class TelegramCodeServiceImpl implements TelegramCodeService {
     @Override
     public boolean existByCode(Integer code) {
         removeOldValue();
-        final boolean exist = storage.isEmpty();
         if (LOGGER.isDebugEnabled()) {
-            LOGGER.debug(String.format(CHECK_CODE_EXIST, code, exist));
+            LOGGER.debug(String.format(CHECK_CODE_EXIST, code));
         }
-        if (exist) {
+        if (storage.isEmpty()) {
             return false;
         }
         return storage.containsKey(code);
@@ -121,7 +122,9 @@ public class TelegramCodeServiceImpl implements TelegramCodeService {
 
     private void removeOldValue() {
         if (!storage.isEmpty()) {
-            storage.entrySet().stream().filter(x -> x.getValue().getTimeCreated().plusMinutes(lifetime).isBefore(LocalTime.now())).forEach(x -> storage.remove(x.getKey()));
+            List<Integer> codesForDelete = new ArrayList<>();
+            storage.entrySet().stream().filter(x -> x.getValue().getTimeCreated().plusMinutes(lifetime).isBefore(LocalTime.now())).forEach(x -> codesForDelete.add(x.getKey()));
+            codesForDelete.forEach(storage::remove);
         }
     }
 }
