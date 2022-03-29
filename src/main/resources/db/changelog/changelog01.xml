@@ -10,7 +10,7 @@
     </changeSet>
     <changeSet id="1648541178087-2" author="BJCreslin">
         <createTable tableName="procurements">
-            <column name="id" type="BIGINT" autoIncrement="true">
+            <column name="id" type="serial" autoIncrement="true">
                 <constraints nullable="false" primaryKey="true" primaryKeyName="pk_procurements"/>
             </column>
             <column name="created" type="DATETIME"/>
@@ -45,7 +45,7 @@
     </changeSet>
     <changeSet id="1648541178087-3" author="BJCreslin">
         <createTable tableName="roles">
-            <column name="id" type="BIGINT" autoIncrement="true">
+            <column name="id" type="serial" autoIncrement="true">
                 <constraints nullable="false" primaryKey="true" primaryKeyName="pk_roles"/>
             </column>
             <column name="created" type="DATETIME"/>
@@ -67,7 +67,7 @@
     </changeSet>
     <changeSet id="1648541178087-5" author="BJCreslin">
         <createTable tableName="users">
-            <column name="id" type="BIGINT" autoIncrement="true">
+            <column name="id" type="serial" autoIncrement="true">
                 <constraints nullable="false" primaryKey="true" primaryKeyName="pk_users"/>
             </column>
             <column name="created" type="DATETIME"/>
