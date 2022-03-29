@@ -15,10 +15,10 @@
         <comment>Заполнение таблицы "Пользователи" первоначальными данными</comment>
         <sql>
             INSERT INTO users
-                (id, username, email, password, enabled, created, updated)
-            VALUES (1, 'admin', 'admin@mhelper.ru',
+                (username, email, password, enabled, created, updated)
+            VALUES ('admin', 'admin@mhelper.ru',
                     '$2a$12$QS4hLJ9.IsMteiKhKduqXeIf5aLxOEVkxvJPyHWjx2D3heM.udptq', true, now(), now()),
-                   (2, 'user', 'user@mhelper.ru',
+                   ('user', 'user@mhelper.ru',
                     '$2a$12$GC7mTGYCrTItKTwzu9rj7.HfmnPeNFR0lojHl8s58qMHcSZVjiYiK', true, now(), now());
         </sql>
     </changeSet>
@@ -34,12 +34,12 @@
         <comment>Заполнение таблицы "Роли" первоначальными данными</comment>
         <sql>
             INSERT INTO roles
-                (id, rolename, created, updated)
-            VALUES (1, 'USER', now(), now()),
-                   (2, 'ADMIN', now(), now()),
-                   (3, 'CHROME_EXTENSION', now(), now()),
-                   (4, 'EMAIL', now(), now()),
-                   (5, 'TELEGRAM', now(), now());
+                (rolename, created, updated)
+            VALUES ('USER', now(), now()),
+                   ('ADMIN', now(), now()),
+                   ('CHROME_EXTENSION', now(), now()),
+                   ('EMAIL', now(), now()),
+                   ('TELEGRAM', now(), now());
         </sql>
     </changeSet>
 
@@ -71,14 +71,14 @@
         <comment>Заполнение таблицы "Закупки" тестовыми данными</comment>
         <sql>
             INSERT INTO procurements
-            (id, stage, uin, fz_number, application_deadline, contract_price,
+            (stage, uin, fz_number, application_deadline, contract_price,
              procedure_type,
              publisher_name,
              restrictions,
              link_on_placement, application_secure, contract_secure,
              object_of,
              last_updated_from_eis, date_time_last_updated, date_of_placement, date_of_auction, created, updated)
-            VALUES (1, 'PROCUREMENT_ENDED', '202320000012100320', 615, '2021-09-08 04:00:00', '5127116.82',
+            VALUES ('PROCUREMENT_ENDED', '202320000012100320', 615, '2021-09-08 04:00:00', '5127116.82',
                     'ELECTRONIC_AUCTION',
                     'НЕКОММЕРЧЕСКАЯ ОРГАНИЗАЦИЯ "ФОНД КАПИТАЛЬНОГО РЕМОНТА МНОГОКВАРТИРНЫХ ДОМОВ АМУРСКОЙ ОБЛАСТИ"',
                     'Порядок расчётов осуществляется в соответствии с главой 3 Раздела «VI. Проект договора на выполнение работ по капитальному ремонту общего имущества многоквартирного дома',
