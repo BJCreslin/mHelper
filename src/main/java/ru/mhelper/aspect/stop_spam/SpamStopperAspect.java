@@ -34,7 +34,7 @@ public class SpamStopperAspect {
 
     private final IpService ipService;
 
-    @Value("${spam.protected.range:12}")
+    @Value("${spam.protected.range:1}")
     private Long spamProtectedRange;
 
     public SpamStopperAspect(IpService ipService) {
