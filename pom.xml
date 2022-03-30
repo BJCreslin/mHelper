@@ -46,12 +46,12 @@
                 <dependency>
                     <groupId>org.liquibase</groupId>
                     <artifactId>liquibase-core</artifactId>
-                    <version>4.9.1</version>
+                    <version>4.3.5</version>
                 </dependency>
                 <dependency>
                     <groupId>org.postgresql</groupId>
                     <artifactId>postgresql</artifactId>
-                    <version>43.3.3</version>
+                    <version>42.3.3</version>
                 </dependency>
             </dependencies>
             <build>
