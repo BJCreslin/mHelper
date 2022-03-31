@@ -30,10 +30,11 @@ public class JwtTokenProvider {
     private static final Logger LOGGER = LoggerFactory.getLogger(JwtTokenProvider.class);
 
     public static final String JWT_FOR_USER_HAVE_BEEN_CREATED = "JWT for user {} have been created.";
-    public static final String BEARER_PREFIX = "Bearer_";
+    public static final String BEARER_PREFIX = "Bearer ";
     public static final String LOAD_USER_DETAILS_FOR_TOKEN = "Load userDetails {} for token.";
     public static final String RESOLVE_JWT = "Resolve JWT:{}";
     public static final String VALIDATE_JWT = "Validate JWT:{}";
+    public static final String ROLES_CLAIMS = "role";
 
     @Value("${jwt.token.secret}")
     private String secret;
@@ -57,7 +58,7 @@ public class JwtTokenProvider {
 
     public String createToken(String userName, Set<Role> roles) {
         Claims claims = Jwts.claims().setSubject(userName);
-        claims.put("role", getRoleNames(roles));
+        claims.put(ROLES_CLAIMS, getRoleNames(roles));
         Date now = new Date();
         Date validity = new Date(now.getTime() + validityInMilliseconds);
         if (LOGGER.isDebugEnabled()) {

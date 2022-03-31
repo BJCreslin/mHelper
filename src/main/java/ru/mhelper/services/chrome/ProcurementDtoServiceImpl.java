@@ -3,11 +3,11 @@ package ru.mhelper.services.chrome;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
-import ru.mhelper.services.exceptions.BadDataParsingException;
+import ru.mhelper.models.dto.ProcurementDto;
 import ru.mhelper.models.procurements.ProcedureType;
 import ru.mhelper.models.procurements.Procurement;
-import ru.mhelper.models.dto.ProcurementDto;
 import ru.mhelper.services.dao.ProcurementDataManager;
+import ru.mhelper.services.exceptions.BadDataParsingException;
 
 import java.math.BigDecimal;
 import java.net.MalformedURLException;
@@ -20,7 +20,9 @@ import java.util.TimeZone;
 
 @Service
 public class ProcurementDtoServiceImpl implements ProcurementDtoService {
-    private static final Logger logger = LoggerFactory.getLogger(ProcurementDtoServiceImpl.class);
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(ProcurementDtoServiceImpl.class);
+
     public static final String REMODEL_DTO_TO_PROCUREMENT = "Remodel Dto to Procurement {}";
     public static final String DTO_WAS_REMODELED = "Dto was remodeled {}";
     public static final String ERROR_URL = "Error URL %s";
@@ -28,6 +30,9 @@ public class ProcurementDtoServiceImpl implements ProcurementDtoService {
     public static final int FZ_615 = 615;
     public static final int FZ_44 = 44;
     public static final int FZ_223 = 223;
+    public static final String DEADLINE_TIME_ZONE_LOGGER = "Deadline From String to ZonedDateTime. Deadline: {}, time zone: {}";
+    public static final String ZONE_PARSING_LOGGER = "Time zone parsing {}";
+
     private final ProcurementDataManager procurementDataManager;
 
     public ProcurementDtoServiceImpl(ProcurementDataManager procurementDataManager) {
@@ -44,8 +49,8 @@ public class ProcurementDtoServiceImpl implements ProcurementDtoService {
     }
 
     protected Procurement remodelDtoToProcurement(ProcurementDto procurementDto) {
-        if (logger.isDebugEnabled()) {
-            logger.debug(REMODEL_DTO_TO_PROCUREMENT, procurementDto);
+        if (LOGGER.isDebugEnabled()) {
+            LOGGER.debug(REMODEL_DTO_TO_PROCUREMENT, procurementDto);
         }
         var timeZone = stringToTimeZone(procurementDto.getTimeZone());
         var procurement = Procurement.builder()
@@ -64,16 +69,19 @@ public class ProcurementDtoServiceImpl implements ProcurementDtoService {
                 .procedureType(remodelProcedureType(procurementDto.getProcedureType()))
                 .publisherName(procurementDto.getPublisherName())
                 .build();
-        if (logger.isDebugEnabled()) {
-            logger.debug(DTO_WAS_REMODELED, procurement);
+        if (LOGGER.isDebugEnabled()) {
+            LOGGER.debug(DTO_WAS_REMODELED, procurement);
         }
         return procurement;
     }
 
     //ToDo: В будущем возможно сделать отельный сервис определения часовых поясов
     private TimeZone stringToTimeZone(String timeZone) {
+        if (LOGGER.isDebugEnabled()) {
+            LOGGER.debug(ZONE_PARSING_LOGGER, timeZone);
+        }
         if (timeZone == null || timeZone.isEmpty() || timeZone.isBlank()) {
-            return null;
+            return TimeZone.getTimeZone("Europe/Moscow");
         }
         if (timeZone.toLowerCase().contains("владивосток") || timeZone.contains("МСК+7") || timeZone.contains("UTC+10")) {
             return TimeZone.getTimeZone("Asia/Vladivostok");
@@ -113,7 +121,7 @@ public class ProcurementDtoServiceImpl implements ProcurementDtoService {
         var procedure = ProcedureType.get(procedureType);
         if (procedure == ProcedureType.DEFAULT_NONAME_PROCEDURE) {
             var msg = String.format(NEED_ADD_TYPE, procedureType);
-            logger.error(msg);
+            LOGGER.error(msg);
         }
         return procedure;
     }
@@ -123,7 +131,7 @@ public class ProcurementDtoServiceImpl implements ProcurementDtoService {
             return new URL(linkOnPlacement);
         } catch (MalformedURLException e) {
             var message = String.format(ERROR_URL, linkOnPlacement);
-            logger.error(message);
+            LOGGER.error(message);
             throw new BadDataParsingException(message, e);
         }
     }
@@ -164,6 +172,9 @@ public class ProcurementDtoServiceImpl implements ProcurementDtoService {
     }
 
     protected ZonedDateTime remodelDeadlineFromStringToTime(String applicationDeadline, TimeZone timeZone) {
+        if (LOGGER.isDebugEnabled()) {
+            LOGGER.debug(DEADLINE_TIME_ZONE_LOGGER, applicationDeadline, timeZone);
+        }
         if (applicationDeadline == null || applicationDeadline.isEmpty() || applicationDeadline.isBlank()) {
             return null;
         }
