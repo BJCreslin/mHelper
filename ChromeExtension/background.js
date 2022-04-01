@@ -1,8 +1,9 @@
-const SERVER_URL = "https://mhelper.ru/";
-// const SERVER_URL = "http://localhost:8080/";
-const POST_PROCUREMENT_URL = SERVER_URL + "v1/chrome/"
+// const SERVER_URL = "https://mhelper.ru/";
+const SERVER_URL = "http://localhost:8080/";
+const POST_PROCUREMENT_URL = SERVER_URL + "v1/chrome/";
 const TEST_SERVER_URL = SERVER_URL + "v1/auth/";
-const CHROME_REGISTRATION = SERVER_URL + "v1/auth/code/"
+const CHROME_REGISTRATION = SERVER_URL + "v1/auth/code/";
+const JWT_PREFIX = "Bearer ";
 let connected = false;
 let token;
 chrome.runtime.onMessage.addListener(
@@ -11,9 +12,11 @@ chrome.runtime.onMessage.addListener(
         console.log(request, sender, sendResponse);
         console.log("***************");
         if (request.destination === "test_connection") {
+            console.log("Connection is testing")
             fetch(TEST_SERVER_URL, {
                 method: 'GET'
             }).then((response) => {
+                console.log("Connection Status:" + response.status);
                 if (!response.ok) {
                     return Promise.reject(new Error(
                         'Responce failed: ' + response.status + ' (' + response.statusText + ')'
@@ -48,7 +51,7 @@ chrome.runtime.onMessage.addListener(
                 headers: {
                     'Accept': 'application/json',
                     'Content-Type': 'application/json; charset=utf-8',
-                    'Authorization': token
+                    'Authorization': JWT_PREFIX + token
                 },
                 body: JSON.stringify(request.data)
             }).then((response) => {

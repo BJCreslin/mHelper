@@ -19,5 +19,19 @@ x.addEventListener("change", function () {
         })
 });
 tag.appendChild(x);
-
-
+const test_div = document.getElementById("test-js");
+const test_button = document.createElement("INPUT");
+test_button.setAttribute("type", "button");
+test_button.value = "Test connection";
+test_button.addEventListener("click", function () {
+    console.log(this.value);
+    chrome.runtime.sendMessage(
+        {
+            destination: "test_connection",
+            data: this.value
+        },
+        function (response) {
+            console.log(response);
+        })
+});
+test_div.appendChild(test_button);
