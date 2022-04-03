@@ -1,28 +1,47 @@
-const tag = document.createElement("a");
-tag.setAttribute("className", "check_tg_number");
-tag.setAttribute("href", "https://telegram.me/mHelperTestBot");
-tag.innerText = "Перейдите в телеграмм t.me/mHelperTestBot. Введите полученный код";
-const start_div = document.getElementById("start-js");
-document.body.insertBefore(tag, start_div);
-const x = document.createElement("INPUT");
-x.setAttribute("type", "text");
-x.setAttribute("className", "input_tg_number");
-x.addEventListener("change", function () {
-    console.log(this.value);
+const inputTgNumber = document.getElementById("input_tg_number");
+const labelNumber = document.getElementById("label_tg_number");
+const buttonTgNumber = document.getElementById("button_tg_number");
+const inputFormTgNumber = document.getElementById("form_tg_number");
+
+inputTgNumber.addEventListener("change", function () {
+    let iNumber = Number(inputTgNumber.value);
+    if (typeof iNumber === 'number' && iNumber > 1000 && iNumber < 1000000000) {
+        inputTgNumber.classList.remove("is-invalid");
+        buttonTgNumber.classList.remove("disabled");
+    } else {
+        inputTgNumber.classList.add("is-invalid");
+        buttonTgNumber.classList.add("disabled");
+    }
+})
+
+inputFormTgNumber.addEventListener("submit", function () {
+    console.log("ffff" + inputTgNumber.value);
+
+    function notCreatedConnection() {
+        inputTgNumber.classList.add("is-invalid");
+    }
+
+    function createConnection() {
+        let tg_numberdocument = document.getElementsByClassName("tg_number")[0];
+        tg_numberdocument.style.display = "none";
+    }
+
     chrome.runtime.sendMessage(
         {
             destination: "send_code",
-            data: this.value
+            data: inputTgNumber.value
         },
         function (response) {
-            console.log(response);
-        })
+            console.log("kkkkk"+response);
+            if (response / 100 === 2) {
+                createConnection();
+            } else {
+                notCreatedConnection();
+            }
+        });
 });
-tag.appendChild(x);
-const test_div = document.getElementById("test-js");
-const test_button = document.createElement("INPUT");
-test_button.setAttribute("type", "button");
-test_button.value = "Test connection";
+
+const test_button = document.getElementById("button_test");
 test_button.addEventListener("click", function () {
     console.log(this.value);
     chrome.runtime.sendMessage(
@@ -30,8 +49,24 @@ test_button.addEventListener("click", function () {
             destination: "test_connection",
             data: this.value
         },
-        function (response) {
-            console.log(response);
+        (response) => {
+            function setConnected() {
+                test_button.removeAttribute("class");
+                test_button.setAttribute("class", "btn btn-secondary")
+                test_button.innerText = "Connected";
+            }
+
+            function setNotConnected() {
+                test_button.removeAttribute("class");
+                test_button.setAttribute("class", "btn btn-danger")
+                test_button.innerText = "Not connected";
+            }
+
+            if ((response / 100) === 2) {
+                setConnected();
+            } else {
+                setNotConnected()
+            }
+
         })
 });
-test_div.appendChild(test_button);

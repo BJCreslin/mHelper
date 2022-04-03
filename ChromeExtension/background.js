@@ -5,26 +5,25 @@ const TEST_SERVER_URL = SERVER_URL + "v1/auth/";
 const CHROME_REGISTRATION = SERVER_URL + "v1/auth/code/";
 const JWT_PREFIX = "Bearer ";
 let connected = false;
-let token;
+let JwtToken;
 chrome.runtime.onMessage.addListener(
     function (request, sender, sendResponse) {
-        console.log("***************");
-        console.log(request, sender, sendResponse);
-        console.log("***************");
+        console.log(request, sender);
+
         if (request.destination === "test_connection") {
-            console.log("Connection is testing")
             fetch(TEST_SERVER_URL, {
                 method: 'GET'
-            }).then((response) => {
-                console.log("Connection Status:" + response.status);
-                if (!response.ok) {
-                    return Promise.reject(new Error(
-                        'Responce failed: ' + response.status + ' (' + response.statusText + ')'
-                    ));
-                }
             })
+                .then((response) => {
+                    console.log("Connection Status:" + response.status);
+                    sendResponse(response.status);
+                })
+                .catch((rejected) => {
+                    sendResponse(rejected.status);
+                });
             return true;
         }
+
         if (request.destination === "send_code") {
             let code_from_tg = request.data;
             fetch(CHROME_REGISTRATION + code_from_tg, {
@@ -36,22 +35,25 @@ chrome.runtime.onMessage.addListener(
                     ));
                 }
                 return response.json();
+            }).then((data) => {
+                connected = true;
+                JwtToken = data.token;
+                console.log("token: " + JwtToken);
+                return true;
             })
-                .then(function (json) {
-                    connected = true;
-                    token = json.token;
-                    console.log("token: " + token);
-                })
-            return true;
+                .catch((rejected) => {
+                    sendResponse(rejected.status);
+                });
         }
+
         if (request.destination === "sender") {
-            console.log("token: " + token);
+            console.log("token: " + JwtToken);
             fetch(POST_PROCUREMENT_URL, {
                 method: 'POST',
                 headers: {
                     'Accept': 'application/json',
                     'Content-Type': 'application/json; charset=utf-8',
-                    'Authorization': JWT_PREFIX + token
+                    'Authorization': JWT_PREFIX + JwtToken
                 },
                 body: JSON.stringify(request.data)
             }).then((response) => {

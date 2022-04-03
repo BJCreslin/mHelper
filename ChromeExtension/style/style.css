@@ -1,0 +1,53 @@
+html,
+body {
+    font-family: 'Open Sans', sans-serif;
+    font-size: 18px;
+    vertical-align: text-bottom;;
+    margin: 0;
+    min-height: 100px;
+    padding: 0;
+    width: 380px;
+    background-color: #fdfdfd;
+}
+
+.container-main {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    align-content: center;
+    justify-content: center;
+}
+
+a:link,
+a:visited {
+    color: #000000;
+    outline: 0;
+    text-decoration: none;
+}
+
+h1 {
+    font-family: 'Menlo', monospace;
+    font-size: 22px;
+    font-weight: 400;
+    margin: 0;
+    color: #2f5876;
+}
+
+.logo_text {
+    display: block;
+    text-align: center;
+}
+
+.description {
+    margin: 5%;
+}
+
+.tg_number {
+    margin: 5%;
+    display: block;
+    text-align: center;
+}
+
+.tg_number button {
+    margin-top: 5%;
+}
