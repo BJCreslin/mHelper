@@ -14,8 +14,7 @@ inputTgNumber.addEventListener("change", function () {
     }
 })
 
-inputFormTgNumber.addEventListener("submit", function () {
-    console.log("ffff" + inputTgNumber.value);
+button_tg_number.addEventListener("click", function () {
 
     function notCreatedConnection() {
         inputTgNumber.classList.add("is-invalid");
@@ -31,9 +30,8 @@ inputFormTgNumber.addEventListener("submit", function () {
             destination: "send_code",
             data: inputTgNumber.value
         },
-        function (response) {
-            console.log("kkkkk"+response);
-            if (response / 100 === 2) {
+        (response) => {
+            if (response >= 200 && response < 300) {
                 createConnection();
             } else {
                 notCreatedConnection();
@@ -67,6 +65,5 @@ test_button.addEventListener("click", function () {
             } else {
                 setNotConnected()
             }
-
         })
 });

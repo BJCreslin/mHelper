@@ -6,6 +6,7 @@ const CHROME_REGISTRATION = SERVER_URL + "v1/auth/code/";
 const JWT_PREFIX = "Bearer ";
 let connected = false;
 let JwtToken;
+
 chrome.runtime.onMessage.addListener(
     function (request, sender, sendResponse) {
         console.log(request, sender);
@@ -31,7 +32,7 @@ chrome.runtime.onMessage.addListener(
             }).then((response) => {
                 if (!response.ok) {
                     return Promise.reject(new Error(
-                        'Responce failed: ' + response.status + ' (' + response.statusText + ')'
+                        'Response failed: ' + response.status + ' (' + response.statusText + ')'
                     ));
                 }
                 return response.json();
@@ -39,11 +40,12 @@ chrome.runtime.onMessage.addListener(
                 connected = true;
                 JwtToken = data.token;
                 console.log("token: " + JwtToken);
-                return true;
+                sendResponse(201);
             })
                 .catch((rejected) => {
                     sendResponse(rejected.status);
                 });
+            return true;
         }
 
         if (request.destination === "sender") {
