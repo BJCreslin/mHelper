@@ -41,7 +41,6 @@ button_tg_number.addEventListener("click", function () {
 
 const test_button = document.getElementById("button_test");
 test_button.addEventListener("click", function () {
-    console.log(this.value);
     chrome.runtime.sendMessage(
         {
             destination: "test_connection",
@@ -60,7 +59,7 @@ test_button.addEventListener("click", function () {
                 test_button.innerText = "Not connected";
             }
 
-            if ((response / 100) === 2) {
+            if (response >= 200 && response < 300) {
                 setConnected();
             } else {
                 setNotConnected()
