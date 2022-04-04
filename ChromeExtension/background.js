@@ -9,14 +9,12 @@ let JwtToken;
 
 chrome.runtime.onMessage.addListener(
     function (request, sender, sendResponse) {
-        console.log(request, sender);
 
         if (request.destination === "test_connection") {
             fetch(TEST_SERVER_URL, {
                 method: 'GET'
             })
                 .then((response) => {
-                    console.log("Connection Status:" + response.status);
                     sendResponse(response.status);
                 })
                 .catch((rejected) => {
@@ -39,7 +37,6 @@ chrome.runtime.onMessage.addListener(
             }).then((data) => {
                 connected = true;
                 JwtToken = data.token;
-                console.log("token: " + JwtToken);
                 sendResponse(201);
             })
                 .catch((rejected) => {
@@ -49,7 +46,6 @@ chrome.runtime.onMessage.addListener(
         }
 
         if (request.destination === "sender") {
-            console.log("token: " + JwtToken);
             fetch(POST_PROCUREMENT_URL, {
                 method: 'POST',
                 headers: {
