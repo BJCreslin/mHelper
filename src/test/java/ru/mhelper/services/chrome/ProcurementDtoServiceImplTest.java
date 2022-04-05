@@ -10,6 +10,7 @@ import org.junit.jupiter.params.provider.ValueSource;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.ActiveProfiles;
 import ru.mhelper.models.procurements.ProcedureType;
+import ru.mhelper.repository.UserRepository;
 import ru.mhelper.services.dao.ProcurementDataManager;
 
 import java.math.BigDecimal;
@@ -21,7 +22,10 @@ class ProcurementDtoServiceImplTest {
     @MockBean
     ProcurementDataManager procurementDataManager;
 
-    ProcurementDtoServiceImpl procurementDtoService = new ProcurementDtoServiceImpl(procurementDataManager);
+    @MockBean
+    UserRepository userRepository;
+
+    ProcurementDtoServiceImpl procurementDtoService = new ProcurementDtoServiceImpl(procurementDataManager, userRepository);
 
 
     @Test

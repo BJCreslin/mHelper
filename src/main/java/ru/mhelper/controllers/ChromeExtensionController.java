@@ -4,6 +4,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -12,6 +13,7 @@ import ru.mhelper.controllers.exeptions.BadRequestException;
 import ru.mhelper.models.dto.Error;
 import ru.mhelper.models.dto.MessageResponse;
 import ru.mhelper.models.dto.ProcurementDto;
+import ru.mhelper.models.users.User;
 import ru.mhelper.services.chrome.ProcurementDtoService;
 import ru.mhelper.services.exceptions.BadDataParsingException;
 
@@ -47,7 +49,7 @@ public class ChromeExtensionController {
 
     @PostMapping(value = {""}, consumes = {"application/json"})
     @Validated
-    public ResponseEntity<?> newProcurement(@Valid @RequestBody ProcurementDto procurementDto, BindingResult bindingResult) {
+    public ResponseEntity<?> newProcurement(@Valid @RequestBody ProcurementDto procurementDto, @AuthenticationPrincipal User user, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             var errors = bindingResult.getFieldErrors();
             var message = errors.stream().map(error -> "@" + error.getField().toUpperCase() + ": " + error.getDefaultMessage()).collect(Collectors.toList()).toString();
@@ -62,7 +64,7 @@ public class ChromeExtensionController {
             logger.debug(POST_FROM_IP, procurementDto);
         }
         try {
-            service.save(procurementDto);
+            service.save(user, procurementDto);
             var success = new MessageResponse();
             success.setMessage(PROCUREMENT_WAS_SAVED);
             success.setCode(MessageResponse.FINE_CODE);
