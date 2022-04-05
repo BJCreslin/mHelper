@@ -1,7 +1,8 @@
-const BUTTON_NAME = "To zHelper";
+const BUTTON_NAME = "To mHelper";
 const BUTTON_CLASS = "btn btn-primary";
 const BOOTSTRAP_LINK = "https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/css/bootstrap.min.css";
 const BOOTSTRAP_INTEGRITY = "sha384-KyZXEAg3QhqLMpG8r+8fhAXLRk2vvoC2f3B09zVXn8CA5QIVfZOJ3BCsw2P0p/We"
+const REGION_PREFIX = "Регион:";
 
 const URL = document.documentURI;
 const dataAboutProcurement = {
@@ -116,6 +117,11 @@ function fillProcurementWith615And44() {
             case 'Окончание подачи заявок':
                 dataAboutProcurement.applicationDeadline = x.nextElementSibling.innerText.trim();
                 break;
+            case 'Регион':
+                if (dataAboutProcurement.timeZone === "") {
+                    dataAboutProcurement.timeZone = REGION_PREFIX + x.nextElementSibling.innerText.trim();
+                }
+                break;
         }
     });
     Array.from(document.body.getElementsByClassName("section__title")).forEach(x => {
@@ -151,16 +157,16 @@ function fillProcurementWith615And44() {
                 dataAboutProcurement.timeOfAuction = x.nextElementSibling.textContent.trim();
                 break;
             case 'Размер обеспечения заявки на участие в электронном аукционе':
-                dataAboutProcurement.applicationSecure = x.nextElementSibling.innerText.replaceAll("(Российский рубль)", "").replace(",", ".").replaceAll(/\s/g, "").trim();
+                dataAboutProcurement.applicationSecure = x.nextElementSibling.innerText.replaceAll("Российский рубль", "").replaceAll("()", "").replace(",", ".").replaceAll(/\s/g, "").trim();
                 break;
             case 'Размер обеспечения заявки':
-                dataAboutProcurement.applicationSecure = x.nextElementSibling.innerText.replaceAll("(Российский рубль)", "").replace(",", ".").replaceAll(/\s/g, "").trim();
+                dataAboutProcurement.applicationSecure = x.nextElementSibling.innerText.replaceAll("Российский рубль", "").replaceAll("()", "").replace(",", ".").replaceAll(/\s/g, "").trim();
                 break;
             case 'Размер обеспечения исполнения обязательств по договору':
-                dataAboutProcurement.contractSecure = x.nextElementSibling.innerText.replaceAll("(Российский рубль)", "").replace(",", ".").replaceAll(/\s/g, "").trim();
+                dataAboutProcurement.contractSecure = x.nextElementSibling.innerText.replaceAll("Российский рубль", "").replaceAll("()", "").replace(",", ".").replaceAll(/\s/g, "").trim();
                 break;
             case 'Размер обеспечения исполнения контракта':
-                dataAboutProcurement.contractSecure = x.nextElementSibling.innerText.replaceAll("(Российский рубль)", "").replace(",", ".").replaceAll(/\s/g, "").trim();
+                dataAboutProcurement.contractSecure = x.nextElementSibling.innerText.replaceAll("Российский рубль", "").replaceAll("()", "").replace(",", ".").replaceAll(/\s/g, "").trim();
                 break;
             case 'Способ определения поставщика (подрядчика, исполнителя, подрядной организации)':
                 dataAboutProcurement.procedureType = x.nextElementSibling.innerText.trim();
@@ -181,12 +187,12 @@ function fillProcurementWith615And44() {
 
 function insertButton(className) {
     let buttonPlace = document.getElementsByClassName(className)[0];
-    let buttonToZhelper = document.createElement("input");
-    buttonToZhelper.type = "button";
-    buttonToZhelper.setAttribute("class", BUTTON_CLASS);
-    buttonToZhelper.setAttribute("style", "color: white; background-color:grey; border:2px solid black; padding: 12px 16px; font-size:20px");
-    buttonToZhelper.value = BUTTON_NAME;
-    buttonToZhelper.onclick = function () {
+    let buttonToMHelper = document.createElement("input");
+    buttonToMHelper.type = "button";
+    buttonToMHelper.setAttribute("class", BUTTON_CLASS);
+    buttonToMHelper.setAttribute("style", "color: white; background-color:grey; border:2px solid black; padding: 12px 16px; font-size:20px");
+    buttonToMHelper.value = BUTTON_NAME;
+    buttonToMHelper.onclick = function () {
         chrome.runtime.sendMessage(
             {
                 destination: "sender",
@@ -196,7 +202,7 @@ function insertButton(className) {
                 console.log(response);
             })
     };
-    buttonPlace.appendChild(buttonToZhelper);
+    buttonPlace.appendChild(buttonToMHelper);
 }
 
 function addCss(css) {
