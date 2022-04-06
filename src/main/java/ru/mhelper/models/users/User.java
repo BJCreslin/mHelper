@@ -74,6 +74,7 @@ public class User extends BaseEntity {
         this.email = email;
         this.password = password;
         this.enabled = true;
+        this.procurements = new HashSet<>();
     }
 
     public User(String username, String email, String password, Long telegramUserId, TelegramStateType telegramStateType, boolean enabled, String comment, Set<Role> roles, Set<Procurement> procurements) {

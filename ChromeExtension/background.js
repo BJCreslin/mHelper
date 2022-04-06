@@ -60,6 +60,11 @@ chrome.runtime.onMessage.addListener(
                         'Responce failed: ' + response.status + ' (' + response.statusText + ')'
                     ));
                 }
+                return response.json();
+            }).then((data) => {
+                connected = true;
+                JwtToken = data.token;
+                sendResponse(201);
             })
             return true;
         }
