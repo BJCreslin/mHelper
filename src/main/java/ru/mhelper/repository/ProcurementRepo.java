@@ -14,8 +14,6 @@ import java.util.Optional;
 @Repository
 public interface ProcurementRepo extends JpaRepository<Procurement, Long> {
 
-    Procurement save(Procurement procurement);
-
     Optional<Procurement> getByUin(String uin);
 
     Page<Procurement> findByIdIn(List<Long> ids, Pageable pageable);
