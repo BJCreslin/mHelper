@@ -3,7 +3,6 @@ package ru.mhelper.models.users;
 import lombok.Builder;
 import lombok.Data;
 import ru.mhelper.models.BaseEntity;
-import ru.mhelper.models.BaseStatus;
 import ru.mhelper.models.procurements.Procurement;
 
 import javax.persistence.*;
@@ -11,7 +10,9 @@ import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 @Entity
@@ -64,7 +65,7 @@ public class User extends BaseEntity {
     @JoinTable(name = "users_procurements",
             joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "procurement_id"))
-    private Set<Procurement> procurements = new HashSet<>();
+    private List<Procurement> procurements = new ArrayList<>();
 
     public User() {
     }
@@ -74,10 +75,10 @@ public class User extends BaseEntity {
         this.email = email;
         this.password = password;
         this.enabled = true;
-        this.procurements = new HashSet<>();
+        this.procurements = new ArrayList<>();
     }
 
-    public User(String username, String email, String password, Long telegramUserId, TelegramStateType telegramStateType, boolean enabled, String comment, Set<Role> roles, Set<Procurement> procurements) {
+    public User(String username, String email, String password, Long telegramUserId, TelegramStateType telegramStateType, boolean enabled, String comment, Set<Role> roles, List<Procurement> procurements) {
         this.username = username;
         this.email = email;
         this.password = password;

@@ -19,6 +19,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.ZonedDateTime;
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.TimeZone;
 
@@ -65,7 +66,7 @@ public class ProcurementDtoServiceImpl implements ProcurementDtoService {
         procurement.getUsers().add(user);
         procurementRepo.save(procurement);
         if (user.getProcurements().isEmpty()) {
-            user.setProcurements(new HashSet<>());
+            user.setProcurements(new ArrayList<>());
         }
         user.getProcurements().add(procurement);
         userRepository.save(user);

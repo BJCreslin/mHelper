@@ -15,9 +15,9 @@ import java.math.BigDecimal;
 import java.net.URL;
 import java.time.LocalDate;
 import java.time.ZonedDateTime;
-import java.util.HashSet;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
-import java.util.Set;
 
 @Entity
 @Getter
@@ -129,12 +129,12 @@ public class Procurement extends BaseEntity implements Serializable {
     @JoinTable(name = "users_procurements",
             joinColumns = @JoinColumn(name = "procurement_id"),
             inverseJoinColumns = @JoinColumn(name = "user_id"))
-    private Set<User> users = new HashSet<>();
+    private List<User> users = new ArrayList<>();
 
     public Procurement() {
     }
 
-    public Procurement(Stage stage, String uin, int fzNumber, ZonedDateTime applicationDeadline, BigDecimal contractPrice, ProcedureType procedureType, String publisherName, String restrictions, URL linkOnPlacement, String applicationSecure, String contractSecure, String objectOf, LocalDate lastUpdatedFromEIS, LocalDate dateTimeLastUpdated, LocalDate dateOfPlacement, ZonedDateTime dateOfAuction, Set<User> users) {
+    public Procurement(Stage stage, String uin, int fzNumber, ZonedDateTime applicationDeadline, BigDecimal contractPrice, ProcedureType procedureType, String publisherName, String restrictions, URL linkOnPlacement, String applicationSecure, String contractSecure, String objectOf, LocalDate lastUpdatedFromEIS, LocalDate dateTimeLastUpdated, LocalDate dateOfPlacement, ZonedDateTime dateOfAuction, List<User> users) {
         this.stage = stage;
         this.uin = uin;
         this.fzNumber = fzNumber;
