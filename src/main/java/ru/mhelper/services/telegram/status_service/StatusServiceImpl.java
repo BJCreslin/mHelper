@@ -23,7 +23,7 @@ public class StatusServiceImpl implements StatusService {
     @Override
     public void setGettingCodeTgStatus(Long userId) {
         TelegramStateType status = TelegramStateType.GETTING_CODE;
-        setTgStatusforUser(userId, status);
+        setTgStatusForUser(userId, status);
         if (LOGGER.isDebugEnabled()) {
             LOGGER.debug(SET_TG_STATUS, status, userId);
         }
@@ -32,7 +32,7 @@ public class StatusServiceImpl implements StatusService {
     @Override
     public void setNoStatusTgStatus(Long userId) {
         TelegramStateType status = TelegramStateType.NO_STATEMENT;
-        setTgStatusforUser(userId, status);
+        setTgStatusForUser(userId, status);
         if (LOGGER.isDebugEnabled()) {
             LOGGER.debug(SET_TG_STATUS, status, userId);
         }
@@ -41,13 +41,13 @@ public class StatusServiceImpl implements StatusService {
     @Override
     public void setNewTelegramUserTgStatus(Long userId) {
         TelegramStateType status = TelegramStateType.NEW_TELEGRAM_USER;
-        setTgStatusforUser(userId, status);
+        setTgStatusForUser(userId, status);
         if (LOGGER.isDebugEnabled()) {
             LOGGER.debug(SET_TG_STATUS, status, userId);
         }
     }
 
-    private void setTgStatusforUser(Long userId, TelegramStateType status) {
+    private void setTgStatusForUser(Long userId, TelegramStateType status) {
         User user = userRepository.getById(userId);
         user.setTelegramStateType(status);
         userRepository.save(user);
