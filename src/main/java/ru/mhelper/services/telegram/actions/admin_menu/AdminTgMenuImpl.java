@@ -9,6 +9,7 @@ import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKe
 import ru.mhelper.services.geting_code.TelegramCodeService;
 import ru.mhelper.services.telegram.actions.answer_services.TelegramTextAnswer;
 
+import javax.transaction.Transactional;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
@@ -80,6 +81,7 @@ public class AdminTgMenuImpl implements AdminTgMenu {
         return inlineKeyboardButton;
     }
 
+    @Transactional
     public String getMenuMessageText(Long chatId, String text) {
         if (LOGGER.isDebugEnabled()) {
             LOGGER.debug(GET_MENU_LOGGER, chatId, text);

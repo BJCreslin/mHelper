@@ -64,6 +64,7 @@ public class Bot extends TelegramLongPollingBot {
         response.setChatId(String.valueOf(chatId));
         String text = update.getCallbackQuery().getData();
         text = adminTgMenu.getMenuMessageText(chatId, text);
+        response.setText(text);
         try {
             execute(response);
         } catch (TelegramApiException ex) {
