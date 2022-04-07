@@ -104,8 +104,7 @@ public class Procurement extends BaseEntity implements Serializable {
     //Объект закупки
     //ОБЩАЯ ИНФОРМАЦИЯ О ЗАКУПКЕ -> Наименование объекта закупки
     //ОБЩИЕ СВЕДЕНИЯ О ЗАКУПКЕ -> Наименование закупки
-    @Lob
-    @Column(name = "object_of")
+    @Column(columnDefinition = "clob",name = "object_of")
     private String objectOf;
 
     //Поле нужно чтобы отслеживать на сайте закупок необходимость обновить данные
