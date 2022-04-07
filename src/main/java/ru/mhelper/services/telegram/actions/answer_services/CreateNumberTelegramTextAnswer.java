@@ -21,6 +21,8 @@ public class CreateNumberTelegramTextAnswer implements TelegramTextAnswer {
 
     public static final String RECEIVING_CODE_FOR_CHAT_ID_CODE = "Receiving code for chatId:{}. Code: {}.";
 
+    public static final String GET_INFO = "Команда получения кода для входа в систему.";
+
     private final TelegramCodeService telegramCodeService;
 
     public CreateNumberTelegramTextAnswer(TelegramCodeService telegramCodeService) {
@@ -46,6 +48,6 @@ public class CreateNumberTelegramTextAnswer implements TelegramTextAnswer {
 
     @Override
     public String getInfo() {
-        return " Команда получения кода для входа в систему.";
+        return GET_INFO;
     }
 }
