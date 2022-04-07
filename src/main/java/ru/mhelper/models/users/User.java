@@ -1,33 +1,51 @@
 package ru.mhelper.models.users;
 
-import lombok.Builder;
 import lombok.ToString;
+import lombok.experimental.SuperBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import ru.mhelper.models.BaseEntity;
+import ru.mhelper.models.BaseStatus;
 import ru.mhelper.models.procurements.Procurement;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
+import javax.persistence.FetchType;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.Lob;
+import javax.persistence.ManyToMany;
+import javax.persistence.Table;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Objects;
+import java.util.Set;
 
 @Entity
 @ToString
 @Table(name = "users")
-@Builder
+@SuperBuilder
 public class User extends BaseEntity {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(User.class);
 
     public static final String POSTFIX_TELEGRAM_EMAIL = "@t.me";
+
     public static final String PREFIX_TELEGRAM_NAME = "tlgrm";
+
     public static final String TELEGRAM_DB_PASSWORD = "$2a$12$skadH6bO.Oz7fIqnSfXxIO.ffv7XdXeOngnOy.q8aiGJmxPRaW7/."; //""
+
     public static final String TELEGRAM_PASSWORD = "";
 
     public static final String ADDED_TO_USER = "Procurement {} has been added to User {}";
+
     public static final String DELETED_FROM_USER = "Procurement {} has been deleted from User {}";
 
     @NotBlank(message = "Name is mandatory")
@@ -61,14 +79,14 @@ public class User extends BaseEntity {
 
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "user_roles",
-            joinColumns = @JoinColumn(name = "user_id"),
-            inverseJoinColumns = @JoinColumn(name = "role_id"))
+        joinColumns = @JoinColumn(name = "user_id"),
+        inverseJoinColumns = @JoinColumn(name = "role_id"))
     private Set<Role> roles = new HashSet<>();
 
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "users_procurements",
-            joinColumns = @JoinColumn(name = "user_id"),
-            inverseJoinColumns = @JoinColumn(name = "procurement_id"))
+        joinColumns = @JoinColumn(name = "user_id"),
+        inverseJoinColumns = @JoinColumn(name = "procurement_id"))
     private List<Procurement> procurements = new ArrayList<>();
 
     public User() {
@@ -96,11 +114,13 @@ public class User extends BaseEntity {
 
     public static User createNewTelegramUser(Long telegramId) {
         return User.builder()
-                .telegramUserId(telegramId)
-                .username(PREFIX_TELEGRAM_NAME + telegramId)
-                .password(TELEGRAM_DB_PASSWORD)
-                .email(telegramId + POSTFIX_TELEGRAM_EMAIL)
-                .enabled(true).build();
+            .telegramUserId(telegramId)
+            .username(PREFIX_TELEGRAM_NAME + telegramId)
+            .password(TELEGRAM_DB_PASSWORD)
+            .email(telegramId + POSTFIX_TELEGRAM_EMAIL)
+            .enabled(true)
+            .status(BaseStatus.ACTIVE)
+            .build();
     }
 
     public String getUsername() {
@@ -186,7 +206,6 @@ public class User extends BaseEntity {
                 procurement.setUsers(new HashSet<>());
             }
             this.procurements.add(procurement);
-            //            procurement.getUsers().add(this);
         }
     }
 
@@ -202,14 +221,24 @@ public class User extends BaseEntity {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof User)) return false;
-        if (!super.equals(o)) return false;
+        if (this == o) {
+            return true;
+        }
+        if (!(o instanceof User)) {
+            return false;
+        }
+        if (!super.equals(o)) {
+            return false;
+        }
 
         User user = (User) o;
 
-        if (!Objects.equals(username, user.username)) return false;
-        if (!Objects.equals(email, user.email)) return false;
+        if (!Objects.equals(username, user.username)) {
+            return false;
+        }
+        if (!Objects.equals(email, user.email)) {
+            return false;
+        }
         return Objects.equals(telegramUserId, user.telegramUserId);
     }
 
