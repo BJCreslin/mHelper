@@ -2,9 +2,9 @@ package ru.mhelper.models.users;
 
 public enum TelegramStateType {
 
-    NO_STATEMENT("NO STATEMENT"),
+    NO_STATEMENT("NO_STATEMENT"),
 
-    NEW_TELEGRAM_USER("NEW TELEGRAM USER"),
+    NEW_TELEGRAM_USER("NEW_TELEGRAM_USER"),
 
     GETTING_CODE("GETTING_CODE");
 
