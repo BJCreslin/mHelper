@@ -8,7 +8,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import ru.mhelper.models.procurements.Procurement;
-import ru.mhelper.repository.ProcurementRepo;
+import ru.mhelper.repository.ProcurementRepository;
 import ru.mhelper.services.exceptions.DataManagerException;
 
 import javax.persistence.EntityNotFoundException;
@@ -27,10 +27,10 @@ public class ProcurementDataManagerImpl implements ProcurementDataManager {
 
     public static final String ALL_PROCUREMENTS_NUMBER = "Load all procurements. Number: {}.";
 
-    private ProcurementRepo repository;
+    private ProcurementRepository repository;
 
     @Autowired
-    public void setRepository(ProcurementRepo repo) {
+    public void setRepository(ProcurementRepository repo) {
         this.repository = repo;
     }
 

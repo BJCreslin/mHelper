@@ -2,12 +2,13 @@ package ru.mhelper.services.chrome;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 import ru.mhelper.models.dto.ProcurementDto;
 import ru.mhelper.models.procurements.ProcedureType;
 import ru.mhelper.models.procurements.Procurement;
 import ru.mhelper.models.users.User;
-import ru.mhelper.repository.ProcurementRepo;
+import ru.mhelper.repository.ProcurementRepository;
 import ru.mhelper.repository.UserRepository;
 import ru.mhelper.services.exceptions.BadDataParsingException;
 import ru.mhelper.services.exceptions.DataManagerException;
@@ -20,7 +21,6 @@ import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.TimeZone;
 
 @Service
@@ -38,37 +38,34 @@ public class ProcurementDtoServiceImpl implements ProcurementDtoService {
     public static final String DEADLINE_TIME_ZONE_LOGGER = "Deadline From String to ZonedDateTime. Deadline: {}, time zone: {}";
     public static final String ZONE_PARSING_LOGGER = "Time zone parsing {}";
 
-    private final ProcurementRepo procurementRepo;
+    private final ProcurementRepository procurementRepository;
     private final UserRepository userRepository;
 
-    public ProcurementDtoServiceImpl(ProcurementRepo procurementRepo, UserRepository userRepository) {
-        this.procurementRepo = procurementRepo;
+    public ProcurementDtoServiceImpl(ProcurementRepository procurementRepository, UserRepository userRepository) {
+        this.procurementRepository = procurementRepository;
         this.userRepository = userRepository;
     }
 
     @Override
     public void save(ProcurementDto procurementDto) {
-        var procurementFromBase = procurementRepo.getByUin(procurementDto.getUin());
+        var procurementFromBase = procurementRepository.getByUin(procurementDto.getUin());
         if (procurementFromBase.isEmpty()) {
-            procurementRepo.save(remodelDtoToProcurement(procurementDto));
+            procurementRepository.save(remodelDtoToProcurement(procurementDto));
         }
     }
 
     @Override
-    public void save(User user, ProcurementDto procurementDto) {
+    public void save(UserDetails jwtUser, ProcurementDto procurementDto) {
         Procurement procurement;
-        var procurementFromBase = procurementRepo.getByUin(procurementDto.getUin());
+        var procurementFromBase = procurementRepository.getByUin(procurementDto.getUin());
         if (procurementFromBase.isEmpty()) {
-            procurement = procurementRepo.save(remodelDtoToProcurement(procurementDto));
+            procurement = procurementRepository.save(remodelDtoToProcurement(procurementDto));
         } else {
             procurement = procurementFromBase.orElseThrow(() -> new DataManagerException(DataManagerException.COULD_NOT_SAVE_PROCUREMENT));
         }
-        procurement.getUsers().add(user);
-        procurementRepo.save(procurement);
-        if (user.getProcurements().isEmpty()) {
-            user.setProcurements(new ArrayList<>());
-        }
-        user.getProcurements().add(procurement);
+        User user = userRepository.findByUsername(jwtUser.getUsername()).orElseThrow(() -> new DataManagerException(DataManagerException.NON_EXISTING_LOAD_OR_DELETE_EXCEPTION));
+        user.addProcurement(procurement);
+        procurementRepository.save(procurement);
         userRepository.save(user);
     }
 

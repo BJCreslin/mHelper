@@ -20,7 +20,7 @@ import org.springframework.test.context.jdbc.Sql;
 import ru.mhelper.models.procurements.ProcedureType;
 import ru.mhelper.models.procurements.Procurement;
 import ru.mhelper.models.procurements.Stage;
-import ru.mhelper.repository.ProcurementRepo;
+import ru.mhelper.repository.ProcurementRepository;
 import ru.mhelper.services.dao.ProcurementDataManagerImpl;
 import ru.mhelper.services.exceptions.DataManagerException;
 
@@ -46,7 +46,7 @@ class ProcurementDataManagerImplTest {
     private ProcurementDataManagerImpl procurementDataManager;
 
     @Autowired
-    private ProcurementRepo repository;
+    private ProcurementRepository repository;
 
     private static final Logger LOGGER = LoggerFactory.getLogger(ProcurementDataManagerImplTest.class);
 

@@ -12,7 +12,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Repository
-public interface ProcurementRepo extends JpaRepository<Procurement, Long> {
+public interface ProcurementRepository extends JpaRepository<Procurement, Long> {
 
     Optional<Procurement> getByUin(String uin);
 

@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import ru.mhelper.controllers.exeptions.BadRequestException;
 import ru.mhelper.models.dto.ProcurementAddress;
 import ru.mhelper.models.procurements.Procurement;
-import ru.mhelper.repository.ProcurementRepo;
+import ru.mhelper.repository.ProcurementRepository;
 import ru.mhelper.services.ProcurementService;
 import ru.mhelper.services.exceptions.BadDataParsingException;
 import ru.mhelper.services.ip_service.IpService;
@@ -41,14 +41,14 @@ public class SimpleController {
 
     private static final String EMPTY_ADDRESS = "";
 
-    private final ProcurementRepo repo;
+    private final ProcurementRepository repo;
 
     private final ProcurementService service;
 
     private final IpService ipService;
 
 
-    public SimpleController(ProcurementRepo repo, ProcurementService service, IpService ipService) {
+    public SimpleController(ProcurementRepository repo, ProcurementService service, IpService ipService) {
         this.repo = repo;
         this.service = service;
         this.ipService = ipService;

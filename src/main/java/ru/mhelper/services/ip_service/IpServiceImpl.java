@@ -6,6 +6,7 @@ import javax.servlet.http.HttpServletRequest;
 
 @Service
 public class IpServiceImpl implements IpService {
+
     private static final String HEADER_X_FORWARD = "X-Forwarded-For";
 
     private static final String COMMA_SEPARATOR = ",";

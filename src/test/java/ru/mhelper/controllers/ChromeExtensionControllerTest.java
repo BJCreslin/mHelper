@@ -15,7 +15,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import ru.mhelper.models.dto.ProcurementDto;
-import ru.mhelper.repository.ProcurementRepo;
+import ru.mhelper.repository.ProcurementRepository;
 import ru.mhelper.services.chrome.ProcurementDtoService;
 
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -30,7 +30,7 @@ class ChromeExtensionControllerTest {
     @MockBean
     ProcurementDtoService service;
     @MockBean
-    ProcurementRepo repo;
+    ProcurementRepository repo;
     @Autowired
     ChromeExtensionController controller;
     @Autowired

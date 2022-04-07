@@ -10,7 +10,7 @@ import org.junit.jupiter.params.provider.ValueSource;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.ActiveProfiles;
 import ru.mhelper.models.procurements.ProcedureType;
-import ru.mhelper.repository.ProcurementRepo;
+import ru.mhelper.repository.ProcurementRepository;
 import ru.mhelper.repository.UserRepository;
 
 import java.math.BigDecimal;
@@ -20,7 +20,7 @@ import java.util.stream.Stream;
 @ActiveProfiles("test")
 class ProcurementDtoServiceImplTest {
     @MockBean
-    ProcurementRepo procurementDataManager;
+    ProcurementRepository procurementDataManager;
 
     @MockBean
     UserRepository userRepository;
