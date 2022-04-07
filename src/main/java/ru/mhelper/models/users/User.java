@@ -2,28 +2,17 @@ package ru.mhelper.models.users;
 
 import lombok.Builder;
 import lombok.ToString;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import ru.mhelper.models.BaseEntity;
 import ru.mhelper.models.procurements.Procurement;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
-import javax.persistence.FetchType;
-import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
-import javax.persistence.Lob;
-import javax.persistence.ManyToMany;
-import javax.persistence.Table;
+import javax.persistence.*;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Objects;
-import java.util.Set;
+import java.util.*;
 
 @Entity
 @ToString
@@ -31,10 +20,15 @@ import java.util.Set;
 @Builder
 public class User extends BaseEntity {
 
+    private static final Logger LOGGER = LoggerFactory.getLogger(User.class);
+
     public static final String POSTFIX_TELEGRAM_EMAIL = "@t.me";
     public static final String PREFIX_TELEGRAM_NAME = "tlgrm";
     public static final String TELEGRAM_DB_PASSWORD = "$2a$12$skadH6bO.Oz7fIqnSfXxIO.ffv7XdXeOngnOy.q8aiGJmxPRaW7/."; //""
     public static final String TELEGRAM_PASSWORD = "";
+
+    public static final String ADDED_TO_USER = "Procurement {} has been added to User {}";
+    public static final String DELETED_FROM_USER = "Procurement {} has been deleted from User {}";
 
     @NotBlank(message = "Name is mandatory")
     @Size(max = 30)
@@ -184,13 +178,22 @@ public class User extends BaseEntity {
     }
 
     public void addProcurement(Procurement procurement) {
+        if (LOGGER.isDebugEnabled()) {
+            LOGGER.debug(ADDED_TO_USER, procurement.getUin(), this.username);
+        }
         if (Objects.nonNull(procurement)) {
+            if (Objects.isNull(procurement.getUsers())) {
+                procurement.setUsers(new HashSet<>());
+            }
             this.procurements.add(procurement);
-            procurement.getUsers().add(this);
+            //            procurement.getUsers().add(this);
         }
     }
 
     public void removeProcurement(Procurement procurement) {
+        if (LOGGER.isDebugEnabled()) {
+            LOGGER.debug(DELETED_FROM_USER, procurement.getUin(), this.username);
+        }
         if (Objects.nonNull(procurement)) {
             this.procurements.remove(procurement);
             procurement.getUsers().remove(this);
