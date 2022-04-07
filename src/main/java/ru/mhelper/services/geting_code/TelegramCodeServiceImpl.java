@@ -5,10 +5,16 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Service;
+import ru.mhelper.models.users.User;
+import ru.mhelper.repository.UserRepository;
 import ru.mhelper.services.telegram.status_service.StatusService;
 
 import java.time.LocalTime;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Random;
 
 import static ru.mhelper.services.geting_code.ErrorGettingCode.TOO_MANY_ATTEMPTS;
 
@@ -18,21 +24,21 @@ public class TelegramCodeServiceImpl implements TelegramCodeService {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(TelegramCodeServiceImpl.class);
 
-    private static final Map<Integer, UserIdTimed> storage = new HashMap<>();
+    public static final String KEY_HAS_BEEN_CREATED = "Key has been created. Attempts: {}.";
+    public static final String ENTERING_THE_CODE_NUMBER = "Entering the code number: %d";
+    public static final String FIND_USER = "Find user TelegramId: %d";
+    public static final String CREATED_NEW_CODE_D_FOR_USER = "Created new code %d for user with TelegramId %d";
+    public static final String CHECK_CODE_EXIST = "Check for code %d.";
+    public static final String GET_ALL_CODES = "Get all codes: %s";
+    public static final String OLD_VALUES_ARE_DELETING = "Old values are deleting.";
 
+    private static final Map<Integer, UserIdTimed> storage = new HashMap<>();
     private static final Random random = new Random();
 
     private final StatusService statusService;
 
-    public static final String ENTERING_THE_CODE_NUMBER = "Entering the code number: %d";
+    private final UserRepository userRepository;
 
-    public static final String FIND_USER = "Find user: %d";
-
-    public static final String CREATED_NEW_CODE_D_FOR_USER = "Created new code %d for user %d";
-
-    public static final String CHECK_CODE_EXIST = "Check for code %d.";
-
-    public static final String GET_ALL_CODES = "Get all codes: %s";
 
     @Value("${bot.time}")
     private int lifetime;
@@ -40,8 +46,9 @@ public class TelegramCodeServiceImpl implements TelegramCodeService {
     @Value("${bot.max_attempts}")
     private int maxAttempts;
 
-    public TelegramCodeServiceImpl(StatusService statusService) {
+    public TelegramCodeServiceImpl(StatusService statusService, UserRepository userRepository) {
         this.statusService = statusService;
+        this.userRepository = userRepository;
     }
 
     @Override
@@ -67,11 +74,11 @@ public class TelegramCodeServiceImpl implements TelegramCodeService {
             throw new ErrorGettingCode(ErrorGettingCode.NO_CODES);
         }
         if (storage.containsKey(code)) {
-            Long userId = storage.get(code).getUserId();
+            Long userTelegramId = storage.get(code).getUserId();
             if (LOGGER.isDebugEnabled()) {
-                LOGGER.debug(String.format(FIND_USER, userId));
+                LOGGER.debug(String.format(FIND_USER, userTelegramId));
             }
-            return userId;
+            return userTelegramId;
         }
         final String noCode = String.format(ErrorGettingCode.NO_CURRENT_CODE, code);
         LOGGER.info(noCode);
@@ -79,14 +86,16 @@ public class TelegramCodeServiceImpl implements TelegramCodeService {
     }
 
     @Override
-    public Integer createCode(Long userId) {
+    public Integer createCode(Long userTgId) {
         removeOldValue();
         int code = generateCode();
         if (LOGGER.isDebugEnabled()) {
-            LOGGER.debug(String.format(CREATED_NEW_CODE_D_FOR_USER, code, userId));
+            LOGGER.debug(String.format(CREATED_NEW_CODE_D_FOR_USER, code, userTgId));
         }
-        storage.put(code, new UserIdTimed(userId));
-        statusService.setGettingCodeTgStatus(userId);
+        storage.put(code, new UserIdTimed(userTgId));
+        var user = userRepository.findByTelegramUserId(userTgId).orElse(User.createNewTelegramUser(userTgId));
+        userRepository.saveAndFlush(user);
+        statusService.setGettingCodeTgStatus(user.getId());
         return code;
     }
 
@@ -115,6 +124,9 @@ public class TelegramCodeServiceImpl implements TelegramCodeService {
             code = random.nextInt(900000) + 100000;
             count++;
             if (!storage.containsKey(code)) {
+                if (LOGGER.isDebugEnabled()) {
+                    LOGGER.debug(KEY_HAS_BEEN_CREATED, count);
+                }
                 break;
             }
             if (count > maxAttempts) {
@@ -125,6 +137,9 @@ public class TelegramCodeServiceImpl implements TelegramCodeService {
     }
 
     private void removeOldValue() {
+        if (LOGGER.isDebugEnabled()){
+            LOGGER.debug(OLD_VALUES_ARE_DELETING);
+        }
         if (!storage.isEmpty()) {
             List<Integer> codesForDelete = new ArrayList<>();
             storage.entrySet().stream().filter(x -> x.getValue().getTimeCreated().plusMinutes(lifetime).isBefore(LocalTime.now())).forEach(x -> codesForDelete.add(x.getKey()));

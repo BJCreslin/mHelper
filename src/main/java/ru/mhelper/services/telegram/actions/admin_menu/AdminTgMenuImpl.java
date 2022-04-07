@@ -18,7 +18,7 @@ import java.util.Map;
 public class AdminTgMenuImpl implements AdminTgMenu {
     private static final Logger LOGGER = LoggerFactory.getLogger(AdminTgMenuImpl.class);
 
-    public static final String GET_MENU_LOGGER = "Get menu for user {} with text {}";
+    public static final String GET_MENU_LOGGER = "Get menu for user TelegramId {} with text {}";
     public static final String GET_INFO = "Меню управления данными.";
     public static final String GET_CODE = "Code";
     public static final String SHOW_ALL_CODE = "All code";
@@ -27,7 +27,7 @@ public class AdminTgMenuImpl implements AdminTgMenu {
     public static final String GET_NEW_CODE_BUTTON_NAME = "Get new code";
     public static final String SHOW_ALL_CODES_BUTTON_NAME = "Show all codes";
     public static final String SELECT_MENU_ITEM = "Выберите пункт меню";
-    public static final String CREATE_MENU_FOR_USER = "Create menu for user {}.";
+    public static final String CREATE_MENU_FOR_USER = "Create menu for user TelegramId {}.";
 
     private final TelegramCodeService telegramCodeService;
 
