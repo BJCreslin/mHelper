@@ -9,7 +9,6 @@ import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
-import ru.mhelper.services.geting_code.TelegramCodeService;
 import ru.mhelper.services.telegram.actions.admin_menu.AdminTgMenu;
 import ru.mhelper.services.telegram.actions.answer_services.PrintAllFunctionTextAnswer;
 import ru.mhelper.services.telegram.actions.answer_services.TelegramTextAnswer;
@@ -23,13 +22,6 @@ import static ru.mhelper.services.telegram.TelegramBotServiceException.ERROR_SEN
 public class Bot extends TelegramLongPollingBot {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(Bot.class);
-
-    private static final String NUMBER_OPERATION = "number";
-
-    private static final String START_OPERATION = "/start";
-
-
-
 
     @Value("${bot.name}")
     private String botName;
@@ -72,7 +64,6 @@ public class Bot extends TelegramLongPollingBot {
         response.setChatId(String.valueOf(chatId));
         String text = update.getCallbackQuery().getData();
         text = adminTgMenu.getMenuMessageText(chatId, text);
-        response.setText(text);
         try {
             execute(response);
         } catch (TelegramApiException ex) {

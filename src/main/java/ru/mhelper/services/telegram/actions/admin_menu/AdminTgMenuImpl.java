@@ -9,7 +9,7 @@ import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKe
 import ru.mhelper.services.geting_code.TelegramCodeService;
 import ru.mhelper.services.telegram.actions.answer_services.TelegramTextAnswer;
 
-import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
@@ -18,16 +18,15 @@ public class AdminTgMenuImpl implements AdminTgMenu {
     private static final Logger LOGGER = LoggerFactory.getLogger(AdminTgMenuImpl.class);
 
     public static final String GET_MENU_LOGGER = "Get menu for user {} with text {}";
-
     public static final String GET_INFO = "Меню управления данными.";
-
     public static final String GET_CODE = "Code";
-
     public static final String SHOW_ALL_CODE = "All code";
-
     private static final String NUMBER_OPERATION = "number";
-
     public static final String THERE_ARE_NO_CODES = "There are no codes.";
+    public static final String GET_NEW_CODE_BUTTON_NAME = "Get new code";
+    public static final String SHOW_ALL_CODES_BUTTON_NAME = "Show all codes";
+    public static final String SELECT_MENU_ITEM = "Выберите пункт меню";
+    public static final String CREATE_MENU_FOR_USER = "Create menu for user {}.";
 
     private final TelegramCodeService telegramCodeService;
 
@@ -45,26 +44,40 @@ public class AdminTgMenuImpl implements AdminTgMenu {
 
     @Override
     public SendMessage sendInlineKeyBoardMessage(long chatId) {
+        if (LOGGER.isDebugEnabled()) {
+            LOGGER.debug(CREATE_MENU_FOR_USER, chatId);
+        }
         InlineKeyboardMarkup inlineKeyboardMarkup = new InlineKeyboardMarkup();
-        InlineKeyboardButton inlineKeyboardButton1 = new InlineKeyboardButton();
-        InlineKeyboardButton inlineKeyboardButton2 = new InlineKeyboardButton();
-        inlineKeyboardButton1.setText("Get new code");
-        inlineKeyboardButton1.setCallbackData(GET_CODE);
-        inlineKeyboardButton2.setText("Show all codes");
-        inlineKeyboardButton2.setCallbackData(SHOW_ALL_CODE);
-        List<InlineKeyboardButton> keyboardButtonsRow1 = new ArrayList<>();
-        List<InlineKeyboardButton> keyboardButtonsRow2 = new ArrayList<>();
-        keyboardButtonsRow1.add(inlineKeyboardButton1);
-        keyboardButtonsRow2.add(inlineKeyboardButton2);
-        List<List<InlineKeyboardButton>> rowList = new ArrayList<>();
-        rowList.add(keyboardButtonsRow1);
-        rowList.add(keyboardButtonsRow2);
+        InlineKeyboardButton inlineKeyboardButton1 = createButton(GET_NEW_CODE_BUTTON_NAME, GET_CODE);
+        InlineKeyboardButton inlineKeyboardButton2 = createButton(SHOW_ALL_CODES_BUTTON_NAME, SHOW_ALL_CODE);
+
+        List<InlineKeyboardButton> keyboardButtonsRow1 = createKeyboardButtonsRow(inlineKeyboardButton1);
+        List<InlineKeyboardButton> keyboardButtonsRow2 = createKeyboardButtonsRow(inlineKeyboardButton2);
+
+        List<List<InlineKeyboardButton>> rowList = createRowList(keyboardButtonsRow1, keyboardButtonsRow2);
+
         inlineKeyboardMarkup.setKeyboard(rowList);
         SendMessage response = new SendMessage();
         response.setChatId(String.valueOf(chatId));
-        response.setText("Выберите пункт меню");
+        response.setText(SELECT_MENU_ITEM);
         response.setReplyMarkup(inlineKeyboardMarkup);
         return response;
+    }
+
+    private List<InlineKeyboardButton> createKeyboardButtonsRow(InlineKeyboardButton... inlineKeyboardButtons) {
+        return Arrays.asList(inlineKeyboardButtons);
+    }
+
+    @SafeVarargs
+    private List<List<InlineKeyboardButton>> createRowList(List<InlineKeyboardButton>... rows) {
+        return Arrays.asList(rows);
+    }
+
+    private InlineKeyboardButton createButton(String name, String action) {
+        InlineKeyboardButton inlineKeyboardButton = new InlineKeyboardButton();
+        inlineKeyboardButton.setText(name);
+        inlineKeyboardButton.setCallbackData(action);
+        return inlineKeyboardButton;
     }
 
     public String getMenuMessageText(Long chatId, String text) {
