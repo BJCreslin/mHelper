@@ -5,13 +5,10 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Service;
+import ru.mhelper.services.telegram.status_service.StatusService;
 
 import java.time.LocalTime;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Random;
+import java.util.*;
 
 import static ru.mhelper.services.geting_code.ErrorGettingCode.TOO_MANY_ATTEMPTS;
 
@@ -24,6 +21,8 @@ public class TelegramCodeServiceImpl implements TelegramCodeService {
     private static final Map<Integer, UserIdTimed> storage = new HashMap<>();
 
     private static final Random random = new Random();
+
+    private final StatusService statusService;
 
     public static final String ENTERING_THE_CODE_NUMBER = "Entering the code number: %d";
 
@@ -40,6 +39,10 @@ public class TelegramCodeServiceImpl implements TelegramCodeService {
 
     @Value("${bot.max_attempts}")
     private int maxAttempts;
+
+    public TelegramCodeServiceImpl(StatusService statusService) {
+        this.statusService = statusService;
+    }
 
     @Override
     public boolean existByCode(Integer code) {
@@ -83,6 +86,7 @@ public class TelegramCodeServiceImpl implements TelegramCodeService {
             LOGGER.debug(String.format(CREATED_NEW_CODE_D_FOR_USER, code, userId));
         }
         storage.put(code, new UserIdTimed(userId));
+        statusService.setGettingCodeTgStatus(userId);
         return code;
     }
 
