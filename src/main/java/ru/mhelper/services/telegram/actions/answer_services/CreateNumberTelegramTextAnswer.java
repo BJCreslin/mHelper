@@ -1,4 +1,4 @@
-package ru.mhelper.services.telegram.actions.text;
+package ru.mhelper.services.telegram.actions.answer_services;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -6,12 +6,12 @@ import org.springframework.stereotype.Service;
 import ru.mhelper.services.geting_code.ErrorGettingCode;
 import ru.mhelper.services.geting_code.TelegramCodeService;
 
-import static ru.mhelper.services.telegram.actions.text.CreateNumberTelegramTextAction.SERVICE_ACTION_NAME;
+import static ru.mhelper.services.telegram.actions.answer_services.CreateNumberTelegramTextAnswer.SERVICE_ACTION_NAME;
 
 @Service(SERVICE_ACTION_NAME)
-public class CreateNumberTelegramTextAction implements TelegramTextAction {
+public class CreateNumberTelegramTextAnswer implements TelegramTextAnswer {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(CreateNumberTelegramTextAction.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(CreateNumberTelegramTextAnswer.class);
 
     public static final String SERVICE_ACTION_NAME="number";
 
@@ -23,7 +23,7 @@ public class CreateNumberTelegramTextAction implements TelegramTextAction {
 
     private final TelegramCodeService telegramCodeService;
 
-    public CreateNumberTelegramTextAction(TelegramCodeService telegramCodeService) {
+    public CreateNumberTelegramTextAnswer(TelegramCodeService telegramCodeService) {
         this.telegramCodeService = telegramCodeService;
     }
 

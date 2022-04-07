@@ -1,4 +1,4 @@
-package ru.mhelper.services.telegram.actions.text;
+package ru.mhelper.services.telegram.actions.answer_services;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -8,12 +8,12 @@ import ru.mhelper.repository.UserRepository;
 
 import java.util.Optional;
 
-import static ru.mhelper.services.telegram.actions.text.HelloTelegramTextAction.SERVICE_ACTION_NAME;
+import static ru.mhelper.services.telegram.actions.answer_services.HelloTelegramTextAnswer.SERVICE_ACTION_NAME;
 
 @Service(SERVICE_ACTION_NAME)
-public class HelloTelegramTextAction implements TelegramTextAction {
+public class HelloTelegramTextAnswer implements TelegramTextAnswer {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(HelloTelegramTextAction.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(HelloTelegramTextAnswer.class);
 
     public static final String SERVICE_ACTION_NAME = "hello";
 
@@ -21,7 +21,7 @@ public class HelloTelegramTextAction implements TelegramTextAction {
 
     private final UserRepository repository;
 
-    public HelloTelegramTextAction(UserRepository repository) {
+    public HelloTelegramTextAnswer(UserRepository repository) {
         this.repository = repository;
     }
 

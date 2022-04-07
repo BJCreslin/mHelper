@@ -1,15 +1,15 @@
-package ru.mhelper.services.telegram.actions.text;
+package ru.mhelper.services.telegram.actions.answer_services;
 
 import org.springframework.stereotype.Service;
 
 import java.util.Map;
 
 @Service("help")
-public class PrintAllFunctionTextAction implements TelegramTextAction {
+public class PrintAllFunctionTextAnswer implements TelegramTextAnswer {
 
-    private final Map<String, TelegramTextAction> telegramServices;
+    private final Map<String, TelegramTextAnswer> telegramServices;
 
-    public PrintAllFunctionTextAction(Map<String, TelegramTextAction> telegramServices) {
+    public PrintAllFunctionTextAnswer(Map<String, TelegramTextAnswer> telegramServices) {
         this.telegramServices = telegramServices;
     }
 

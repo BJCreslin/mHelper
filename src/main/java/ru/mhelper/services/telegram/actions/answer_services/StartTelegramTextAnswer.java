@@ -1,21 +1,21 @@
-package ru.mhelper.services.telegram.actions.text;
+package ru.mhelper.services.telegram.actions.answer_services;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 @Service("start")
-public class StartTelegramTextAction implements TelegramTextAction {
+public class StartTelegramTextAnswer implements TelegramTextAnswer {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(StartTelegramTextAction.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(StartTelegramTextAnswer.class);
 
     public static final String START_FOR_USER_WITH_ID = "Start for user with id: {}";
 
     public static final String INFO_MESSAGE = "Start bot with getting the enter code.";
 
-    private final CreateNumberTelegramTextAction numberTelegramTextAction;
+    private final CreateNumberTelegramTextAnswer numberTelegramTextAction;
 
-    public StartTelegramTextAction(CreateNumberTelegramTextAction numberTelegramTextAction) {
+    public StartTelegramTextAnswer(CreateNumberTelegramTextAnswer numberTelegramTextAction) {
         this.numberTelegramTextAction = numberTelegramTextAction;
     }
 

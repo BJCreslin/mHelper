@@ -12,7 +12,7 @@ import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMa
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKeyboardButton;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 import ru.mhelper.services.geting_code.TelegramCodeService;
-import ru.mhelper.services.telegram.actions.text.TelegramTextAction;
+import ru.mhelper.services.telegram.actions.answer_services.TelegramTextAnswer;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -44,9 +44,9 @@ public class Bot extends TelegramLongPollingBot {
 
     private final TelegramCodeService telegramCodeService;
 
-    private final Map<String, TelegramTextAction> textActions;
+    private final Map<String, TelegramTextAnswer> textActions;
 
-    public Bot(TelegramCodeService telegramCodeService, Map<String, TelegramTextAction> textActions) {
+    public Bot(TelegramCodeService telegramCodeService, Map<String, TelegramTextAnswer> textActions) {
         this.telegramCodeService = telegramCodeService;
         this.textActions = textActions;
     }
@@ -73,6 +73,8 @@ public class Bot extends TelegramLongPollingBot {
                 text = textActions.get(text.toLowerCase(Locale.ROOT)).action(chatId, text);
             } else if (text.equals("menu")) {
                 response = sendInlineKeyBoardMessage(chatId);
+            } else {
+                textActions.get("help").action(chatId, text);
             }
             response.setText(text);
             try {
