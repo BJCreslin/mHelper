@@ -9,6 +9,7 @@ import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
+import ru.mhelper.models.users.User;
 import ru.mhelper.services.telegram.actions.admin_menu.AdminTgMenu;
 import ru.mhelper.services.telegram.actions.answer_services.PrintAllFunctionTextAnswer;
 import ru.mhelper.services.telegram.actions.answer_services.TelegramTextAnswer;
@@ -17,6 +18,7 @@ import java.util.Locale;
 import java.util.Map;
 
 import static ru.mhelper.services.telegram.TelegramBotServiceException.ERROR_SEND_MESSAGE;
+import static ru.mhelper.services.telegram.TelegramBotServiceException.USER_MUST_HAVE_TELEGRAM_ID;
 
 @Service
 public class Bot extends TelegramLongPollingBot {
@@ -58,17 +60,36 @@ public class Bot extends TelegramLongPollingBot {
         }
     }
 
+    public void sendMessageToUser(User user, String text) {
+        SendMessage message = new SendMessage();
+        if (user.getTelegramUserId() != null) {
+            message.setChatId(String.valueOf(user.getTelegramUserId()));
+            message.setText(text);
+            try {
+                execute(message);
+            } catch (TelegramApiException ex) {
+                String eMessage = String.format(ERROR_SEND_MESSAGE, user.getTelegramUserId(), text);
+                LOGGER.error(eMessage);
+                throw new TelegramBotServiceException(eMessage, ex);
+            }
+        } else {
+            String eMessage = String.format(USER_MUST_HAVE_TELEGRAM_ID, user.getId());
+            LOGGER.error(eMessage);
+            throw new TelegramBotServiceException(eMessage);
+        }
+    }
+
     private void callbackEvent(Update update) {
         SendMessage response = new SendMessage();
         Long chatId = update.getCallbackQuery().getMessage().getChatId();
         response.setChatId(String.valueOf(chatId));
         String text = update.getCallbackQuery().getData();
-        text = adminTgMenu.getMenuMessageText(chatId, text);
-        response.setText(text);
+        var sendText = adminTgMenu.getMenuMessageText(chatId, text);
+        response.setText(sendText);
         try {
             execute(response);
         } catch (TelegramApiException ex) {
-            String eMessage = String.format(ERROR_SEND_MESSAGE, chatId, text);
+            String eMessage = String.format(ERROR_SEND_MESSAGE, chatId, sendText);
             LOGGER.error(eMessage);
             throw new TelegramBotServiceException(eMessage, ex);
         }
