@@ -1,4 +1,4 @@
-package ru.mhelper.models.procurements.objects;
+package ru.mhelper.models.objects;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

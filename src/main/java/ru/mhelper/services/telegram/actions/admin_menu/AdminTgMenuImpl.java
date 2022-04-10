@@ -6,7 +6,7 @@ import org.springframework.stereotype.Service;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKeyboardButton;
-import ru.mhelper.models.procurements.objects.TelegramNameFunctionPair;
+import ru.mhelper.models.objects.TelegramNameFunctionPair;
 import ru.mhelper.repository.ProcurementRepository;
 import ru.mhelper.repository.UserRepository;
 import ru.mhelper.services.geting_code.TelegramCodeService;
