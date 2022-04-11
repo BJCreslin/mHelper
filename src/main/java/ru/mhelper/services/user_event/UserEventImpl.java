@@ -22,6 +22,8 @@ public class UserEventImpl implements UserEvent {
 
     public static final String CREATE_DEAD_LINE_MESSAGE_FOR_USER_WITH_ID = "Create deadLine message for user with Id {}.";
 
+    public static final String CREATE_AUCTION_MESSAGE_FOR_USER_WITH_ID = "Create auction message for user with Id {}.";
+
     private final UsersListGet usersListGet;
 
     private final CreateMessage createMessage;
@@ -45,11 +47,18 @@ public class UserEventImpl implements UserEvent {
         for (User user : users) {
             for (Procurement procurement : user.getProcurements()) {
                 if (procurement.getApplicationDeadline().isAfter(zdtNow) &&
-                    procurement.getApplicationDeadline().isBefore(zdtNow.minusHours(1L))) {
+                        procurement.getApplicationDeadline().isBefore(zdtNow.minusHours(1L))) {
                     if (LOGGER.isDebugEnabled()) {
                         LOGGER.debug(CREATE_DEAD_LINE_MESSAGE_FOR_USER_WITH_ID, user.getId());
                     }
                     userTextPairs.add(UserTextPair.builder().user(user).text(createMessage.createDeadLineMessage(procurement)).build());
+                }
+                if (procurement.getDateOfAuction().isAfter(zdtNow) &&
+                        procurement.getDateOfAuction().isBefore(zdtNow.minusHours(1L))) {
+                    if (LOGGER.isDebugEnabled()) {
+                        LOGGER.debug(CREATE_AUCTION_MESSAGE_FOR_USER_WITH_ID, user.getId());
+                    }
+                    userTextPairs.add(UserTextPair.builder().user(user).text(createMessage.createAuctionMessage(procurement)).build());
                 }
             }
         }

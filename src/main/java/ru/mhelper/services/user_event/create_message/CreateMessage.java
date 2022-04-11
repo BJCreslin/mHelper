@@ -5,4 +5,6 @@ import ru.mhelper.models.procurements.Procurement;
 public interface CreateMessage {
 
     String createDeadLineMessage(Procurement procurement);
+
+    String createAuctionMessage(Procurement procurement);
 }
