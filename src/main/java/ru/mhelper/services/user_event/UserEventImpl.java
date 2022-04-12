@@ -18,11 +18,14 @@ import java.util.Objects;
 
 @Service
 public class UserEventImpl implements UserEvent {
+
     private static final Logger LOGGER = LoggerFactory.getLogger(UserEventImpl.class);
 
-    public static final String CREATE_DEAD_LINE_MESSAGE_FOR_USER_WITH_ID = "Create deadLine message for user with Id {}.";
+    public static final long TIME_RANGE = 1L;
 
-    public static final String CREATE_AUCTION_MESSAGE_FOR_USER_WITH_ID = "Create auction message for user with Id {}.";
+    public static final String SEND_MESSAGES_BY_TELEGRAM_BOT = "Send {} messages by TelegramBot.";
+
+    public static final String CRON_INTERVAL = "@hourly";
 
     private final UsersListGet usersListGet;
 
@@ -36,36 +39,47 @@ public class UserEventImpl implements UserEvent {
         this.tgBot = tgBot;
     }
 
-    @Scheduled(cron = "@hourly")
+    @Scheduled(cron = CRON_INTERVAL)
     public void doAction() {
         List<User> users = usersListGet.getList();
         if (Objects.isNull(users) || users.isEmpty()) {
             return;
         }
-        ZonedDateTime zdtNow = ZonedDateTime.now();
+        List<UserTextPair> userTextPairs = createUserTextPairLIst(users);
+        if (!userTextPairs.isEmpty()) {
+            sendMessagesToTgBot(userTextPairs);
+        }
+    }
+
+    private List<UserTextPair> createUserTextPairLIst(List<User> users) {
+        final ZonedDateTime zdtNow = ZonedDateTime.now();
         List<UserTextPair> userTextPairs = new ArrayList<>();
         for (User user : users) {
             for (Procurement procurement : user.getProcurements()) {
-                if (procurement.getApplicationDeadline().isAfter(zdtNow) &&
-                        procurement.getApplicationDeadline().isBefore(zdtNow.minusHours(1L))) {
-                    if (LOGGER.isDebugEnabled()) {
-                        LOGGER.debug(CREATE_DEAD_LINE_MESSAGE_FOR_USER_WITH_ID, user.getId());
-                    }
+                if (isEventSoon(procurement.getApplicationDeadline(), zdtNow)) {
                     userTextPairs.add(UserTextPair.builder().user(user).text(createMessage.createDeadLineMessage(procurement)).build());
                 }
-                if (procurement.getDateOfAuction().isAfter(zdtNow) &&
-                        procurement.getDateOfAuction().isBefore(zdtNow.minusHours(1L))) {
-                    if (LOGGER.isDebugEnabled()) {
-                        LOGGER.debug(CREATE_AUCTION_MESSAGE_FOR_USER_WITH_ID, user.getId());
-                    }
+                if (isEventSoon(procurement.getDateOfAuction(), zdtNow)) {
                     userTextPairs.add(UserTextPair.builder().user(user).text(createMessage.createAuctionMessage(procurement)).build());
                 }
             }
+        }
+        return userTextPairs;
+    }
+
+    private void sendMessagesToTgBot(List<UserTextPair> userTextPairs) {
+        if (LOGGER.isDebugEnabled()) {
+            LOGGER.debug(SEND_MESSAGES_BY_TELEGRAM_BOT, userTextPairs.size());
         }
         if (!userTextPairs.isEmpty()) {
             for (UserTextPair pair : userTextPairs) {
                 tgBot.sendMessageToUser(pair.getUser(), pair.getText());
             }
         }
+    }
+
+    private boolean isEventSoon(ZonedDateTime procurement, ZonedDateTime zdtNow) {
+        return procurement.isAfter(zdtNow) &&
+                procurement.isBefore(zdtNow.minusHours(TIME_RANGE));
     }
 }
