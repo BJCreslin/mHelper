@@ -7,6 +7,7 @@ import org.slf4j.LoggerFactory;
 import ru.mhelper.models.BaseEntity;
 import ru.mhelper.models.BaseStatus;
 import ru.mhelper.models.procurements.Procurement;
+import ru.mhelper.models.user_procurement.UserProcurementLinks;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -17,6 +18,8 @@ import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.Lob;
 import javax.persistence.ManyToMany;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
@@ -24,6 +27,7 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Objects;
 import java.util.Set;
@@ -88,6 +92,17 @@ public class User extends BaseEntity {
         joinColumns = @JoinColumn(name = "user_id"),
         inverseJoinColumns = @JoinColumn(name = "procurement_id"))
     private List<Procurement> procurements = new ArrayList<>();
+
+    @OneToMany(mappedBy = "user", orphanRemoval = true)
+    private Set<UserProcurementLinks> userProcurementLinkses = new LinkedHashSet<>();
+
+    public Set<UserProcurementLinks> getUserProcurementLinkses() {
+        return userProcurementLinkses;
+    }
+
+    public void setUserProcurementLinkses(Set<UserProcurementLinks> userProcurementLinkses) {
+        this.userProcurementLinkses = userProcurementLinkses;
+    }
 
     public User() {
     }

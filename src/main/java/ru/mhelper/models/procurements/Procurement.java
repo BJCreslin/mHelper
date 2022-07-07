@@ -7,6 +7,7 @@ import lombok.Setter;
 import lombok.ToString;
 import org.hibernate.Hibernate;
 import ru.mhelper.models.BaseEntity;
+import ru.mhelper.models.user_procurement.UserProcurementLinks;
 import ru.mhelper.models.users.User;
 
 import javax.persistence.Column;
@@ -17,6 +18,7 @@ import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import java.io.Serializable;
 import java.math.BigDecimal;
@@ -24,6 +26,7 @@ import java.net.URL;
 import java.time.LocalDate;
 import java.time.ZonedDateTime;
 import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.Objects;
 import java.util.Set;
 
@@ -137,6 +140,9 @@ public class Procurement extends BaseEntity implements Serializable {
             joinColumns = @JoinColumn(name = "procurement_id"),
             inverseJoinColumns = @JoinColumn(name = "user_id"))
     private Set<User> users;
+
+    @OneToMany(mappedBy = "procurement", orphanRemoval = true)
+    private Set<UserProcurementLinks> userProcurementLinkses = new LinkedHashSet<>();
 
     public Procurement() {
         this.users = new HashSet<>();

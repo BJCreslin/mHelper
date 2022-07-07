@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                      http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.3.xsd">
+    <changeSet id="07072022-2046" author="BJCReslin">
+
+        <createTable tableName="user_procurement_links">
+            <column name="id" type="BIGINT">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="pk_user_procurement_links"/>
+            </column>
+            <column name="created" type="DATETIME"/>
+            <column name="updated" type="DATETIME"/>
+            <column defaultValue="ACTIVE" name="status" type="varchar(255)"/>
+            <column name="comment" type="CLOB"/>
+            <column name="user_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="procurement_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+        <addForeignKeyConstraint baseColumnNames="procurement_id" baseTableName="user_procurement_links" constraintName="FK_USER_PROCUREMENT_LINKS_ON_PROCUREMENT" referencedColumnNames="id" referencedTableName="procurements"/>
+        <addForeignKeyConstraint baseColumnNames="user_id" baseTableName="user_procurement_links" constraintName="FK_USER_PROCUREMENT_LINKS_ON_USER" referencedColumnNames="id" referencedTableName="users"/>
+
+    </changeSet>
+
+</databaseChangeLog>
