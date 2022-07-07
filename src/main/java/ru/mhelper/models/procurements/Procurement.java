@@ -115,7 +115,7 @@ public class Procurement extends BaseEntity implements Serializable {
     //Объект закупки
     //ОБЩАЯ ИНФОРМАЦИЯ О ЗАКУПКЕ -> Наименование объекта закупки
     //ОБЩИЕ СВЕДЕНИЯ О ЗАКУПКЕ -> Наименование закупки
-    @Column(columnDefinition = "clob",name = "object_of")
+    @Column(columnDefinition = "clob", name = "object_of")
     private String objectOf;
 
     //Поле нужно чтобы отслеживать на сайте закупок необходимость обновить данные
@@ -137,8 +137,8 @@ public class Procurement extends BaseEntity implements Serializable {
 
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "users_procurements",
-            joinColumns = @JoinColumn(name = "procurement_id"),
-            inverseJoinColumns = @JoinColumn(name = "user_id"))
+        joinColumns = @JoinColumn(name = "procurement_id"),
+        inverseJoinColumns = @JoinColumn(name = "user_id"))
     private Set<User> users;
 
     @OneToMany(mappedBy = "procurement", orphanRemoval = true)
@@ -146,9 +146,10 @@ public class Procurement extends BaseEntity implements Serializable {
 
     public Procurement() {
         this.users = new HashSet<>();
+        this.userProcurementLinkses = new LinkedHashSet<>();
     }
 
-    public Procurement(Stage stage, String uin, int fzNumber, ZonedDateTime applicationDeadline, BigDecimal contractPrice, ProcedureType procedureType, String publisherName, String restrictions, URL linkOnPlacement, String applicationSecure, String contractSecure, String objectOf, LocalDate lastUpdatedFromEIS, LocalDate dateTimeLastUpdated, LocalDate dateOfPlacement, ZonedDateTime dateOfAuction, Set<User> users) {
+    public Procurement(Stage stage, String uin, int fzNumber, ZonedDateTime applicationDeadline, BigDecimal contractPrice, ProcedureType procedureType, String publisherName, String restrictions, URL linkOnPlacement, String applicationSecure, String contractSecure, String objectOf, LocalDate lastUpdatedFromEIS, LocalDate dateTimeLastUpdated, LocalDate dateOfPlacement, ZonedDateTime dateOfAuction, Set<User> users, Set<UserProcurementLinks> userProcurementLinkses) {
         this.stage = stage;
         this.uin = uin;
         this.fzNumber = fzNumber;
@@ -170,12 +171,21 @@ public class Procurement extends BaseEntity implements Serializable {
         } else {
             this.users = users;
         }
+        if (Objects.isNull(userProcurementLinkses)) {
+            this.userProcurementLinkses = new LinkedHashSet<>();
+        } else {
+            this.userProcurementLinkses = userProcurementLinkses;
+        }
     }
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || Hibernate.getClass(this) != Hibernate.getClass(o)) return false;
+        if (this == o) {
+            return true;
+        }
+        if (o == null || Hibernate.getClass(this) != Hibernate.getClass(o)) {
+            return false;
+        }
         Procurement that = (Procurement) o;
         return getId() != null && Objects.equals(getId(), that.getId());
     }
