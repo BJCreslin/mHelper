@@ -4,11 +4,14 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
+import ru.mhelper.models.BaseStatus;
 import ru.mhelper.models.dto.ProcurementDto;
 import ru.mhelper.models.procurements.ProcedureType;
 import ru.mhelper.models.procurements.Procurement;
+import ru.mhelper.models.user_procurement.UserProcurementLinks;
 import ru.mhelper.models.users.User;
 import ru.mhelper.repository.ProcurementRepository;
+import ru.mhelper.repository.UserProcurementRepository;
 import ru.mhelper.repository.UserRepository;
 import ru.mhelper.services.exceptions.BadDataParsingException;
 import ru.mhelper.services.exceptions.DataManagerException;
@@ -20,7 +23,6 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.ZonedDateTime;
-import java.util.ArrayList;
 import java.util.TimeZone;
 
 @Service
@@ -29,21 +31,33 @@ public class ProcurementDtoServiceImpl implements ProcurementDtoService {
     private static final Logger LOGGER = LoggerFactory.getLogger(ProcurementDtoServiceImpl.class);
 
     public static final String REMODEL_DTO_TO_PROCUREMENT = "Remodel Dto to Procurement {}";
+
     public static final String DTO_WAS_REMODELED = "Dto was remodeled {}";
+
     public static final String ERROR_URL = "Error URL %s";
+
     public static final String NEED_ADD_TYPE = "Need add the procedure type: %s";
+
     public static final int FZ_615 = 615;
+
     public static final int FZ_44 = 44;
+
     public static final int FZ_223 = 223;
+
     public static final String DEADLINE_TIME_ZONE_LOGGER = "Deadline From String to ZonedDateTime. Deadline: {}, time zone: {}";
+
     public static final String ZONE_PARSING_LOGGER = "Time zone parsing {}";
 
     private final ProcurementRepository procurementRepository;
+
     private final UserRepository userRepository;
 
-    public ProcurementDtoServiceImpl(ProcurementRepository procurementRepository, UserRepository userRepository) {
+    private final UserProcurementRepository userProcurementRepository;
+
+    public ProcurementDtoServiceImpl(ProcurementRepository procurementRepository, UserRepository userRepository, UserProcurementRepository userProcurementRepository) {
         this.procurementRepository = procurementRepository;
         this.userRepository = userRepository;
+        this.userProcurementRepository = userProcurementRepository;
     }
 
     @Override
@@ -64,7 +78,7 @@ public class ProcurementDtoServiceImpl implements ProcurementDtoService {
             procurement = procurementFromBase.orElseThrow(() -> new DataManagerException(DataManagerException.COULD_NOT_SAVE_PROCUREMENT));
         }
         User user = userRepository.findByUsername(jwtUser.getUsername()).orElseThrow(() -> new DataManagerException(DataManagerException.NON_EXISTING_LOAD_OR_DELETE_EXCEPTION));
-        user.addProcurement(procurement);
+        userProcurementRepository.save(UserProcurementLinks.builder().procurement(procurement).user(user).status(BaseStatus.ACTIVE).build());
         procurementRepository.save(procurement);
         userRepository.save(user);
     }
@@ -75,21 +89,21 @@ public class ProcurementDtoServiceImpl implements ProcurementDtoService {
         }
         var timeZone = stringToTimeZone(procurementDto.getTimeZone());
         var procurement = Procurement.builder()
-                .uin(procurementDto.getUin())
-                .applicationDeadline(remodelDeadlineFromStringToTime(procurementDto.getApplicationDeadline(), timeZone))
-                .contractPrice(remodelPriceToBigDecimal(procurementDto.getContractPrice()))
-                .applicationSecure(procurementDto.getApplicationSecure())
-                .contractSecure(procurementDto.getContractSecure())
-                .dateOfAuction(remodelDateOfAuctionToZonedDateTime(procurementDto.getDateOfAuction(), procurementDto.getTimeOfAuction(), timeZone))
-                .dateOfPlacement(remodelDateOfPlacementToLocalDate(procurementDto.getDateOfPlacement()))
-                .lastUpdatedFromEIS(remodelDateLastUpdateToLocalDate(procurementDto.getLastUpdatedFromEIS()))
-                .dateTimeLastUpdated(LocalDate.now())
-                .fzNumber(remodelFzToInteger(procurementDto.getFzNumber()))
-                .linkOnPlacement(remodelStringUrlToURL(procurementDto.getLinkOnPlacement()))
-                .objectOf(procurementDto.getObjectOf())
-                .procedureType(remodelProcedureType(procurementDto.getProcedureType()))
-                .publisherName(procurementDto.getPublisherName())
-                .build();
+            .uin(procurementDto.getUin())
+            .applicationDeadline(remodelDeadlineFromStringToTime(procurementDto.getApplicationDeadline(), timeZone))
+            .contractPrice(remodelPriceToBigDecimal(procurementDto.getContractPrice()))
+            .applicationSecure(procurementDto.getApplicationSecure())
+            .contractSecure(procurementDto.getContractSecure())
+            .dateOfAuction(remodelDateOfAuctionToZonedDateTime(procurementDto.getDateOfAuction(), procurementDto.getTimeOfAuction(), timeZone))
+            .dateOfPlacement(remodelDateOfPlacementToLocalDate(procurementDto.getDateOfPlacement()))
+            .lastUpdatedFromEIS(remodelDateLastUpdateToLocalDate(procurementDto.getLastUpdatedFromEIS()))
+            .dateTimeLastUpdated(LocalDate.now())
+            .fzNumber(remodelFzToInteger(procurementDto.getFzNumber()))
+            .linkOnPlacement(remodelStringUrlToURL(procurementDto.getLinkOnPlacement()))
+            .objectOf(procurementDto.getObjectOf())
+            .procedureType(remodelProcedureType(procurementDto.getProcedureType()))
+            .publisherName(procurementDto.getPublisherName())
+            .build();
         if (LOGGER.isDebugEnabled()) {
             LOGGER.debug(DTO_WAS_REMODELED, procurement);
         }

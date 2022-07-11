@@ -2,13 +2,17 @@ package ru.mhelper.services.dao;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import ru.mhelper.exceptions.UserException;
+import ru.mhelper.models.BaseStatus;
 import ru.mhelper.models.procurements.Procurement;
+import ru.mhelper.models.user_procurement.UserProcurementLinks;
+import ru.mhelper.models.users.User;
 import ru.mhelper.repository.ProcurementRepository;
+import ru.mhelper.repository.UserProcurementRepository;
 import ru.mhelper.services.exceptions.DataManagerException;
 
 import javax.persistence.EntityNotFoundException;
@@ -27,12 +31,15 @@ public class ProcurementDataManagerImpl implements ProcurementDataManager {
 
     public static final String ALL_PROCUREMENTS_NUMBER = "Load all procurements. Number: {}.";
 
-    private ProcurementRepository repository;
+    private final ProcurementRepository repository;
 
-    @Autowired
-    public void setRepository(ProcurementRepository repo) {
-        this.repository = repo;
+    public ProcurementDataManagerImpl(ProcurementRepository repository, UserProcurementRepository userProcurementRepository) {
+        this.repository = repository;
+        this.userProcurementRepository = userProcurementRepository;
     }
+
+    private final UserProcurementRepository userProcurementRepository;
+
 
     @Override
     public Procurement loadById(Long idToLoad) {
@@ -62,19 +69,29 @@ public class ProcurementDataManagerImpl implements ProcurementDataManager {
     }
 
     @Override
-    public Procurement save(Procurement procurement) {
-        if (procurement == null) {
-            throw new DataManagerException(
-                DataManagerException.COULD_NOT_SAVE_PROCUREMENT_NULL_DATA, null);
-        }
+
+    public Procurement save(Procurement procurement, User user) {
+        checkProcurementAndUser(procurement, user);
         try {
             if (LOGGER.isInfoEnabled()) {
                 LOGGER.info(">>>>>>>>>> SAVE PROCUREMENT: {}", procurement);
             }
-            return repository.save(procurement);
+            procurement = repository.save(procurement);
+            userProcurementRepository.save(createUserProcurementLink(user, procurement));
+            return procurement;
         } catch (DataManagerException dataMgrExc) {
             LOGGER.error(DataManagerException.COULD_NOT_SAVE_PROCUREMENT);
             throw new DataManagerException(DataManagerException.COULD_NOT_SAVE_PROCUREMENT, dataMgrExc);
+        }
+    }
+
+    private void checkProcurementAndUser(Procurement procurement, User user) {
+        if (procurement == null) {
+            throw new DataManagerException(
+                DataManagerException.COULD_NOT_SAVE_PROCUREMENT_NULL_DATA);
+        }
+        if (user == null) {
+            throw new UserException(UserException.USER_NULL);
         }
     }
 
@@ -160,5 +177,12 @@ public class ProcurementDataManagerImpl implements ProcurementDataManager {
             LOGGER.info(ALL_PROCUREMENTS_NUMBER, result.size());
         }
         return result;
+    }
+
+    private UserProcurementLinks createUserProcurementLink(User user, Procurement procurement) {
+        return UserProcurementLinks.builder()
+            .procurement(procurement)
+            .user(user)
+            .status(BaseStatus.ACTIVE).build();
     }
 }

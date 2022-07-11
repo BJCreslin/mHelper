@@ -1,5 +1,6 @@
 package ru.mhelper.models.user_procurement;
 
+import lombok.experimental.SuperBuilder;
 import ru.mhelper.models.BaseEntity;
 import ru.mhelper.models.procurements.Procurement;
 import ru.mhelper.models.users.User;
@@ -12,6 +13,7 @@ import javax.persistence.Table;
 
 @Entity
 @Table(name = "user_procurement_links")
+@SuperBuilder
 public class UserProcurementLinks extends BaseEntity {
     @ManyToOne(cascade = CascadeType.ALL, optional = false)
     @JoinColumn(name = "user_id", nullable = false)
@@ -20,6 +22,10 @@ public class UserProcurementLinks extends BaseEntity {
     @ManyToOne(cascade = CascadeType.ALL, optional = false)
     @JoinColumn(name = "procurement_id", nullable = false)
     private Procurement procurement;
+
+    public UserProcurementLinks() {
+        //for Lombok and others
+    }
 
     public Procurement getProcurement() {
         return procurement;

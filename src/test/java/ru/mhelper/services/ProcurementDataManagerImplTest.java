@@ -17,10 +17,14 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.orm.jpa.JpaObjectRetrievalFailureException;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.jdbc.Sql;
+import ru.mhelper.models.BaseStatus;
 import ru.mhelper.models.procurements.ProcedureType;
 import ru.mhelper.models.procurements.Procurement;
 import ru.mhelper.models.procurements.Stage;
+import ru.mhelper.models.users.User;
 import ru.mhelper.repository.ProcurementRepository;
+import ru.mhelper.repository.UserProcurementRepository;
+import ru.mhelper.repository.UserRepository;
 import ru.mhelper.services.dao.ProcurementDataManagerImpl;
 import ru.mhelper.services.exceptions.DataManagerException;
 
@@ -35,7 +39,9 @@ import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.fail;
 
 @ActiveProfiles("serviceTest")
 @SpringBootTest
@@ -48,22 +54,32 @@ class ProcurementDataManagerImplTest {
     @Autowired
     private ProcurementRepository repository;
 
+    @Autowired
+    private UserRepository userRepository;
+
+    @Autowired
+    private UserProcurementRepository userProcurementRepository;
+
     private static final Logger LOGGER = LoggerFactory.getLogger(ProcurementDataManagerImplTest.class);
 
     private final static String MY_UIN = "202320000012100777";
+
     private final static Long ID_NON_EXISTING_PROCUREMENT = 8765L;
+
     private final static int FZ_NUMBER_OF_SECOND_PROCUREMENT = 44;
+
     private final static int FZ_NUMBER_OF_SAVED_PROCUREMENT = 615;
+
     private final static String EXCEPTION_NOT_RECEIVED = "Exception not received: ";
 
     Pageable firstPageWithFiveElements = PageRequest.of(0, 5);
+
     // 5 = page size, 20 = page number
     Pageable secondPageWithFiveElements = PageRequest.of(5, 20);
 
     @BeforeAll
     void init() {
-        procurementDataManager = new ProcurementDataManagerImpl();
-        procurementDataManager.setRepository(repository);
+        procurementDataManager = new ProcurementDataManagerImpl(repository, userProcurementRepository);
 
     }
 
@@ -88,7 +104,9 @@ class ProcurementDataManagerImplTest {
         procurement.setContractSecure("1999-01-08 04:05:06");
         procurement.setObjectOf("Выполнение работ по капитальному ремонту");
 
-        Procurement saved = procurementDataManager.save(procurement);
+        var user = User.builder().username("name").status(BaseStatus.ACTIVE).email("email@email.com").telegramUserId(1L).build();
+
+        Procurement saved = procurementDataManager.save(procurement, user);
 
         // Check the saved data
         Assertions.assertEquals(saved.getContractPrice(), procurement.getContractPrice());
@@ -112,8 +130,11 @@ class ProcurementDataManagerImplTest {
         Procurement second = procurementDataManager.loadById(allProcurements.get().findAny().get().getId());
         Assertions.assertEquals(FZ_NUMBER_OF_SAVED_PROCUREMENT, second.getFzNumber());
 
+        var user = User.builder().username("name").status(BaseStatus.ACTIVE).email("email@email.com").telegramUserId(1L).build();
+        userRepository.save(user);
+
         second.setUin(MY_UIN);
-        Procurement updated = procurementDataManager.save(second);
+        Procurement updated = procurementDataManager.save(second, user);
 
         Assertions.assertEquals(MY_UIN, updated.getUin());
         Assertions.assertEquals(FZ_NUMBER_OF_SAVED_PROCUREMENT, updated.getFzNumber());
@@ -123,7 +144,7 @@ class ProcurementDataManagerImplTest {
     @Transactional
     void testLoadProcurementsByFzNumber() {
         Assertions.assertEquals(1,
-                procurementDataManager.loadListByFzNumber(FZ_NUMBER_OF_SECOND_PROCUREMENT).size());
+            procurementDataManager.loadListByFzNumber(FZ_NUMBER_OF_SECOND_PROCUREMENT).size());
     }
 
     /**
@@ -139,7 +160,7 @@ class ProcurementDataManagerImplTest {
         Assertions.assertEquals(1, foundList.size());
         procurementDataManager.delete(foundList.get(0));
         Assertions.assertEquals(0,
-                procurementDataManager.loadListByFzNumber(FZ_NUMBER_OF_SECOND_PROCUREMENT).size());
+            procurementDataManager.loadListByFzNumber(FZ_NUMBER_OF_SECOND_PROCUREMENT).size());
     }
 
     @Test
@@ -153,7 +174,7 @@ class ProcurementDataManagerImplTest {
 
         // Assertion - is it really deleted?
         Assertions.assertThrows(JpaObjectRetrievalFailureException.class,
-                () -> procurementDataManager.loadById(allProcurements.get().findAny().get().getId()));
+            () -> procurementDataManager.loadById(allProcurements.get().findAny().get().getId()));
     }
 
     @Test
@@ -175,7 +196,7 @@ class ProcurementDataManagerImplTest {
             procurementDataManager.deleteById(ID_NON_EXISTING_PROCUREMENT);
         } catch (DataManagerException dataMgrExc) {
             String expectedMessage = String.format(
-                    DataManagerException.NON_EXISTING_LOAD_OR_DELETE_EXCEPTION, ID_NON_EXISTING_PROCUREMENT);
+                DataManagerException.NON_EXISTING_LOAD_OR_DELETE_EXCEPTION, ID_NON_EXISTING_PROCUREMENT);
             if (!expectedMessage.equals(dataMgrExc.getMessage())) {
                 fail(EXCEPTION_NOT_RECEIVED + expectedMessage);
             }
@@ -196,13 +217,13 @@ class ProcurementDataManagerImplTest {
         Assertions.assertEquals(2, allProcurements.stream().count());
         // Get a collection of all the ids
         List<Long> ids = allProcurements.stream()
-                .map(Procurement::getId).collect(Collectors.toList());
+            .map(Procurement::getId).collect(Collectors.toList());
         if (LOGGER.isInfoEnabled()) {
             LOGGER.info("----> ids: {}", ids);
         }
 
         Page<Procurement> result = procurementDataManager.loadByIdList(ids,
-                firstPageWithFiveElements);
+            firstPageWithFiveElements);
         Assertions.assertEquals(2, result.stream().count());
     }
 
@@ -210,7 +231,7 @@ class ProcurementDataManagerImplTest {
     @Transactional
     void testLoadCreatedBeforeDate() {
         Page<Procurement> result = procurementDataManager.loadPageableCreatedBeforeDate(
-                LocalDate.of(2021, 2, 1), firstPageWithFiveElements);
+            LocalDate.of(2021, 2, 1), firstPageWithFiveElements);
         Assertions.assertEquals(1, result.stream().count());
     }
 
