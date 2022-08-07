@@ -20,6 +20,7 @@ import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import java.io.Serial;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.net.URL;
@@ -41,7 +42,10 @@ public class Procurement extends BaseEntity implements Serializable {
     //Что означает поле
     //Где можно найти по ФЗ №44
     //и по ФЗ №223
+    @Serial
     private static final long serialVersionUID = 8376509998615282286L;
+
+    public static final String DEADLINE = "application_deadline";
 
     //Этап закупки
     //ОБЩАЯ ИНФОРМАЦИЯ О ЗАКУПКЕ -> Этап закупки
@@ -65,7 +69,7 @@ public class Procurement extends BaseEntity implements Serializable {
     //Дата и время окончания срока подачи заявок
     //ИНФОРМАЦИЯ О ПРОЦЕДУРЕ ЭЛЕКТРОННОГО АУКЦИОНА -> Дата и время окончания срока подачи заявок на участие в электронном аукционе
     //ПОРЯДОК ПРОВЕДЕНИЯ ПРОЦЕДУРЫ -> Дата и время окончания подачи заявок (по местному времени заказчика)
-    @Column(name = "application_deadline")
+    @Column(name = DEADLINE)
     private ZonedDateTime applicationDeadline;
 
     //Максимальная цена

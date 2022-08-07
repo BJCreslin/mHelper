@@ -6,7 +6,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import ru.mhelper.models.BaseEntity;
 import ru.mhelper.models.BaseStatus;
-import ru.mhelper.models.procurements.Procurement;
 import ru.mhelper.models.user_procurement.UserProcurementLinks;
 
 import javax.persistence.Column;
@@ -18,17 +17,14 @@ import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.Lob;
 import javax.persistence.ManyToMany;
-import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
-import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.LinkedHashSet;
-import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 
@@ -87,12 +83,6 @@ public class User extends BaseEntity {
         inverseJoinColumns = @JoinColumn(name = "role_id"))
     private Set<Role> roles = new HashSet<>();
 
-    @ManyToMany(fetch = FetchType.EAGER)
-    @JoinTable(name = "users_procurements",
-        joinColumns = @JoinColumn(name = "user_id"),
-        inverseJoinColumns = @JoinColumn(name = "procurement_id"))
-    private List<Procurement> procurements = new ArrayList<>();
-
     @OneToMany(mappedBy = "user", orphanRemoval = true)
     private Set<UserProcurementLinks> userProcurementLinkses = new LinkedHashSet<>();
 
@@ -112,10 +102,9 @@ public class User extends BaseEntity {
         this.email = email;
         this.password = password;
         this.enabled = true;
-        this.procurements = new ArrayList<>();
     }
 
-    public User(String username, String email, String password, Long telegramUserId, TelegramStateType telegramStateType, boolean enabled, String comment, Set<Role> roles, List<Procurement> procurements) {
+    public User(String username, String email, String password, Long telegramUserId, TelegramStateType telegramStateType, boolean enabled, String comment, Set<Role> roles) {
         this.username = username;
         this.email = email;
         this.password = password;
@@ -124,7 +113,6 @@ public class User extends BaseEntity {
         this.enabled = enabled;
         this.comment = comment;
         this.roles = roles;
-        this.procurements = procurements;
     }
 
     public static User createNewTelegramUser(Long telegramId) {
@@ -202,36 +190,6 @@ public class User extends BaseEntity {
 
     public void setRoles(Set<Role> roles) {
         this.roles = roles;
-    }
-
-    public List<Procurement> getProcurements() {
-        return procurements;
-    }
-
-    public void setProcurements(List<Procurement> procurements) {
-        this.procurements = procurements;
-    }
-
-    public void addProcurement(Procurement procurement) {
-        if (LOGGER.isDebugEnabled()) {
-            LOGGER.debug(ADDED_TO_USER, procurement.getUin(), this.username);
-        }
-        if (Objects.nonNull(procurement)) {
-            if (Objects.isNull(procurement.getUsers())) {
-                procurement.setUsers(new HashSet<>());
-            }
-            this.procurements.add(procurement);
-        }
-    }
-
-    public void removeProcurement(Procurement procurement) {
-        if (LOGGER.isDebugEnabled()) {
-            LOGGER.debug(DELETED_FROM_USER, procurement.getUin(), this.username);
-        }
-        if (Objects.nonNull(procurement)) {
-            this.procurements.remove(procurement);
-            procurement.getUsers().remove(this);
-        }
     }
 
     @Override

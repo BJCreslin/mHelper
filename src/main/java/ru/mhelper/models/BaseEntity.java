@@ -1,6 +1,5 @@
 package ru.mhelper.models;
 
-import lombok.Data;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
@@ -28,6 +27,8 @@ import java.util.Objects;
 @RequiredArgsConstructor
 @SuperBuilder
 public abstract class BaseEntity {
+    public static final String STATUS_FIELD = "status";
+
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(nullable = false)
@@ -41,7 +42,7 @@ public abstract class BaseEntity {
     @Column(name = "updated")
     private Date updated;
 
-    @Column(name = "status", columnDefinition = "varchar(255) default 'ACTIVE'")
+    @Column(name = STATUS_FIELD, columnDefinition = "varchar(255) default 'ACTIVE'")
     @Enumerated(EnumType.STRING)
     private BaseStatus status;
 

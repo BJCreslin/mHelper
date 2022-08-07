@@ -7,15 +7,19 @@ import org.springframework.stereotype.Service;
 import ru.mhelper.models.objects.UserTextPair;
 import ru.mhelper.models.procurements.Procurement;
 import ru.mhelper.models.users.User;
+import ru.mhelper.services.procurement.ProcurementService;
 import ru.mhelper.services.telegram.Bot;
 import ru.mhelper.services.user_event.create_message.CreateMessage;
 import ru.mhelper.services.user_event.users_list.UsersListGet;
 
+import java.time.LocalDateTime;
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
+/**
+ * Сервис уведомлений о событиях
+ */
 @Service
 public class UserEventImpl implements UserEvent {
 
@@ -33,28 +37,47 @@ public class UserEventImpl implements UserEvent {
 
     private final Bot tgBot;
 
-    public UserEventImpl(UsersListGet usersListGet, CreateMessage createMessage, Bot tgBot) {
+    private final ProcurementService procurementService;
+
+    public UserEventImpl(UsersListGet usersListGet, CreateMessage createMessage, Bot tgBot, ProcurementService procurementService) {
         this.usersListGet = usersListGet;
         this.createMessage = createMessage;
         this.tgBot = tgBot;
+        this.procurementService = procurementService;
     }
 
     @Scheduled(cron = CRON_INTERVAL)
     public void doAction() {
-        List<User> users = usersListGet.getList();
-        if (Objects.isNull(users) || users.isEmpty()) {
-            return;
-        }
-        List<UserTextPair> userTextPairs = createUserTextPairLIst(users);
-        if (!userTextPairs.isEmpty()) {
-            sendMessagesToTgBot(userTextPairs);
-        }
+//        List<User> users = usersListGet.getList();
+//        if (Objects.isNull(users) || users.isEmpty()) {
+//            return;
+//        }
+//        List<UserTextPair> userTextPairs = createUserTextPairLIst(users);
+//        if (!userTextPairs.isEmpty()) {
+//            sendMessagesToTgBot(userTextPairs);
+//        }
+        List<Procurement> procurementList = getAllUpcomingEvents();
+
+    }
+
+    private List<Procurement> getAllUpcomingEvents() {
+        LocalDateTime nextTimeEvent = getNextTimeEvent();
+        List<Procurement> result = procurementService.getAllBeforeTime(nextTimeEvent);
+
+    }
+
+    /**
+     * Дата следующего события
+     */
+    private static LocalDateTime getNextTimeEvent() {
+        return LocalDateTime.now().plusHours(1L);
     }
 
     private List<UserTextPair> createUserTextPairLIst(List<User> users) {
         final ZonedDateTime zdtNow = ZonedDateTime.now();
         List<UserTextPair> userTextPairs = new ArrayList<>();
         for (User user : users) {
+
             for (Procurement procurement : user.getProcurements()) {
                 if (isEventSoon(procurement.getApplicationDeadline(), zdtNow)) {
                     userTextPairs.add(UserTextPair.builder().user(user).text(createMessage.createDeadLineMessage(procurement)).build());
@@ -80,6 +103,6 @@ public class UserEventImpl implements UserEvent {
 
     private boolean isEventSoon(ZonedDateTime procurement, ZonedDateTime zdtNow) {
         return procurement.isAfter(zdtNow) &&
-                procurement.isBefore(zdtNow.minusHours(TIME_RANGE));
+            procurement.isBefore(zdtNow.minusHours(TIME_RANGE));
     }
 }

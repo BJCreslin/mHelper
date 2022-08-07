@@ -7,7 +7,7 @@
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>2.6.6</version>
+        <version>2.7.2</version>
         <relativePath/>
     </parent>
     <groupId>ru.mhelper</groupId>
@@ -16,11 +16,12 @@
     <name>mHelper</name>
     <description>Website automation service zakupki.gov.ru</description>
     <properties>
-        <java.version>11</java.version>
-        <maven.compiler.source>11</maven.compiler.source>
-        <maven.compiler.target>11</maven.compiler.target>
+        <java.version>17</java.version>
+        <maven.compiler.source>17</maven.compiler.source>
+        <maven.compiler.target>17</maven.compiler.target>
         <sonar.organization>bjcreslin</sonar.organization>
         <sonar.host.url>https://sonarcloud.io</sonar.host.url>
+        <org.mapstruct.version>1.5.2.Final</org.mapstruct.version>
     </properties>
     <profiles>
         <profile>
@@ -46,13 +47,15 @@
                 <dependency>
                     <groupId>org.liquibase</groupId>
                     <artifactId>liquibase-core</artifactId>
-                    <version>4.8.0</version>
+                    <version>3.2.0</version>
                 </dependency>
+                <!-- https://mvnrepository.com/artifact/org.postgresql/postgresql -->
                 <dependency>
                     <groupId>org.postgresql</groupId>
                     <artifactId>postgresql</artifactId>
-                    <version>42.3.3</version>
+                    <version>42.4.1</version>
                 </dependency>
+
             </dependencies>
             <build>
                 <finalName>mHelper</finalName>
@@ -93,7 +96,7 @@
         <dependency>
             <groupId>com.h2database</groupId>
             <artifactId>h2</artifactId>
-            <version>2.1.210</version>
+            <version>2.1.214</version>
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -114,7 +117,7 @@
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
-            <version>1.18.22</version>
+            <version>1.18.24</version>
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -132,13 +135,24 @@
         <dependency>
             <groupId>org.telegram</groupId>
             <artifactId>telegrambots-spring-boot-starter</artifactId>
-            <version>5.7.1</version>
+            <version>6.1.0</version>
         </dependency>
         <dependency>
             <groupId>io.springfox</groupId>
             <artifactId>springfox-boot-starter</artifactId>
             <version>3.0.0</version>
         </dependency>
+        <dependency>
+            <groupId>org.mapstruct</groupId>
+            <artifactId>mapstruct</artifactId>
+            <version>${org.mapstruct.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.data</groupId>
+            <artifactId>spring-data-jpa</artifactId>
+            <version>2.6.3</version>
+        </dependency>
+
     </dependencies>
     <build>
         <finalName>mHelper</finalName>
@@ -149,6 +163,23 @@
                 <version>3.3.2</version>
                 <configuration>
                     <failOnMissingWebXml>false</failOnMissingWebXml>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.8.1</version>
+                <configuration>
+                    <source>17</source> <!-- depending on your project -->
+                    <target>17</target> <!-- depending on your project -->
+                    <annotationProcessorPaths>
+                        <path>
+                            <groupId>org.mapstruct</groupId>
+                            <artifactId>mapstruct-processor</artifactId>
+                            <version>${org.mapstruct.version}</version>
+                        </path>
+                        <!-- other annotation processors -->
+                    </annotationProcessorPaths>
                 </configuration>
             </plugin>
         </plugins>
