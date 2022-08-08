@@ -11,7 +11,7 @@ import ru.mhelper.models.procurements.Procurement;
 import ru.mhelper.models.user_procurement.UserProcurementLinks;
 import ru.mhelper.models.users.User;
 import ru.mhelper.repository.ProcurementRepository;
-import ru.mhelper.repository.UserProcurementRepository;
+import ru.mhelper.repository.UserProcurementLinksRepository;
 import ru.mhelper.repository.UserRepository;
 import ru.mhelper.services.exceptions.BadDataParsingException;
 import ru.mhelper.services.exceptions.DataManagerException;
@@ -52,12 +52,12 @@ public class ProcurementDtoServiceImpl implements ProcurementDtoService {
 
     private final UserRepository userRepository;
 
-    private final UserProcurementRepository userProcurementRepository;
+    private final UserProcurementLinksRepository userProcurementLinksRepository;
 
-    public ProcurementDtoServiceImpl(ProcurementRepository procurementRepository, UserRepository userRepository, UserProcurementRepository userProcurementRepository) {
+    public ProcurementDtoServiceImpl(ProcurementRepository procurementRepository, UserRepository userRepository, UserProcurementLinksRepository userProcurementLinksRepository) {
         this.procurementRepository = procurementRepository;
         this.userRepository = userRepository;
-        this.userProcurementRepository = userProcurementRepository;
+        this.userProcurementLinksRepository = userProcurementLinksRepository;
     }
 
     @Override
@@ -78,7 +78,7 @@ public class ProcurementDtoServiceImpl implements ProcurementDtoService {
             procurement = procurementFromBase.orElseThrow(() -> new DataManagerException(DataManagerException.COULD_NOT_SAVE_PROCUREMENT));
         }
         User user = userRepository.findByUsername(jwtUser.getUsername()).orElseThrow(() -> new DataManagerException(DataManagerException.NON_EXISTING_LOAD_OR_DELETE_EXCEPTION));
-        userProcurementRepository.save(UserProcurementLinks.builder().procurement(procurement).user(user).status(BaseStatus.ACTIVE).build());
+        userProcurementLinksRepository.save(UserProcurementLinks.builder().procurement(procurement).user(user).status(BaseStatus.ACTIVE).build());
         procurementRepository.save(procurement);
         userRepository.save(user);
     }

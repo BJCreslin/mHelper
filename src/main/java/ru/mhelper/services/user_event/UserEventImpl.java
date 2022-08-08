@@ -63,6 +63,7 @@ public class UserEventImpl implements UserEvent {
     private List<Procurement> getAllUpcomingEvents() {
         LocalDateTime nextTimeEvent = getNextTimeEvent();
         List<Procurement> result = procurementService.getAllBeforeTime(nextTimeEvent);
+        return result;
 
     }
 
@@ -78,14 +79,14 @@ public class UserEventImpl implements UserEvent {
         List<UserTextPair> userTextPairs = new ArrayList<>();
         for (User user : users) {
 
-            for (Procurement procurement : user.getProcurements()) {
-                if (isEventSoon(procurement.getApplicationDeadline(), zdtNow)) {
-                    userTextPairs.add(UserTextPair.builder().user(user).text(createMessage.createDeadLineMessage(procurement)).build());
-                }
-                if (isEventSoon(procurement.getDateOfAuction(), zdtNow)) {
-                    userTextPairs.add(UserTextPair.builder().user(user).text(createMessage.createAuctionMessage(procurement)).build());
-                }
-            }
+//            for (Procurement procurement : user.getProcurements()) {
+//                if (isEventSoon(procurement.getApplicationDeadline(), zdtNow)) {
+//                    userTextPairs.add(UserTextPair.builder().user(user).text(createMessage.createDeadLineMessage(procurement)).build());
+//                }
+//                if (isEventSoon(procurement.getDateOfAuction(), zdtNow)) {
+//                    userTextPairs.add(UserTextPair.builder().user(user).text(createMessage.createAuctionMessage(procurement)).build());
+//                }
+//            }
         }
         return userTextPairs;
     }

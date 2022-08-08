@@ -12,7 +12,7 @@ import ru.mhelper.models.procurements.Procurement;
 import ru.mhelper.models.user_procurement.UserProcurementLinks;
 import ru.mhelper.models.users.User;
 import ru.mhelper.repository.ProcurementRepository;
-import ru.mhelper.repository.UserProcurementRepository;
+import ru.mhelper.repository.UserProcurementLinksRepository;
 import ru.mhelper.services.exceptions.DataManagerException;
 
 import javax.persistence.EntityNotFoundException;
@@ -33,12 +33,12 @@ public class ProcurementDataManagerImpl implements ProcurementDataManager {
 
     private final ProcurementRepository repository;
 
-    public ProcurementDataManagerImpl(ProcurementRepository repository, UserProcurementRepository userProcurementRepository) {
+    public ProcurementDataManagerImpl(ProcurementRepository repository, UserProcurementLinksRepository userProcurementLinksRepository) {
         this.repository = repository;
-        this.userProcurementRepository = userProcurementRepository;
+        this.userProcurementLinksRepository = userProcurementLinksRepository;
     }
 
-    private final UserProcurementRepository userProcurementRepository;
+    private final UserProcurementLinksRepository userProcurementLinksRepository;
 
 
     @Override
@@ -77,7 +77,7 @@ public class ProcurementDataManagerImpl implements ProcurementDataManager {
                 LOGGER.info(">>>>>>>>>> SAVE PROCUREMENT: {}", procurement);
             }
             procurement = repository.save(procurement);
-            userProcurementRepository.save(createUserProcurementLink(user, procurement));
+            userProcurementLinksRepository.save(createUserProcurementLink(user, procurement));
             return procurement;
         } catch (DataManagerException dataMgrExc) {
             LOGGER.error(DataManagerException.COULD_NOT_SAVE_PROCUREMENT);

@@ -23,7 +23,7 @@ import ru.mhelper.models.procurements.Procurement;
 import ru.mhelper.models.procurements.Stage;
 import ru.mhelper.models.users.User;
 import ru.mhelper.repository.ProcurementRepository;
-import ru.mhelper.repository.UserProcurementRepository;
+import ru.mhelper.repository.UserProcurementLinksRepository;
 import ru.mhelper.repository.UserRepository;
 import ru.mhelper.services.dao.ProcurementDataManagerImpl;
 import ru.mhelper.services.exceptions.DataManagerException;
@@ -58,7 +58,7 @@ class ProcurementDataManagerImplTest {
     private UserRepository userRepository;
 
     @Autowired
-    private UserProcurementRepository userProcurementRepository;
+    private UserProcurementLinksRepository userProcurementLinksRepository;
 
     private static final Logger LOGGER = LoggerFactory.getLogger(ProcurementDataManagerImplTest.class);
 
@@ -79,7 +79,7 @@ class ProcurementDataManagerImplTest {
 
     @BeforeAll
     void init() {
-        procurementDataManager = new ProcurementDataManagerImpl(repository, userProcurementRepository);
+        procurementDataManager = new ProcurementDataManagerImpl(repository, userProcurementLinksRepository);
 
     }
 
