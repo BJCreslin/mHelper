@@ -54,9 +54,9 @@ public class ChromeExtensionController {
             var errors = bindingResult.getFieldErrors();
             var message = errors.stream().map(error -> "@" + error.getField().toUpperCase() + ": " + error.getDefaultMessage()).collect(Collectors.toList()).toString();
             var responseObject = Error.builder()
-                .code(MessageResponse.BAD_CODE)
-                .message(PROCUREMENT_IS_INVALID)
-                .cause(message).build();
+                    .code(MessageResponse.BAD_CODE)
+                    .message(PROCUREMENT_IS_INVALID)
+                    .cause(message).build();
             logger.error(message);
             return new ResponseEntity<>(responseObject, HttpStatus.BAD_REQUEST);
         }
@@ -77,7 +77,7 @@ public class ChromeExtensionController {
 
     @GetMapping({""})
     @ResponseBody
-    public ResponseEntity<?> testConnect() {
+    public ResponseEntity<MessageResponse> testConnect() {
         return ResponseEntity.ok(new MessageResponse(SUCCESSFUL_CONNECTION));
     }
 }
