@@ -7,14 +7,12 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import ru.mhelper.controllers.exeptions.BadRequestException;
 import ru.mhelper.models.dto.*;
-import ru.mhelper.models.jwt.JwtUser;
 import ru.mhelper.models.users.ERole;
 import ru.mhelper.models.users.Role;
 import ru.mhelper.models.users.User;
@@ -24,7 +22,6 @@ import ru.mhelper.services.geting_code.TelegramCodeService;
 import ru.mhelper.services.security.JwtTokenProvider;
 
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 @Service
@@ -70,13 +67,16 @@ public class AuthServiceImpl implements AuthService {
             userRepository.save(newUser);
         }
         User user = userRepository.findByTelegramUserId(telegramId).orElseThrow(() -> new BadRequestException(USER_NOT_FOUND));
-        String jwt = jwtTokenProvider.createToken(user.getUsername(), user.getRoles());
-        return ResponseEntity.ok(new JwtResponse(
-                jwt,
-                user.getId(),
-                user.getUsername(),
-                user.getEmail(),
-                user.getRoles().stream().map(Role::getName).toList()));
+        String accessToken = jwtTokenProvider.createAccessToken(user.getUsername(), user.getRoles());
+        String refreshToken = jwtTokenProvider.createRefreshToken(user.getUsername());
+        return ResponseEntity.ok(JwtResponse.builder()
+                .accessToken(accessToken)
+                .refreshToken(refreshToken)
+                .id(user.getId())
+                .userName(user.getUsername())
+                .email(user.getEmail())
+                .roles(user.getRoles().stream().map(Role::getName).toList()
+                ).build());
     }
 
     @Override
@@ -88,16 +88,16 @@ public class AuthServiceImpl implements AuthService {
         SecurityContextHolder.getContext().setAuthentication(authentication);
         User user = userRepository.findByUsername(loginRequest.getUserName()).
                 orElseThrow(() -> new UsernameNotFoundException(String.format(USER_NOT_FOUND, loginRequest.getUserName())));
-        JwtUser userDetails = (JwtUser) authentication.getPrincipal();
-        List<String> roles = userDetails.getAuthorities().stream()
-                .map(GrantedAuthority::getAuthority)
-                .toList();
-        String jwt = jwtTokenProvider.createToken(user.getUsername(), user.getRoles());
-        return ResponseEntity.ok(new JwtResponse(jwt,
-                userDetails.getId(),
-                userDetails.getUsername(),
-                userDetails.getEmail(),
-                roles));
+        String accessToken = jwtTokenProvider.createAccessToken(user.getUsername(), user.getRoles());
+        String refreshToken = jwtTokenProvider.createRefreshToken(user.getUsername());
+        return ResponseEntity.ok(JwtResponse.builder()
+                .accessToken(accessToken)
+                .refreshToken(refreshToken)
+                .id(user.getId())
+                .userName(user.getUsername())
+                .email(user.getEmail())
+                .roles(user.getRoles().stream().map(Role::getName).toList()
+                ).build());
     }
 
     @Override

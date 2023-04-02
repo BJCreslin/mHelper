@@ -1,66 +1,62 @@
 package ru.mhelper.services.security;
 
-import io.jsonwebtoken.*;
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.Jws;
+import io.jsonwebtoken.JwtException;
+import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
 import jakarta.servlet.http.HttpServletRequest;
+import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.event.EventListener;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Component;
 import ru.mhelper.exceptions.JwtAuthenticationException;
+import ru.mhelper.models.dto.JwtResponse;
 import ru.mhelper.models.users.Role;
 
+import java.nio.charset.StandardCharsets;
 import java.security.Key;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @Component
+@RequiredArgsConstructor
 public class JwtTokenProvider {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(JwtTokenProvider.class);
 
     public static final String JWT_FOR_USER_HAVE_BEEN_CREATED = "JWT for user {} have been created.";
-    public static final String BEARER_PREFIX = "Bearer ";
+    public static final String BEARER_PREFIX = "Bearer_";
     public static final String LOAD_USER_DETAILS_FOR_TOKEN = "Load userDetails {} for token.";
     public static final String RESOLVE_JWT = "Resolve JWT:{}";
     public static final String VALIDATE_JWT = "Validate JWT:{}";
     public static final String ROLES_CLAIMS = "role";
 
-    @Value("${jwt.token.secret}")
-    private String secret;
-
-    @Value("${jwt.token.expired}")
-    private long validityInMilliseconds;
-
-    @Value("${jwt.header}")
-    private String authorizationHeader;
-
     private final UserDetailsService userDetailsService;
 
-    public JwtTokenProvider(UserDetailsService userDetailsService) {
-        this.userDetailsService = userDetailsService;
-    }
+    private final JwtProperties jwtProperties;
 
     private Key codeSecret;
 
     @EventListener(ApplicationReadyEvent.class)
     public void init() {
-        codeSecret = Keys.secretKeyFor(SignatureAlgorithm.HS512);
+        codeSecret = Keys.hmacShaKeyFor(jwtProperties.getSecret().getBytes(StandardCharsets.UTF_8));
     }
 
-    public String createToken(String userName, Set<Role> roles) {
+    public String createAccessToken(String userName, Set<String> roles) {
         Claims claims = Jwts.claims().setSubject(userName);
-        claims.put(ROLES_CLAIMS, getRoleNames(roles));
+        claims.put(ROLES_CLAIMS, roles);
         Date now = new Date();
-        Date validity = new Date(now.getTime() + validityInMilliseconds);
+        Date validity = new Date(now.getTime() + jwtProperties.getExpired());
         if (LOGGER.isDebugEnabled()) {
             LOGGER.debug(JWT_FOR_USER_HAVE_BEEN_CREATED, userName);
         }
@@ -70,6 +66,37 @@ public class JwtTokenProvider {
                 .setExpiration(validity)//
                 .signWith(codeSecret)//
                 .compact();
+    }
+
+    public String createRefreshToken(String userName) {
+        Claims claims = Jwts.claims().setSubject(userName);
+        Date now = new Date();
+        Date validity = new Date(now.getTime() + jwtProperties.getRefresh());
+        if (LOGGER.isDebugEnabled()) {
+            LOGGER.debug(JWT_FOR_USER_HAVE_BEEN_CREATED, userName);
+        }
+        return Jwts.builder()//
+                .setClaims(claims)//
+                .setIssuedAt(now)//
+                .setExpiration(validity)//
+                .signWith(codeSecret)//
+                .compact();
+    }
+
+    public JwtResponse refreshTokens(String refreshToken) {
+        if (!validateToken(refreshToken)) {
+            throw new JwtAuthenticationException(JwtAuthenticationException.JWT_IS_INVALID);
+        }
+        String userName = getUsername(refreshToken);
+        UserDetails userDetails = userDetailsService.loadUserByUsername(userName);
+        Set<String> roles = userDetails.getAuthorities().stream().map(GrantedAuthority::getAuthority).collect(Collectors.toSet());
+        return JwtResponse.builder()
+                .userName(userName)
+                .roles(roles)
+                .accessToken(createAccessToken(userName, roles))
+                .refreshToken(userName)
+                .build();
+
     }
 
     public Authentication getAuthentication(String token) {
@@ -85,7 +112,7 @@ public class JwtTokenProvider {
     }
 
     public String resolveToken(HttpServletRequest req) {
-        String bearerToken = req.getHeader(authorizationHeader);
+        String bearerToken = req.getHeader(jwtProperties.getHeader());
         if (LOGGER.isDebugEnabled()) {
             LOGGER.debug(RESOLVE_JWT, bearerToken);
         }
@@ -111,8 +138,6 @@ public class JwtTokenProvider {
     }
 
     private List<String> getRoleNames(Set<Role> userRoles) {
-        List<String> result = new ArrayList<>();
-        userRoles.forEach(role -> result.add(role.getName()));
-        return result;
+        return userRoles.stream().map(Role::getName).toList();
     }
 }
