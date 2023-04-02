@@ -1,9 +1,14 @@
 package ru.mhelper.services.telegram;
 
+import jakarta.annotation.PostConstruct;
+import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Service;
+import org.springframework.boot.context.event.ApplicationReadyEvent;
+import org.springframework.context.event.ContextStartedEvent;
+import org.springframework.context.event.EventListener;
+import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Message;
@@ -20,7 +25,9 @@ import java.util.Map;
 import static ru.mhelper.services.telegram.TelegramBotServiceException.ERROR_SEND_MESSAGE;
 import static ru.mhelper.services.telegram.TelegramBotServiceException.USER_MUST_HAVE_TELEGRAM_ID;
 
-@Service
+//@Service
+@Slf4j
+@Component
 public class Bot extends TelegramLongPollingBot {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(Bot.class);
@@ -28,15 +35,13 @@ public class Bot extends TelegramLongPollingBot {
     @Value("${bot.name}")
     private String botName;
 
-    @Value("${bot.token}")
-    private String botToken;
-
 
     private final Map<String, TelegramTextAnswer> textActions;
 
     private final AdminTgMenu adminTgMenu;
 
-    public Bot(Map<String, TelegramTextAnswer> textActions, AdminTgMenu adminTgMenu) {
+    public Bot(@Value("${bot.token}") String botToken, Map<String, TelegramTextAnswer> textActions, AdminTgMenu adminTgMenu) {
+        super(botToken);
         this.textActions = textActions;
         this.adminTgMenu = adminTgMenu;
     }
@@ -46,13 +51,10 @@ public class Bot extends TelegramLongPollingBot {
         return botName;
     }
 
-    @Override
-    public String getBotToken() {
-        return botToken;
-    }
 
     @Override
     public void onUpdateReceived(Update update) {
+        log.info("has message");
         if (update.hasMessage()) {
             messageEvent(update);
         } else if (update.hasCallbackQuery()) {
@@ -99,6 +101,7 @@ public class Bot extends TelegramLongPollingBot {
         Message message = update.getMessage();
         SendMessage response = new SendMessage();
         Long chatId = message.getChatId();
+        log.info("receive message from tguser: " + chatId + " message: " + message.getText());
         response.setChatId(String.valueOf(chatId));
         String text = message.getText();
         if (textActions.containsKey(text.toLowerCase(Locale.ROOT))) {
@@ -116,6 +119,11 @@ public class Bot extends TelegramLongPollingBot {
             LOGGER.error(eMessage);
             throw new TelegramBotServiceException(eMessage, ex);
         }
+    }
+
+    @PostConstruct
+    public void start() {
+        LOGGER.info("botName: {}", botName);
     }
 }
 

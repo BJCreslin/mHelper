@@ -1,15 +1,10 @@
 package ru.mhelper.models.user_procurement;
 
+import jakarta.persistence.*;
 import lombok.experimental.SuperBuilder;
 import ru.mhelper.models.BaseEntity;
 import ru.mhelper.models.procurements.Procurement;
 import ru.mhelper.models.users.User;
-
-import javax.persistence.CascadeType;
-import javax.persistence.Entity;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.Table;
 
 @Entity
 @Table(name = "user_procurement_links")

@@ -7,7 +7,7 @@ import ru.mhelper.models.procurements.Procurement;
 import ru.mhelper.repository.ProcurementRepository;
 import ru.mhelper.services.parsers_dispatcher.Dispatcher;
 
-import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
@@ -31,14 +31,14 @@ public class ProcurementServiceImpl implements ProcurementService {
         repository.save(procurement);
     }
 
-    @Override
-    public List<Procurement> getAllBeforeTime(LocalDateTime nextTimeEvent) {
-        if (nextTimeEvent != null) {
-            List<Procurement> procurementList = repository.getAllInTimeInterval(LocalDateTime.now(), nextTimeEvent);
-            if (procurementList != null) {
-                return procurementList;
-            }
-        }
-        return Collections.emptyList();
-    }
+//    @Override
+//    public List<Procurement> getAllBeforeTime(ZonedDateTime nextTimeEvent) {
+//        if (nextTimeEvent != null) {
+//            List<Procurement> procurementList = repository.getAllInTimeInterval(ZonedDateTime.now(), nextTimeEvent);
+//            if (procurementList != null) {
+//                return procurementList;
+//            }
+//        }
+//        return Collections.emptyList();
+//    }
 }

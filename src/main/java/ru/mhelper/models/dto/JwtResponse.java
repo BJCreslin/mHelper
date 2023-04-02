@@ -1,15 +1,20 @@
 package ru.mhelper.models.dto;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.util.List;
 
-@Data
 @NoArgsConstructor
-public class JwtResponse extends AbstractResponse{
+@Data
+public class JwtResponse extends AbstractResponse {
+
+    @JsonIgnore
+    public static final String BEARER_NAME = "Bearer";
     private String token;
-    private String type = "Bearer";
+
+    private String type;
     private Long id;
     private String userName;
     private String email;
@@ -21,5 +26,6 @@ public class JwtResponse extends AbstractResponse{
         this.userName = userName;
         this.email = email;
         this.roles = roles;
+        this.type = BEARER_NAME;
     }
 }

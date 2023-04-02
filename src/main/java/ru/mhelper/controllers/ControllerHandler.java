@@ -1,5 +1,6 @@
 package ru.mhelper.controllers;
 
+import jakarta.persistence.PersistenceException;
 import org.springframework.dao.DataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -10,7 +11,6 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 import ru.mhelper.controllers.exeptions.BadRequestException;
 import ru.mhelper.models.dto.Error;
 
-import javax.persistence.PersistenceException;
 
 @ControllerAdvice
 public class ControllerHandler extends ResponseEntityExceptionHandler {

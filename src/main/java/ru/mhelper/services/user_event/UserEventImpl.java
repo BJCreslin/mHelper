@@ -15,6 +15,7 @@ import ru.mhelper.services.user_event.users_list.UsersListGet;
 import java.time.LocalDateTime;
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -62,8 +63,8 @@ public class UserEventImpl implements UserEvent {
 
     private List<Procurement> getAllUpcomingEvents() {
         LocalDateTime nextTimeEvent = getNextTimeEvent();
-        List<Procurement> result = procurementService.getAllBeforeTime(nextTimeEvent);
-        return result;
+//        List<Procurement> result = procurementService.getAllBeforeTime(nextTimeEvent);
+        return Collections.emptyList();
 
     }
 

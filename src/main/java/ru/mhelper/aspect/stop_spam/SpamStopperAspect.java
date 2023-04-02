@@ -1,5 +1,6 @@
 package ru.mhelper.aspect.stop_spam;
 
+import jakarta.servlet.http.HttpServletRequest;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Before;
@@ -11,7 +12,6 @@ import ru.mhelper.controllers.exeptions.BadRequestException;
 import ru.mhelper.exceptions.SpamCodeException;
 import ru.mhelper.services.ip_service.IpService;
 
-import javax.servlet.http.HttpServletRequest;
 import java.time.LocalTime;
 import java.util.HashSet;
 import java.util.Map;
@@ -45,6 +45,7 @@ public class SpamStopperAspect {
     private void createStopSpam(JoinPoint joinPoint) {
         refreshIpTable();
         HttpServletRequest request = getHttpServletRequest(joinPoint);
+
         var ip = ipService.getIpFromRequest(request);
         if (LOGGER.isDebugEnabled()) {
             final var message = String.format(ATTEMPT, ip);
@@ -75,8 +76,8 @@ public class SpamStopperAspect {
 
     private HttpServletRequest getHttpServletRequest(JoinPoint joinPoint) {
         for (Object mayBeRequest : joinPoint.getArgs()) {
-            if (mayBeRequest instanceof HttpServletRequest) {
-                return (HttpServletRequest) mayBeRequest;
+            if (mayBeRequest instanceof HttpServletRequest httpServletRequest) {
+                return httpServletRequest;
             }
         }
         LOGGER.error(REQUEST_IN_ARGS);

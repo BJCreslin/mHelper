@@ -1,8 +1,8 @@
 package ru.mhelper.services.ip_service;
 
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.stereotype.Service;
 
-import javax.servlet.http.HttpServletRequest;
 
 @Service
 public class IpServiceImpl implements IpService {

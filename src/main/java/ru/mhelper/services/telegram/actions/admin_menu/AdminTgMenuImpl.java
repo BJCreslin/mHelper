@@ -1,18 +1,21 @@
 package ru.mhelper.services.telegram.actions.admin_menu;
 
+import jakarta.transaction.Transactional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKeyboardButton;
+import ru.mhelper.cfg.Constants;
 import ru.mhelper.models.objects.TelegramNameFunctionPair;
 import ru.mhelper.repository.ProcurementRepository;
 import ru.mhelper.repository.UserRepository;
 import ru.mhelper.services.geting_code.TelegramCodeService;
 import ru.mhelper.services.telegram.actions.answer_services.TelegramTextAnswer;
 
-import javax.transaction.Transactional;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeFormatterBuilder;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -169,8 +172,9 @@ public class AdminTgMenuImpl implements AdminTgMenu {
         if (codes.isEmpty()) {
             result = THERE_ARE_NO_CODES;
         } else {
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern(Constants.DATE_TIME_FORMAT);
             StringBuilder textBuilder = new StringBuilder();
-            telegramCodeService.getAllCodes().forEach((k, v) -> textBuilder.append(k).append(" ").append(v.getUserId()).append(" ").append(v.getTimeCreated()).append(System.lineSeparator()));
+            telegramCodeService.getAllCodes().forEach((k, v) -> textBuilder.append(k).append(" ").append(v.getUserId()).append(" ").append(v.getTimeCreated().format(formatter)).append(System.lineSeparator()));
             result = textBuilder.toString();
         }
         return result;

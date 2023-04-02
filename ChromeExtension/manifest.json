@@ -19,7 +19,7 @@
         "https://zakupki.gov.ru/*"
       ],
       "js": [
-        "app.js"
+        "application.js"
       ]
     }
   ]

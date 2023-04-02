@@ -1,6 +1,7 @@
 package ru.mhelper.models.procurements;
 
 
+import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
@@ -10,16 +11,6 @@ import ru.mhelper.models.BaseEntity;
 import ru.mhelper.models.user_procurement.UserProcurementLinks;
 import ru.mhelper.models.users.User;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
-import javax.persistence.FetchType;
-import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
-import javax.persistence.ManyToMany;
-import javax.persistence.OneToMany;
-import javax.persistence.Table;
 import java.io.Serial;
 import java.io.Serializable;
 import java.math.BigDecimal;

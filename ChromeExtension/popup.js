@@ -2,6 +2,7 @@ const inputTgNumber = document.getElementById("input_tg_number");
 const labelNumber = document.getElementById("label_tg_number");
 const buttonTgNumber = document.getElementById("button_tg_number");
 const inputFormTgNumber = document.getElementById("form_tg_number");
+let connected = false;
 
 inputTgNumber.addEventListener("change", function () {
     let iNumber = Number(inputTgNumber.value);
@@ -38,6 +39,16 @@ button_tg_number.addEventListener("click", function () {
             }
         });
 });
+
+const isConnected = () => {
+    chrome.runtime.sendMessage(
+        {
+            destination: "check_code"
+        },
+        (response) => {
+            connected = (response === 1);
+        });
+}
 
 const test_button = document.getElementById("button_test");
 test_button.addEventListener("click", function () {

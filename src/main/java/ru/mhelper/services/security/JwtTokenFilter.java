@@ -1,21 +1,19 @@
 package ru.mhelper.services.security;
 
+import jakarta.servlet.FilterChain;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
-import org.springframework.web.filter.GenericFilterBean;
+import org.springframework.web.filter.OncePerRequestFilter;
 import ru.mhelper.exceptions.JwtAuthenticationException;
 
-import javax.servlet.FilterChain;
-import javax.servlet.ServletException;
-import javax.servlet.ServletRequest;
-import javax.servlet.ServletResponse;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 @Component
-public class JwtTokenFilter extends GenericFilterBean {
+public class JwtTokenFilter extends OncePerRequestFilter {
 
     public static final String LOGGING_WITH_TOKEN_NAME_S = "Logging with token name: %s";
     public static final String LOGGING_WITH_TOKEN = "Logging with token: %s";
@@ -26,9 +24,10 @@ public class JwtTokenFilter extends GenericFilterBean {
         this.jwtTokenProvider = jwtTokenProvider;
     }
 
+
     @Override
-    public void doFilter(ServletRequest req, ServletResponse res, FilterChain filterChain) throws IOException, ServletException {
-        String token = jwtTokenProvider.resolveToken((HttpServletRequest) req);
+    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
+        String token = jwtTokenProvider.resolveToken((HttpServletRequest) request);
         if (logger.isDebugEnabled()) {
             logger.debug(String.format(LOGGING_WITH_TOKEN, token));
         }
@@ -44,9 +43,9 @@ public class JwtTokenFilter extends GenericFilterBean {
             }
         } catch (JwtAuthenticationException e) {
             SecurityContextHolder.clearContext();
-            ((HttpServletResponse) res).sendError(HttpServletResponse.SC_UNAUTHORIZED, JwtAuthenticationException.JWT_IS_INVALID);
+            ((HttpServletResponse) response).sendError(HttpServletResponse.SC_UNAUTHORIZED, JwtAuthenticationException.JWT_IS_INVALID);
             throw new JwtAuthenticationException(JwtAuthenticationException.JWT_IS_INVALID);
         }
-        filterChain.doFilter(req, res);
+        filterChain.doFilter(request, response);
     }
 }

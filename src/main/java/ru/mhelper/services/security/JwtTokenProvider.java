@@ -1,13 +1,13 @@
 package ru.mhelper.services.security;
 
-import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.Jws;
-import io.jsonwebtoken.JwtException;
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
+import io.jsonwebtoken.*;
+import io.jsonwebtoken.security.Keys;
+import jakarta.servlet.http.HttpServletRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.context.event.ApplicationReadyEvent;
+import org.springframework.context.event.EventListener;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -16,10 +16,8 @@ import org.springframework.stereotype.Component;
 import ru.mhelper.exceptions.JwtAuthenticationException;
 import ru.mhelper.models.users.Role;
 
-import javax.annotation.PostConstruct;
-import javax.servlet.http.HttpServletRequest;
+import java.security.Key;
 import java.util.ArrayList;
-import java.util.Base64;
 import java.util.Date;
 import java.util.List;
 import java.util.Set;
@@ -51,9 +49,11 @@ public class JwtTokenProvider {
         this.userDetailsService = userDetailsService;
     }
 
-    @PostConstruct
-    protected void init() {
-        secret = Base64.getEncoder().encodeToString(secret.getBytes());
+    private Key codeSecret;
+
+    @EventListener(ApplicationReadyEvent.class)
+    public void init() {
+        codeSecret = Keys.secretKeyFor(SignatureAlgorithm.HS512);
     }
 
     public String createToken(String userName, Set<Role> roles) {
@@ -68,7 +68,7 @@ public class JwtTokenProvider {
                 .setClaims(claims)//
                 .setIssuedAt(now)//
                 .setExpiration(validity)//
-                .signWith(SignatureAlgorithm.HS256, secret)//
+                .signWith(codeSecret)//
                 .compact();
     }
 
@@ -81,7 +81,7 @@ public class JwtTokenProvider {
     }
 
     public String getUsername(String token) {
-        return Jwts.parser().setSigningKey(secret).parseClaimsJws(token).getBody().getSubject();
+        return Jwts.parserBuilder().setSigningKey(codeSecret).build().parseClaimsJws(token).getBody().getSubject();
     }
 
     public String resolveToken(HttpServletRequest req) {
@@ -96,11 +96,14 @@ public class JwtTokenProvider {
     }
 
     public boolean validateToken(String token) {
+        if (token == null) {
+            throw new JwtAuthenticationException(JwtAuthenticationException.JWT_IS_INVALID);
+        }
         try {
             if (LOGGER.isDebugEnabled()) {
                 LOGGER.debug(VALIDATE_JWT, token);
             }
-            Jws<Claims> claims = Jwts.parser().setSigningKey(secret).parseClaimsJws(token);
+            Jws<Claims> claims = Jwts.parserBuilder().setSigningKey(codeSecret).build().parseClaimsJws(token);
             return !claims.getBody().getExpiration().before(new Date());
         } catch (JwtException | IllegalArgumentException e) {
             throw new JwtAuthenticationException(JwtAuthenticationException.JWT_IS_INVALID);

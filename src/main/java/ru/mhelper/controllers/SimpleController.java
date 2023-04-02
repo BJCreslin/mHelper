@@ -1,23 +1,19 @@
 package ru.mhelper.controllers;
 
+import jakarta.servlet.http.HttpServletRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 import ru.mhelper.controllers.exeptions.BadRequestException;
 import ru.mhelper.models.dto.ProcurementAddress;
 import ru.mhelper.models.procurements.Procurement;
 import ru.mhelper.repository.ProcurementRepository;
-import ru.mhelper.services.procurement.ProcurementService;
 import ru.mhelper.services.exceptions.BadDataParsingException;
 import ru.mhelper.services.ip_service.IpService;
+import ru.mhelper.services.procurement.ProcurementService;
 
-import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 import static ru.mhelper.controllers.SimpleController.INDEX_PAGE_NAME;

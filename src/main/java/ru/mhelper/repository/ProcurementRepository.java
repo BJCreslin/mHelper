@@ -9,6 +9,7 @@ import ru.mhelper.models.procurements.Procurement;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -23,5 +24,5 @@ public interface ProcurementRepository extends JpaRepository<Procurement, Long> 
     Page<Procurement> findByLessThanDate(LocalDate date, Pageable page);
 
     @Query("SELECT p FROM Procurement p WHERE p.status = ru.mhelper.models.BaseStatus.ACTIVE AND  p.applicationDeadline > :prevTime AND p.applicationDeadline < :nextTimeEvent")
-    List<Procurement> getAllInTimeInterval(LocalDateTime prevTime, LocalDateTime nextTimeEvent);
+    List<Procurement> getAllInTimeInterval(ZonedDateTime prevTime, ZonedDateTime nextTimeEvent);
 }

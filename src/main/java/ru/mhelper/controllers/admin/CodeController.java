@@ -1,7 +1,6 @@
 package ru.mhelper.controllers.admin;
 
-import io.swagger.v3.oas.annotations.OpenAPIDefinition;
-import io.swagger.v3.oas.annotations.info.Info;
+import jakarta.annotation.security.RolesAllowed;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -12,7 +11,7 @@ import ru.mhelper.cfg.ApiVersion;
 import ru.mhelper.services.geting_code.TelegramCodeServiceImpl;
 import ru.mhelper.services.geting_code.UserIdTimed;
 
-import javax.annotation.security.RolesAllowed;
+
 import java.util.Map;
 
 import static ru.mhelper.controllers.AuthController.URL;
@@ -20,7 +19,7 @@ import static ru.mhelper.controllers.AuthController.URL;
 @RestController
 @RequestMapping(URL)
 @CrossOrigin(origins = "*", maxAge = 3600)
-@OpenAPIDefinition(info = @Info(title = "Telegram code API", version = "1.0", description = "Telegram codes Information"))
+
 public class CodeController {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(CodeController.class);

@@ -9,6 +9,7 @@ import ru.mhelper.models.users.User;
 import ru.mhelper.repository.UserRepository;
 import ru.mhelper.services.telegram.status_service.StatusService;
 
+import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -142,7 +143,7 @@ public class TelegramCodeServiceImpl implements TelegramCodeService {
         }
         if (!storage.isEmpty()) {
             List<Integer> codesForDelete = new ArrayList<>();
-            storage.entrySet().stream().filter(x -> x.getValue().getTimeCreated().plusMinutes(lifetime).isBefore(LocalTime.now())).forEach(x -> codesForDelete.add(x.getKey()));
+            storage.entrySet().stream().filter(x -> x.getValue().getTimeCreated().plusMinutes(lifetime).isBefore(LocalDateTime.now())).forEach(x -> codesForDelete.add(x.getKey()));
             codesForDelete.forEach(storage::remove);
         }
     }

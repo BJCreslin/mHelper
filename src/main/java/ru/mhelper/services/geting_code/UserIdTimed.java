@@ -2,15 +2,15 @@ package ru.mhelper.services.geting_code;
 
 import lombok.Getter;
 
-import java.time.LocalTime;
+import java.time.LocalDateTime;
 
 @Getter
 public class UserIdTimed {
     private final Long userId;
-    private final LocalTime timeCreated;
+    private final LocalDateTime timeCreated;
 
     public UserIdTimed(Long userId) {
         this.userId = userId;
-        this.timeCreated = LocalTime.now();
+        this.timeCreated = LocalDateTime.now();
     }
 }

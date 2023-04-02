@@ -1,5 +1,6 @@
 package ru.mhelper.controllers;
 
+import jakarta.validation.Valid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
@@ -17,7 +18,6 @@ import ru.mhelper.models.dto.ProcurementDto;
 import ru.mhelper.services.chrome.ProcurementDtoService;
 import ru.mhelper.services.exceptions.BadDataParsingException;
 
-import javax.validation.Valid;
 import java.util.stream.Collectors;
 
 import static ru.mhelper.controllers.ChromeExtensionController.URL;

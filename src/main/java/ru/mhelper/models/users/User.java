@@ -1,6 +1,10 @@
 package ru.mhelper.models.users;
 
-import lombok.ToString;
+import jakarta.persistence.*;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 import lombok.experimental.SuperBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -8,28 +12,12 @@ import ru.mhelper.models.BaseEntity;
 import ru.mhelper.models.BaseStatus;
 import ru.mhelper.models.user_procurement.UserProcurementLinks;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
-import javax.persistence.FetchType;
-import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
-import javax.persistence.Lob;
-import javax.persistence.ManyToMany;
-import javax.persistence.OneToMany;
-import javax.persistence.Table;
-import javax.validation.constraints.Email;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
 import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.Objects;
 import java.util.Set;
 
 @Entity
-@ToString
 @Table(name = "users")
 @SuperBuilder
 public class User extends BaseEntity {
@@ -79,8 +67,8 @@ public class User extends BaseEntity {
 
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "user_roles",
-        joinColumns = @JoinColumn(name = "user_id"),
-        inverseJoinColumns = @JoinColumn(name = "role_id"))
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "role_id"))
     private Set<Role> roles = new HashSet<>();
 
     @OneToMany(mappedBy = "user", orphanRemoval = true)
@@ -95,6 +83,10 @@ public class User extends BaseEntity {
     }
 
     public User() {
+    }
+
+    public User(Long telegramUserId){
+        this.telegramUserId = telegramUserId;
     }
 
     public User(String userName, String email, String password) {
@@ -117,13 +109,13 @@ public class User extends BaseEntity {
 
     public static User createNewTelegramUser(Long telegramId) {
         return User.builder()
-            .telegramUserId(telegramId)
-            .username(PREFIX_TELEGRAM_NAME + telegramId)
-            .password(TELEGRAM_DB_PASSWORD)
-            .email(telegramId + POSTFIX_TELEGRAM_EMAIL)
-            .enabled(true)
-            .status(BaseStatus.ACTIVE)
-            .build();
+                .telegramUserId(telegramId)
+                .username(PREFIX_TELEGRAM_NAME + telegramId)
+                .password(TELEGRAM_DB_PASSWORD)
+                .email(telegramId + POSTFIX_TELEGRAM_EMAIL)
+                .enabled(true)
+                .status(BaseStatus.ACTIVE)
+                .build();
     }
 
     public String getUsername() {

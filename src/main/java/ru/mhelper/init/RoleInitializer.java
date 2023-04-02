@@ -37,7 +37,7 @@ public class RoleInitializer implements CommandLineRunner {
             }
         });
         if (LOGGER.isDebugEnabled()) {
-            LOGGER.debug("Roles were initiated");
+            LOGGER.debug("Roles has been initiated");
         }
     }
 }
