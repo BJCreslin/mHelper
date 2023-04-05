@@ -1,5 +1,6 @@
 package ru.mhelper.services;
 
+import jakarta.transaction.Transactional;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -28,7 +29,6 @@ import ru.mhelper.repository.UserRepository;
 import ru.mhelper.services.dao.ProcurementDataManagerImpl;
 import ru.mhelper.services.exceptions.DataManagerException;
 
-import javax.transaction.Transactional;
 import java.math.BigDecimal;
 import java.net.MalformedURLException;
 import java.net.URL;
