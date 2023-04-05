@@ -15,7 +15,7 @@
     <groupId>ru.mhelper</groupId>
     <artifactId>mhelper</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <name>mHelper</name>
+    <name>MHelperApplication</name>
     <description>Website automation service zakupki.gov.ru</description>
 
     <properties>
@@ -195,6 +195,22 @@
 
     </dependencies>
 
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-jar-plugin</artifactId>
+                <version>3.2.0</version>
+                <configuration>
+                    <archive>
+                        <manifest>
+                            <mainClass>ru.mhelper.MHelperApplication</mainClass>
+                        </manifest>
+                    </archive>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
 
 
 </project>
