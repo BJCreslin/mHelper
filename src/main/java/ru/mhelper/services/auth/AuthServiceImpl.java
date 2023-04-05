@@ -23,6 +23,7 @@ import ru.mhelper.services.security.JwtTokenProvider;
 
 import java.util.HashSet;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -67,7 +68,7 @@ public class AuthServiceImpl implements AuthService {
             userRepository.save(newUser);
         }
         User user = userRepository.findByTelegramUserId(telegramId).orElseThrow(() -> new BadRequestException(USER_NOT_FOUND));
-        String accessToken = jwtTokenProvider.createAccessToken(user.getUsername(), user.getRoles());
+        String accessToken = jwtTokenProvider.createAccessToken(user.getUsername(), user.getRoles().stream().map(Role::getName).collect(Collectors.toSet()));
         String refreshToken = jwtTokenProvider.createRefreshToken(user.getUsername());
         return ResponseEntity.ok(JwtResponse.builder()
                 .accessToken(accessToken)
@@ -88,7 +89,7 @@ public class AuthServiceImpl implements AuthService {
         SecurityContextHolder.getContext().setAuthentication(authentication);
         User user = userRepository.findByUsername(loginRequest.getUserName()).
                 orElseThrow(() -> new UsernameNotFoundException(String.format(USER_NOT_FOUND, loginRequest.getUserName())));
-        String accessToken = jwtTokenProvider.createAccessToken(user.getUsername(), user.getRoles());
+        String accessToken = jwtTokenProvider.createAccessToken(user.getUsername(), user.getRoles().stream().map(Role::getName).collect(Collectors.toSet()));
         String refreshToken = jwtTokenProvider.createRefreshToken(user.getUsername());
         return ResponseEntity.ok(JwtResponse.builder()
                 .accessToken(accessToken)
