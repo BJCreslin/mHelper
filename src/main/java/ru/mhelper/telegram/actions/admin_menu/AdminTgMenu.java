@@ -1,4 +1,4 @@
-package ru.mhelper.services.telegram.actions.admin_menu;
+package ru.mhelper.telegram.actions.admin_menu;
 
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 

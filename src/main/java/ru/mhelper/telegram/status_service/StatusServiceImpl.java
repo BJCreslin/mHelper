@@ -1,4 +1,4 @@
-package ru.mhelper.services.telegram.status_service;
+package ru.mhelper.telegram.status_service;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -48,7 +48,7 @@ public class StatusServiceImpl implements StatusService {
     }
 
     private void setTgStatusForUser(Long userId, TelegramStateType status) {
-        User user = userRepository.getById(userId);
+        User user = userRepository.getReferenceById(userId);
         user.setTelegramStateType(status);
         userRepository.save(user);
     }

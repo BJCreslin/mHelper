@@ -1,9 +1,12 @@
-package ru.mhelper.services.telegram.actions.answer_services;
+package ru.mhelper.telegram.actions.answer_services;
 
 import org.springframework.stereotype.Service;
 
 import java.util.Map;
 
+/**
+ * Сервис печати всех функций
+ */
 @Service(PrintAllFunctionTextAnswer.SERVICE_NAME)
 public class PrintAllFunctionTextAnswer implements TelegramTextAnswer {
 

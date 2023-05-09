@@ -8,9 +8,9 @@ import ru.mhelper.models.objects.UserTextPair;
 import ru.mhelper.models.procurements.Procurement;
 import ru.mhelper.models.users.User;
 import ru.mhelper.services.procurement.ProcurementService;
-import ru.mhelper.services.telegram.Bot;
 import ru.mhelper.services.user_event.create_message.CreateMessage;
 import ru.mhelper.services.user_event.users_list.UsersListGet;
+import ru.mhelper.telegram.BotMain;
 
 import java.time.LocalDateTime;
 import java.time.ZonedDateTime;
@@ -36,11 +36,11 @@ public class UserEventImpl implements UserEvent {
 
     private final CreateMessage createMessage;
 
-    private final Bot tgBot;
+    private final BotMain tgBot;
 
     private final ProcurementService procurementService;
 
-    public UserEventImpl(UsersListGet usersListGet, CreateMessage createMessage, Bot tgBot, ProcurementService procurementService) {
+    public UserEventImpl(UsersListGet usersListGet, CreateMessage createMessage, BotMain tgBot, ProcurementService procurementService) {
         this.usersListGet = usersListGet;
         this.createMessage = createMessage;
         this.tgBot = tgBot;

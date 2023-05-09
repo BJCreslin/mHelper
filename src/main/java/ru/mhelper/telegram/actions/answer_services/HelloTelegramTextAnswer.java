@@ -1,4 +1,4 @@
-package ru.mhelper.services.telegram.actions.answer_services;
+package ru.mhelper.telegram.actions.answer_services;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -8,7 +8,7 @@ import ru.mhelper.repository.UserRepository;
 
 import java.util.Optional;
 
-import static ru.mhelper.services.telegram.actions.answer_services.HelloTelegramTextAnswer.SERVICE_ACTION_NAME;
+import static ru.mhelper.telegram.actions.answer_services.HelloTelegramTextAnswer.SERVICE_ACTION_NAME;
 
 @Service(SERVICE_ACTION_NAME)
 public class HelloTelegramTextAnswer implements TelegramTextAnswer {

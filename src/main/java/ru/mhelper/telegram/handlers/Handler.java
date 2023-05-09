@@ -1,4 +1,4 @@
-package ru.mhelper.services.telegram.handlers;
+package ru.mhelper.telegram.handlers;
 
 import org.telegram.telegrambots.meta.api.methods.PartialBotApiMethod;
 import ru.mhelper.models.users.TelegramStateType;

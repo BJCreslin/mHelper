@@ -1,4 +1,4 @@
-package ru.mhelper.services.telegram.actions.answer_services;
+package ru.mhelper.telegram.actions.answer_services;
 
 public interface TelegramTextAnswer {
 

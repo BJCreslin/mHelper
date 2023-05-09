@@ -1,4 +1,4 @@
-package ru.mhelper.services.telegram;
+package ru.mhelper.telegram.exception;
 
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 

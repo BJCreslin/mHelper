@@ -1,11 +1,11 @@
-package ru.mhelper.services.telegram.receiver;
+package ru.mhelper.telegram.receiver;
 
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.methods.PartialBotApiMethod;
 import ru.mhelper.models.users.TelegramStateType;
 import ru.mhelper.models.users.User;
 import ru.mhelper.repository.UserRepository;
-import ru.mhelper.services.telegram.handlers.Handler;
+import ru.mhelper.telegram.handlers.Handler;
 import org.telegram.telegrambots.meta.api.objects.CallbackQuery;
 import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.Update;
@@ -79,6 +79,7 @@ public class UpdateReceiver {
                 .findAny()
                 .orElseThrow(UnsupportedOperationException::new);
     }
+
 
 }
 

@@ -1,10 +1,8 @@
-package ru.mhelper.services.telegram;
+package ru.mhelper.telegram.init;
 
-import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.event.ContextRefreshedEvent;
-import org.springframework.context.event.ContextStartedEvent;
 import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.TelegramBotsApi;
@@ -26,7 +24,7 @@ public class BotInitializer {
         TelegramBotsApi telegramBotsApi = new TelegramBotsApi(DefaultBotSession.class);
         try {
             telegramBotsApi.registerBot((LongPollingBot) bot);
-            log.info("registered telegram Bot");
+            log.info("Registered telegram Bot");
         } catch (TelegramApiRequestException e) {
             log.error(e.getMessage());
         }

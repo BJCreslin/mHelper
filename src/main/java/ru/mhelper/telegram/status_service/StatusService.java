@@ -1,4 +1,4 @@
-package ru.mhelper.services.telegram.status_service;
+package ru.mhelper.telegram.status_service;
 
 public interface StatusService {
 

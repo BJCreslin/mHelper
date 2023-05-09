@@ -7,15 +7,10 @@ import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Service;
 import ru.mhelper.models.users.User;
 import ru.mhelper.repository.UserRepository;
-import ru.mhelper.services.telegram.status_service.StatusService;
+import ru.mhelper.telegram.status_service.StatusService;
 
 import java.time.LocalDateTime;
-import java.time.LocalTime;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Random;
+import java.util.*;
 
 import static ru.mhelper.services.geting_code.ErrorGettingCode.TOO_MANY_ATTEMPTS;
 
