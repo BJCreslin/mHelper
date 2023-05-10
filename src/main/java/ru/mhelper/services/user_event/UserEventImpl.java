@@ -21,7 +21,7 @@ import java.util.List;
 /**
  * Сервис уведомлений о событиях
  */
-@Service
+
 public class UserEventImpl implements UserEvent {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(UserEventImpl.class);
