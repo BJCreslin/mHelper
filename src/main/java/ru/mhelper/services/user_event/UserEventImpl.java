@@ -36,14 +36,14 @@ public class UserEventImpl implements UserEvent {
 
     private final CreateMessage createMessage;
 
-    private final BotMain tgBot;
+//    private final BotMain tgBot;
 
     private final ProcurementService procurementService;
 
-    public UserEventImpl(UsersListGet usersListGet, CreateMessage createMessage, BotMain tgBot, ProcurementService procurementService) {
+    public UserEventImpl(UsersListGet usersListGet, CreateMessage createMessage, ProcurementService procurementService) {
         this.usersListGet = usersListGet;
         this.createMessage = createMessage;
-        this.tgBot = tgBot;
+//        this.tgBot = tgBot;
         this.procurementService = procurementService;
     }
 
@@ -96,11 +96,11 @@ public class UserEventImpl implements UserEvent {
         if (LOGGER.isDebugEnabled()) {
             LOGGER.debug(SEND_MESSAGES_BY_TELEGRAM_BOT, userTextPairs.size());
         }
-        if (!userTextPairs.isEmpty()) {
-            for (UserTextPair pair : userTextPairs) {
-                tgBot.sendMessageToUser(pair.getUser(), pair.getText());
-            }
-        }
+//        if (!userTextPairs.isEmpty()) {
+//            for (UserTextPair pair : userTextPairs) {
+//                tgBot.sendMessageToUser(pair.getUser(), pair.getText());
+//            }
+//        }
     }
 
     private boolean isEventSoon(ZonedDateTime procurement, ZonedDateTime zdtNow) {
