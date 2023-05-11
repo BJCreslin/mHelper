@@ -3,14 +3,12 @@ package ru.mhelper.services.user_event;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.scheduling.annotation.Scheduled;
-import org.springframework.stereotype.Service;
 import ru.mhelper.models.objects.UserTextPair;
 import ru.mhelper.models.procurements.Procurement;
 import ru.mhelper.models.users.User;
 import ru.mhelper.services.procurement.ProcurementService;
 import ru.mhelper.services.user_event.create_message.CreateMessage;
 import ru.mhelper.services.user_event.users_list.UsersListGet;
-import ru.mhelper.telegram.BotMain;
 
 import java.time.LocalDateTime;
 import java.time.ZonedDateTime;
