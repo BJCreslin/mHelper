@@ -36,7 +36,7 @@ public class ControllerHandler extends ResponseEntityExceptionHandler {
     @ExceptionHandler({BadRequestException.class})
     protected ResponseEntity<Object> handleBadRequestException(BadRequestException ex, WebRequest request) {
         var apiError = Error.builder()
-                .code(HttpStatus.INTERNAL_SERVER_ERROR.value())
+                .code(HttpStatus.BAD_REQUEST.value())
                 .cause(ex.getMessage())
                 .message("BadRequestException").build();
         return new ResponseEntity<>(apiError, HttpStatus.INTERNAL_SERVER_ERROR);

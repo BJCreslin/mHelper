@@ -1,8 +1,9 @@
 package ru.mhelper.cfg;
 
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
+import org.springframework.context.annotation.Configuration;
 
-@org.springframework.context.annotation.Configuration
+@Configuration
 @EnableConfigurationProperties
-public class Configuration {
+public class ApplicationConfiguration {
 }

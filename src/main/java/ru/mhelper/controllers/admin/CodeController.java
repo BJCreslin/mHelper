@@ -14,7 +14,8 @@ import ru.mhelper.services.geting_code.UserIdTimed;
 
 import java.util.Map;
 
-import static ru.mhelper.controllers.AuthController.URL;
+import static ru.mhelper.controllers.admin.CodeController.URL;
+
 
 @RestController
 @RequestMapping(URL)
@@ -35,7 +36,7 @@ public class CodeController {
     }
 
     @GetMapping({"/codes"})
-    @RolesAllowed("ADMIN")
+//    @RolesAllowed("ADMIN")
     public Map<Integer, UserIdTimed> getAll() {
         if (LOGGER.isDebugEnabled()) {
             LOGGER.debug(GET_ALL_CODES);

@@ -25,7 +25,7 @@ import java.util.Set;
 
 import static ru.mhelper.controllers.AuthController.URL;
 
-@Controller
+@RestController
 @RequestMapping(URL)
 @CrossOrigin(origins = "*", maxAge = 3600)
 @RequiredArgsConstructor
@@ -54,20 +54,17 @@ public class AuthController {
 
 
     @GetMapping({""})
-    @ResponseBody
     public ResponseEntity<MessageResponse> testConnect() {
         return ResponseEntity.ok(new MessageResponse(SUCCESSFUL_CONNECTION));
     }
 
-    @PreAuthorize("hasAnyRole('ADMIN', 'CHROME_EXTENSION')")
+//    @PreAuthorize("hasAnyRole('ADMIN', 'CHROME_EXTENSION')")
     @GetMapping({TEST_JWT})
-    @ResponseBody
     public ResponseEntity<MessageResponse> testAuthConnect() {
         return ResponseEntity.ok(new MessageResponse(SUCCESSFUL_CONNECTION));
     }
 
     @GetMapping({CODE_URL + "{code}"})
-    @ResponseBody
     @StopSpam
     public Object tgSignIn(@PathVariable Integer code, HttpServletRequest request) {
         if (LOGGER.isDebugEnabled()) {
@@ -81,7 +78,6 @@ public class AuthController {
     }
 
     @PostMapping({"/signin"})
-    @ResponseBody
     public ResponseEntity<JwtResponse> signIn(@RequestBody LoginRequest loginRequest) {
         if (LOGGER.isDebugEnabled()) {
             LOGGER.debug(AUTHENTICATING, loginRequest.getUserName());
