@@ -8,7 +8,6 @@ import ru.mhelper.models.users.User;
 
 import java.io.Serial;
 import java.util.Collection;
-import java.util.stream.Collectors;
 
 public class JwtUser implements UserDetails {
 
@@ -37,7 +36,7 @@ public class JwtUser implements UserDetails {
     public static UserDetails build(User user) {
         var authorities = user.getRoles().stream()
                 .map(role -> new SimpleGrantedAuthority(role.getName()))
-                .collect(Collectors.toList());
+                .toList();
         return new JwtUser(
                 user.getId(),
                 user.getUsername(),
