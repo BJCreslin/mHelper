@@ -1,4 +1,4 @@
-package ru.mhelper.services.auth;
+package ru.mhelper.security.auth;
 
 
 import org.springframework.http.ResponseEntity;

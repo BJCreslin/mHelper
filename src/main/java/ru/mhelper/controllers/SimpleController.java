@@ -69,7 +69,6 @@ public class SimpleController {
         try {
             service.action(address);
         } catch (BadDataParsingException exception) {
-            logger.error(ERROR_FROM_PARSING, exception);
             throw new BadRequestException(ERROR_FROM_PARSING, exception);
         }
         List<Procurement> procurements = repo.findAll();

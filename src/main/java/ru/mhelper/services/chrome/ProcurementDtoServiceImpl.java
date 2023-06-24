@@ -89,21 +89,21 @@ public class ProcurementDtoServiceImpl implements ProcurementDtoService {
         }
         var timeZone = stringToTimeZone(procurementDto.getTimeZone());
         var procurement = Procurement.builder()
-            .uin(procurementDto.getUin())
-            .applicationDeadline(remodelDeadlineFromStringToTime(procurementDto.getApplicationDeadline(), timeZone))
-            .contractPrice(remodelPriceToBigDecimal(procurementDto.getContractPrice()))
-            .applicationSecure(procurementDto.getApplicationSecure())
-            .contractSecure(procurementDto.getContractSecure())
-            .dateOfAuction(remodelDateOfAuctionToZonedDateTime(procurementDto.getDateOfAuction(), procurementDto.getTimeOfAuction(), timeZone))
-            .dateOfPlacement(remodelDateOfPlacementToLocalDate(procurementDto.getDateOfPlacement()))
-            .lastUpdatedFromEIS(remodelDateLastUpdateToLocalDate(procurementDto.getLastUpdatedFromEIS()))
-            .dateTimeLastUpdated(LocalDate.now())
-            .fzNumber(remodelFzToInteger(procurementDto.getFzNumber()))
-            .linkOnPlacement(remodelStringUrlToURL(procurementDto.getLinkOnPlacement()))
-            .objectOf(procurementDto.getObjectOf())
-            .procedureType(remodelProcedureType(procurementDto.getProcedureType()))
-            .publisherName(procurementDto.getPublisherName())
-            .build();
+                .uin(procurementDto.getUin())
+                .applicationDeadline(remodelDeadlineFromStringToTime(procurementDto.getApplicationDeadline(), timeZone))
+                .contractPrice(remodelPriceToBigDecimal(procurementDto.getContractPrice()))
+                .applicationSecure(procurementDto.getApplicationSecure())
+                .contractSecure(procurementDto.getContractSecure())
+                .dateOfAuction(remodelDateOfAuctionToZonedDateTime(procurementDto.getDateOfAuction(), procurementDto.getTimeOfAuction(), timeZone))
+                .dateOfPlacement(remodelDateOfPlacementToLocalDate(procurementDto.getDateOfPlacement()))
+                .lastUpdatedFromEIS(remodelDateLastUpdateToLocalDate(procurementDto.getLastUpdatedFromEIS()))
+                .dateTimeLastUpdated(LocalDate.now())
+                .fzNumber(remodelFzToInteger(procurementDto.getFzNumber()))
+                .linkOnPlacement(remodelStringUrlToURL(procurementDto.getLinkOnPlacement()))
+                .objectOf(procurementDto.getObjectOf())
+                .procedureType(remodelProcedureType(procurementDto.getProcedureType()))
+                .publisherName(procurementDto.getPublisherName())
+                .build();
         if (LOGGER.isDebugEnabled()) {
             LOGGER.debug(DTO_WAS_REMODELED, procurement);
         }

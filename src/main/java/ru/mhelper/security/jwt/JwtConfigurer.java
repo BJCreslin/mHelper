@@ -1,4 +1,4 @@
-package ru.mhelper.services.security;
+package ru.mhelper.security.jwt;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.config.annotation.SecurityConfigurerAdapter;
@@ -11,7 +11,6 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 public class JwtConfigurer extends SecurityConfigurerAdapter<DefaultSecurityFilterChain, HttpSecurity> {
     private final JwtTokenFilter jwtTokenFilter;
-
 
     @Override
     public void configure(HttpSecurity httpSecurity) {

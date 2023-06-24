@@ -6,11 +6,13 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import ru.mhelper.models.users.User;
 
+import java.io.Serial;
 import java.util.Collection;
 import java.util.stream.Collectors;
 
 public class JwtUser implements UserDetails {
 
+    @Serial
     private static final long serialVersionUID = -4603089111149819076L;
 
     private final Long id;
@@ -62,7 +64,7 @@ public class JwtUser implements UserDetails {
         return username;
     }
 
-    public Long getId() {
+    public Long id() {
         return id;
     }
 

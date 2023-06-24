@@ -1,4 +1,4 @@
-package ru.mhelper.services.security;
+package ru.mhelper.security.jwt;
 
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -12,7 +12,7 @@ import ru.mhelper.exceptions.JwtAuthenticationException;
 
 import java.io.IOException;
 
-import static ru.mhelper.services.security.JwtTokenProvider.BEARER_PREFIX;
+import static ru.mhelper.security.jwt.JwtTokenProvider.BEARER_PREFIX;
 
 @Component
 public class JwtTokenFilter extends OncePerRequestFilter {

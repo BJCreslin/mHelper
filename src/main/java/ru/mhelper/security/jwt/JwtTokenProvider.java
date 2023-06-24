@@ -1,4 +1,4 @@
-package ru.mhelper.services.security;
+package ru.mhelper.security.jwt;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jws;

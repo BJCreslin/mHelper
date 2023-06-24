@@ -1,4 +1,4 @@
-package ru.mhelper.services.auth;
+package ru.mhelper.security.auth;
 
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
@@ -19,7 +19,7 @@ import ru.mhelper.models.users.User;
 import ru.mhelper.repository.RoleRepository;
 import ru.mhelper.repository.UserRepository;
 import ru.mhelper.services.geting_code.TelegramCodeService;
-import ru.mhelper.services.security.JwtTokenProvider;
+import ru.mhelper.security.jwt.JwtTokenProvider;
 
 import java.util.HashSet;
 import java.util.Set;

@@ -1,4 +1,4 @@
-package ru.mhelper.services.security;
+package ru.mhelper.security.jwt;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

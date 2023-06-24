@@ -5,23 +5,12 @@ import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import ru.mhelper.aspect.stop_spam.StopSpam;
 import ru.mhelper.cfg.ApiVersion;
 import ru.mhelper.models.dto.*;
-import ru.mhelper.models.users.ERole;
-import ru.mhelper.models.users.Role;
-import ru.mhelper.models.users.User;
-import ru.mhelper.repository.RoleRepository;
-import ru.mhelper.repository.UserRepository;
-import ru.mhelper.services.auth.AuthService;
+import ru.mhelper.security.auth.AuthService;
 import ru.mhelper.services.geting_code.TelegramCodeService;
-
-import java.util.HashSet;
-import java.util.Set;
 
 import static ru.mhelper.controllers.AuthController.URL;
 
