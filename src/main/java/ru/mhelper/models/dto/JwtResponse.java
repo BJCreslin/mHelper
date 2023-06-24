@@ -12,7 +12,7 @@ import java.util.Collection;
 @AllArgsConstructor
 @Builder
 @Data
-public class JwtResponse extends AbstractResponse {
+public non-sealed class JwtResponse extends AbstractResponse {
 
     private String accessToken;
 
