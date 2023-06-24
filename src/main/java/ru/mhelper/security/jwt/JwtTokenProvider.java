@@ -35,7 +35,7 @@ public class JwtTokenProvider {
     private static final Logger LOGGER = LoggerFactory.getLogger(JwtTokenProvider.class);
 
     public static final String JWT_FOR_USER_HAVE_BEEN_CREATED = "JWT for user {} have been created.";
-    public static final String BEARER_PREFIX = "Bearer_";
+    public static final String BEARER_PREFIX = "Bearer";
     public static final String LOAD_USER_DETAILS_FOR_TOKEN = "Load userDetails {} for token.";
     public static final String RESOLVE_JWT = "Resolve JWT:{}";
     public static final String VALIDATE_JWT = "Validate JWT:{}";
