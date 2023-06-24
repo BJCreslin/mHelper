@@ -1,8 +1,10 @@
 package ru.mhelper.models.dto;
 
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
+@EqualsAndHashCode(callSuper = false)
 @NoArgsConstructor
 @Data
 public class MessageResponse extends AbstractResponse {

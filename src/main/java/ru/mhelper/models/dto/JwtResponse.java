@@ -1,13 +1,17 @@
 package ru.mhelper.models.dto;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 import java.util.Collection;
-import java.util.List;
 
+@EqualsAndHashCode(callSuper = false)
 @AllArgsConstructor
 @Builder
+@Data
 public class JwtResponse extends AbstractResponse {
 
     private String accessToken;
@@ -16,6 +20,7 @@ public class JwtResponse extends AbstractResponse {
 
     private String type;
 
+    @JsonIgnore
     private Long id;
 
     private String userName;

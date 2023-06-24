@@ -79,7 +79,7 @@ public class SecurityConfig {
                 .disable()
                 .authorizeHttpRequests()
                 .requestMatchers(
-                        "/h2-console**",
+                        "/v1/auth/code/**",
                         CHROME_AUTH,
                         AuthController.URL + CODE_URL + "***",
                         SimpleController.INDEX_PAGE_NAME
