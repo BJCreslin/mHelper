@@ -18,6 +18,7 @@ public class JwtResponse extends AbstractResponse {
 
     private String refreshToken;
 
+    @JsonIgnore
     private String type;
 
     @JsonIgnore
@@ -25,8 +26,10 @@ public class JwtResponse extends AbstractResponse {
 
     private String userName;
 
+    @JsonIgnore
     private String email;
 
+    @JsonIgnore
     private Collection<String> roles;
 
 }
