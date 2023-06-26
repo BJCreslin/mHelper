@@ -7,6 +7,9 @@ const JWT_PREFIX = "Bearer ";
 let connected = false;
 let jwtToken = null;
 
+let accessToken = null;
+let refreshToken = null;
+
 chrome.runtime.onMessage.addListener(
     function (request, sender, sendResponse) {
 
@@ -38,7 +41,10 @@ chrome.runtime.onMessage.addListener(
                 return response.json();
             }).then((data) => {
                 connected = true;
-                jwtToken = data.token;
+                accessToken = data.accessToken;
+                refreshToken = data.refreshToken;
+
+                debugger;
                 sendResponse(201);
             })
                 .catch((rejected) => {
