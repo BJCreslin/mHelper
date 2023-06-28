@@ -15,7 +15,8 @@ chrome.runtime.onMessage.addListener(
 
         if (request.destination === "test_connection") {
             fetch(TEST_SERVER_URL, {
-                method: 'GET'
+                method: 'GET',
+                headers: getHeaders()
             })
                 .then((response) => {
                     debugger;
@@ -43,7 +44,7 @@ chrome.runtime.onMessage.addListener(
                 connected = true;
                 accessToken = data.accessToken;
                 refreshToken = data.refreshToken;
-
+                saveAccessToken();
                 debugger;
                 sendResponse(201);
             })
@@ -56,11 +57,7 @@ chrome.runtime.onMessage.addListener(
         if (request.destination === "sender") {
             fetch(POST_PROCUREMENT_URL, {
                 method: 'POST',
-                headers: {
-                    'Accept': 'application/json',
-                    'Content-Type': 'application/json; charset=utf-8',
-                    'Authorization': JWT_PREFIX + jwtToken
-                },
+                headers: getHeaders(),
                 body: JSON.stringify(request.data)
             }).then((response) => {
                 if (!response.ok) {
@@ -77,10 +74,64 @@ chrome.runtime.onMessage.addListener(
             return true;
         }
 
-        if (request.destination === "check_code"){
+        if (request.destination === "check_code") {
             if (jwtToken === null) {
                 sendResponse(2);
             }
         }
     }
 );
+
+function testConnection() {
+    fetch(TEST_SERVER_URL, {
+        method: 'GET',
+        headers: getHeaders()
+    })
+        .then((response) => {
+            if (!response.ok) {
+                return Promise.reject(new Error(
+                    'Response failed: ' + response.status + ' (' + response.statusText + ')'
+                ));
+            }
+            return response.json();
+        }).then((data) => {
+        connected = true;
+        accessToken = data.accessToken;
+        refreshToken = data.refreshToken;
+        saveAccessToken();
+        sendResponse(201);
+    })
+        .catch((rejected) => {
+            sendResponse(rejected.status);
+        });
+}
+
+chrome.runtime.onStartup.addListener(() => {
+    accessToken = readAccessToken()
+    if (accessToken === null) {
+        connected = false;
+    } else {
+        testConnection();
+        connected = true;
+    }
+
+})
+
+function saveAccessToken() {
+    chrome.storage.local.set({
+        accessToken: accessToken,
+        refreshToken: refreshToken
+    })
+}
+
+function readAccessToken() {
+    return chrome.storage.local.get('accessToken');
+}
+
+function getHeaders() {
+    let myHeaders = new Headers();
+    myHeaders.append('Authorization', JWT_PREFIX + accessToken);
+    myHeaders.append('Content-Type', 'application/json; charset=utf-8');
+    myHeaders.append('Accept', 'application/json');
+    return myHeaders;
+}
