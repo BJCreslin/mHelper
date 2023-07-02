@@ -107,6 +107,7 @@ function testConnection() {
 }
 
 chrome.runtime.onStartup.addListener(() => {
+    debugger;
     accessToken = readAccessToken()
     if (accessToken === null) {
         connected = false;

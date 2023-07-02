@@ -4,6 +4,23 @@ const buttonTgNumber = document.getElementById("button_tg_number");
 const inputFormTgNumber = document.getElementById("form_tg_number");
 let connected = false;
 
+
+// chrome.runtime.щт.addListener(() => {
+//     accessToken = readAccessToken()
+//     if (accessToken === null) {
+//         connected = false;
+//     } else {
+//         testConnection();
+//         connected = true;
+//     }
+//
+// })
+
+chrome.action.onClicked.addListener(function(tab) {
+    debugger
+    console.log("Иконка расширения была нажата.");
+});
+
 inputTgNumber.addEventListener("change", function () {
     let iNumber = Number(inputTgNumber.value);
     if (typeof iNumber === 'number' && iNumber > 1000 && iNumber < 1000000000) {
