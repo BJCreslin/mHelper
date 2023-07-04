@@ -44,7 +44,7 @@ chrome.runtime.onMessage.addListener(
                 connected = true;
                 accessToken = data.accessToken;
                 refreshToken = data.refreshToken;
-                saveAccessToken();
+                saveAccessTokensToLocalStorage();
                 debugger;
                 sendResponse(201);
             })
@@ -95,38 +95,52 @@ function testConnection() {
             }
             return response.json();
         }).then((data) => {
-        connected = true;
-        accessToken = data.accessToken;
-        refreshToken = data.refreshToken;
-        saveAccessToken();
-        sendResponse(201);
+
+        if (data.accessToken != null) {
+            accessToken = data.accessToken;
+            refreshToken = data.refreshToken;
+            saveAccessTokensToLocalStorage();
+            connected = true;
+        }
+        else {
+            connected = false;
+            // todo: Что если приходит с бэка пустой токен?
+        }
     })
         .catch((rejected) => {
-            sendResponse(rejected.status);
+            // todo: Что если приходит c бэка пришла ошибка
         });
 }
 
 chrome.runtime.onStartup.addListener(() => {
     debugger;
-    accessToken = readAccessToken()
+    restoreAccessTokensFromLocalStorage();
     if (accessToken === null) {
         connected = false;
     } else {
         testConnection();
-        connected = true;
     }
 
 })
 
-function saveAccessToken() {
+function saveAccessTokensToLocalStorage() {
     chrome.storage.local.set({
         accessToken: accessToken,
         refreshToken: refreshToken
     })
 }
 
-function readAccessToken() {
+function restoreAccessTokensFromLocalStorage() {
+    accessToken = getAccessTokenFromLocalStorage()
+    refreshToken = getRefreshTokenFromLocalStorage()
+}
+
+function getAccessTokenFromLocalStorage() {
     return chrome.storage.local.get('accessToken');
+}
+
+function getRefreshTokenFromLocalStorage() {
+    return chrome.storage.local.get('refreshToken');
 }
 
 function getHeaders() {
@@ -136,3 +150,5 @@ function getHeaders() {
     myHeaders.append('Accept', 'application/json');
     return myHeaders;
 }
+
+
