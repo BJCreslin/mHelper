@@ -4,26 +4,14 @@ const buttonTgNumber = document.getElementById("button_tg_number");
 const inputFormTgNumber = document.getElementById("form_tg_number");
 let connected = false;
 
-
-// chrome.runtime.щт.addListener(() => {
-//     accessToken = readAccessToken()
-//     if (accessToken === null) {
-//         connected = false;
-//     } else {
-//         testConnection();
-//         connected = true;
-//     }
-//
-// })
-
-chrome.action.onClicked.addListener(function(tab) {
+chrome.action.onClicked.addListener(function (tab) {
     debugger
     console.log("Иконка расширения была нажата.");
 });
 
 inputTgNumber.addEventListener("change", function () {
-    let iNumber = Number(inputTgNumber.value);
-    if (typeof iNumber === 'number' && iNumber > 1000 && iNumber < 1000000000) {
+    let inputNumber = Number(inputTgNumber.value);
+    if (typeof inputNumber === 'number' && inputNumber > 1000 && inputNumber < 1000000000) {
         inputTgNumber.classList.remove("is-invalid");
         buttonTgNumber.classList.remove("disabled");
     } else {
@@ -36,11 +24,13 @@ button_tg_number.addEventListener("click", function () {
 
     function notCreatedConnection() {
         inputTgNumber.classList.add("is-invalid");
+        connected = false;
     }
 
     function createConnection() {
-        let tg_numberdocument = document.getElementsByClassName("tg_number")[0];
-        tg_numberdocument.style.display = "none";
+        let numberDocument = document.getElementsByClassName("tg_number")[0];
+        numberDocument.style.display = "none";
+        connected = true;
     }
 
     chrome.runtime.sendMessage(
@@ -67,8 +57,8 @@ const isConnected = () => {
         });
 }
 
-const test_button = document.getElementById("button_test");
-test_button.addEventListener("click", function () {
+const testConnectionButton = document.getElementById("button_test");
+testConnectionButton.addEventListener("click", function () {
     chrome.runtime.sendMessage(
         {
             destination: "test_connection",
@@ -76,15 +66,17 @@ test_button.addEventListener("click", function () {
         },
         (response) => {
             function setConnected() {
-                test_button.removeAttribute("class");
-                test_button.setAttribute("class", "btn btn-secondary")
-                test_button.innerText = "Connected";
+                testConnectionButton.removeAttribute("class");
+                testConnectionButton.setAttribute("class", "btn btn-secondary")
+                testConnectionButton.innerText = "Connected";
+                connected = true;
             }
 
             function setNotConnected() {
-                test_button.removeAttribute("class");
-                test_button.setAttribute("class", "btn btn-danger")
-                test_button.innerText = "Not connected";
+                testConnectionButton.removeAttribute("class");
+                testConnectionButton.setAttribute("class", "btn btn-danger")
+                testConnectionButton.innerText = "Not connected";
+                connected = false;
             }
 
             if (response >= 200 && response < 300) {
