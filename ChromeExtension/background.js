@@ -16,7 +16,7 @@ chrome.runtime.onMessage.addListener(
         if (request.destination === "test_connection") {
             fetch(TEST_SERVER_URL, {
                 method: 'GET',
-                headers: getHeaders()
+                headers: createHeaders()
             })
                 .then((response) => {
                     debugger;
@@ -29,8 +29,9 @@ chrome.runtime.onMessage.addListener(
         }
 
         if (request.destination === "send_code") {
-            let code_from_tg = request.data;
-            fetch(CHROME_REGISTRATION + code_from_tg, {
+            debugger;
+            let registrationCode = request.data;
+            fetch(CHROME_REGISTRATION + registrationCode, {
                 method: 'GET'
             }).then((response) => {
                 if (!response.ok) {
@@ -41,6 +42,7 @@ chrome.runtime.onMessage.addListener(
                 debugger;
                 return response.json();
             }).then((data) => {
+                debugger;
                 connected = true;
                 accessToken = data.accessToken;
                 refreshToken = data.refreshToken;
@@ -57,7 +59,7 @@ chrome.runtime.onMessage.addListener(
         if (request.destination === "sender") {
             fetch(POST_PROCUREMENT_URL, {
                 method: 'POST',
-                headers: getHeaders(),
+                headers: createHeaders(),
                 body: JSON.stringify(request.data)
             }).then((response) => {
                 if (!response.ok) {
@@ -85,7 +87,7 @@ chrome.runtime.onMessage.addListener(
 function testConnection() {
     fetch(TEST_SERVER_URL, {
         method: 'GET',
-        headers: getHeaders()
+        headers: createHeaders()
     })
         .then((response) => {
             if (!response.ok) {
@@ -101,8 +103,7 @@ function testConnection() {
             refreshToken = data.refreshToken;
             saveAccessTokensToLocalStorage();
             connected = true;
-        }
-        else {
+        } else {
             connected = false;
             // todo: Что если приходит с бэка пустой токен?
         }
@@ -120,35 +121,56 @@ chrome.runtime.onStartup.addListener(() => {
     } else {
         testConnection();
     }
-
 })
 
+// --------------------------------- LocalStorage Api ----------------------
+/**
+ * Сохраняет токены в локальное хранилище
+ */
 function saveAccessTokensToLocalStorage() {
     chrome.storage.local.set({
         accessToken: accessToken,
         refreshToken: refreshToken
-    })
+    }, function () {
+        console.log("Saved access tokens to local storage.");
+    });
 }
 
+/**
+ * Восстанавливает токены из локального хранилища
+ */
 function restoreAccessTokensFromLocalStorage() {
-    accessToken = getAccessTokenFromLocalStorage()
-    refreshToken = getRefreshTokenFromLocalStorage()
+    const accessTokenLocal = readLocalStorage('accessToken')
+    const refreshTokenLocal = readLocalStorage('refreshToken')
+    Promise.all([accessTokenLocal, refreshTokenLocal]).then(values => {
+        accessToken = values[0] === null ? null : values[0];
+        refreshToken = values[1] === null ? null : values[1];
+        console.log("Restored access tokens from local storage.");
+    });
 }
 
-function getAccessTokenFromLocalStorage() {
-    return chrome.storage.local.get('accessToken');
-}
+const readLocalStorage = async (key) => {
+    return new Promise((resolve, reject) => {
+        chrome.storage.local.get([key], function (result) {
+            if (result[key] === undefined) {
+                reject();
+            } else {
+                resolve(result[key]);
+            }
+        });
+    });
+};
+//--------------------------------------------------------------------------
 
-function getRefreshTokenFromLocalStorage() {
-    return chrome.storage.local.get('refreshToken');
-}
-
-function getHeaders() {
+// --------------------------------- Web ----------------------
+/**
+ * Создает заголовки
+ */
+function createHeaders() {
     let myHeaders = new Headers();
     myHeaders.append('Authorization', JWT_PREFIX + accessToken);
     myHeaders.append('Content-Type', 'application/json; charset=utf-8');
     myHeaders.append('Accept', 'application/json');
     return myHeaders;
 }
-
-
+//--------------------------------------------------------------------------
