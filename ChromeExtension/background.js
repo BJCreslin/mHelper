@@ -10,6 +10,30 @@ let jwtToken = null;
 let accessToken = null;
 let refreshToken = null;
 
+function sendCode(host) {
+    return fetch(host, {
+        method: 'GET'
+    }).then((response) => {
+        debugger;
+        return response.json();
+    }).then((data) => {
+        debugger;
+        return data;
+    })
+        .catch((rejected) => {
+            return null;
+        });
+}
+
+function saveTokens(data) {
+    connected = true;
+    debugger;
+    console.log('access ' + data.accessToken);
+    accessToken = data.accessToken;
+    refreshToken = data.refreshToken;
+    saveAccessTokensToLocalStorage();
+}
+
 chrome.runtime.onMessage.addListener(
     function (request, sender, sendResponse) {
 
@@ -29,31 +53,16 @@ chrome.runtime.onMessage.addListener(
         }
 
         if (request.destination === "send_code") {
-            debugger;
             let registrationCode = request.data;
-            fetch(CHROME_REGISTRATION + registrationCode, {
-                method: 'GET'
-            }).then((response) => {
-                if (!response.ok) {
-                    return Promise.reject(new Error(
-                        'Response failed: ' + response.status + ' (' + response.statusText + ')'
-                    ));
-                }
-                debugger;
-                return response.json();
-            }).then((data) => {
-                debugger;
-                connected = true;
-                accessToken = data.accessToken;
-                refreshToken = data.refreshToken;
-                saveAccessTokensToLocalStorage();
-                debugger;
-                sendResponse(201);
-            })
-                .catch((rejected) => {
-                    sendResponse(rejected.status);
-                });
-            return true;
+            let host = CHROME_REGISTRATION + registrationCode;
+            let result = sendCode(host);
+            result.then(saveTokens)
+            // if (result != null) {
+            //     console.log(result)
+            //     saveTokens(result);
+            //     sendResponse(200);
+            // }
+            // sendResponse(400);
         }
 
         if (request.destination === "sender") {
@@ -173,4 +182,5 @@ function createHeaders() {
     myHeaders.append('Accept', 'application/json');
     return myHeaders;
 }
+
 //--------------------------------------------------------------------------
