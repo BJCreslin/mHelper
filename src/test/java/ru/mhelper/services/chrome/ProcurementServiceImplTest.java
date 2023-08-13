@@ -13,13 +13,14 @@ import ru.mhelper.models.procurements.ProcedureType;
 import ru.mhelper.repository.ProcurementRepository;
 import ru.mhelper.repository.UserProcurementLinksRepository;
 import ru.mhelper.repository.UserRepository;
+import ru.mhelper.services.parsers_dispatcher.Dispatcher;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.stream.Stream;
 
 @ActiveProfiles("test")
-class ProcurementDtoServiceImplTest {
+class ProcurementServiceImplTest {
     @MockBean
     ProcurementRepository procurementDataManager;
 
@@ -29,7 +30,10 @@ class ProcurementDtoServiceImplTest {
     @MockBean
     UserProcurementLinksRepository userProcurementLinksRepository;
 
-    ProcurementDtoServiceImpl procurementDtoService = new ProcurementDtoServiceImpl(procurementDataManager, userRepository, userProcurementLinksRepository);
+    @MockBean
+    Dispatcher dispatcher;
+
+    ProcurementServiceImpl procurementDtoService = new ProcurementServiceImpl(procurementDataManager, userRepository, userProcurementLinksRepository, dispatcher);
 
 
     @Test

@@ -1,6 +1,8 @@
 package ru.mhelper.security.auth;
 
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
@@ -8,18 +10,16 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import ru.mhelper.controllers.exeptions.BadRequestException;
 import ru.mhelper.models.dto.*;
 import ru.mhelper.models.users.ERole;
 import ru.mhelper.models.users.Role;
 import ru.mhelper.models.users.User;
 import ru.mhelper.repository.RoleRepository;
-import ru.mhelper.repository.UserRepository;
-import ru.mhelper.services.geting_code.TelegramCodeService;
 import ru.mhelper.security.jwt.JwtTokenProvider;
+import ru.mhelper.services.geting_code.TelegramCodeService;
+import ru.mhelper.services.models_sevices.user.UserService;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -43,11 +43,7 @@ public class AuthServiceImpl implements AuthService {
 
     public static final String USER_CREATED = "User CREATED";
 
-    public static final String USER_NOT_FOUND = "User with name %s not found";
-
     private final TelegramCodeService telegramCodeService;
-
-    private final UserRepository userRepository;
 
     private final RoleRepository roleRepository;
 
@@ -57,60 +53,65 @@ public class AuthServiceImpl implements AuthService {
 
     private final PasswordEncoder passwordEncoder;
 
+    private final UserService userService;
+
     @Override
+    @Transactional
     public ResponseEntity<AbstractResponse> getResponseEntity(Integer code) {
         var telegramId = telegramCodeService.getTelegramUserId(code);
-        if (!userRepository.existsByTelegramUserId(telegramId)) {
-            var newUser = User.createNewTelegramUser(telegramId);
-            newUser.setRoles(
-                    Set.of(roleRepository.findByName(ERole.CHROME_EXTENSION.getName()).orElseThrow(() -> new BadRequestException(BadRequestException.ROLE_NOT_FOUND)),
-                            roleRepository.findByName(ERole.ROLE_TELEGRAM.getName()).orElseThrow(() -> new BadRequestException(BadRequestException.ROLE_NOT_FOUND))));
-            userRepository.save(newUser);
+        User user;
+        if (!userService.existsByTelegramUserId(telegramId)) {
+            user = userService.createNewTelegramUser(telegramId);
+        } else {
+            user = userService.getUserByTelegramId(telegramId);
         }
-        User user = userRepository.findByTelegramUserId(telegramId).orElseThrow(() -> new BadRequestException(USER_NOT_FOUND));
-        String accessToken = jwtTokenProvider.createAccessToken(user.getUsername(), user.getRoles().stream().map(Role::getName).collect(Collectors.toSet()));
-        String refreshToken = jwtTokenProvider.createRefreshToken(user.getUsername());
+        return createResponse(user);
+    }
+
+    private String getRefreshToken(User user) {
+        return jwtTokenProvider.createRefreshToken(user.getUsername());
+    }
+
+    private String getAccessToken(User user) {
+        return jwtTokenProvider.createAccessToken(user.getUsername(), user.getRoles().stream().map(Role::getName).collect(Collectors.toSet()));
+    }
+
+    @NotNull
+    private ResponseEntity<AbstractResponse> createResponse(User user) {
+        var accessToken = getAccessToken(user);
+        var refreshToken = getRefreshToken(user);
         return ResponseEntity.ok(JwtResponse.builder()
                 .accessToken(accessToken)
                 .refreshToken(refreshToken)
                 .id(user.getId())
                 .userName(user.getUsername())
                 .email(user.getEmail())
-                .roles(user.getRoles().stream().map(Role::getName).toList()
-                ).build());
+                .roles(user.getRoles().stream().map(Role::getName).toList())
+                .text("Tokens were been created")
+                .build());
     }
 
     @Override
-    public ResponseEntity<JwtResponse> doSignIn(LoginRequest loginRequest) {
+    public ResponseEntity<AbstractResponse> doSignIn(LoginRequest loginRequest) {
         Authentication authentication = authenticationManager
                 .authenticate(new UsernamePasswordAuthenticationToken(
                         loginRequest.getUserName(),
                         loginRequest.getPassword()));
         SecurityContextHolder.getContext().setAuthentication(authentication);
-        User user = userRepository.findByUsername(loginRequest.getUserName()).
-                orElseThrow(() -> new UsernameNotFoundException(String.format(USER_NOT_FOUND, loginRequest.getUserName())));
-        String accessToken = jwtTokenProvider.createAccessToken(user.getUsername(), user.getRoles().stream().map(Role::getName).collect(Collectors.toSet()));
-        String refreshToken = jwtTokenProvider.createRefreshToken(user.getUsername());
-        return ResponseEntity.ok(JwtResponse.builder()
-                .accessToken(accessToken)
-                .refreshToken(refreshToken)
-                .id(user.getId())
-                .userName(user.getUsername())
-                .email(user.getEmail())
-                .roles(user.getRoles().stream().map(Role::getName).toList()
-                ).build());
+        User user = userService.getUserByUserName(loginRequest.getUserName());
+        return createResponse(user);
     }
 
     @Override
     public ResponseEntity<AbstractResponse> doSignUp(SignUpRequest signupRequest) {
-        if (userRepository.existsByUsername(signupRequest.getUserName())) {
+        if (!userService.existsByUsername(signupRequest.getUserName())) {
             LOGGER.error(USERNAME_IS_EXIST);
             return ResponseEntity
                     .badRequest()
                     .body(new MessageResponse(MessageResponse.BAD_CODE, USERNAME_IS_EXIST));
         }
 
-        if (userRepository.existsByEmail(signupRequest.getEmail())) {
+        if (!userService.existsByEmail(signupRequest.getEmail())) {
             LOGGER.error(EMAIL_IS_EXIST);
             return ResponseEntity
                     .badRequest()
@@ -154,7 +155,7 @@ public class AuthServiceImpl implements AuthService {
             });
         }
         user.setRoles(roles);
-        userRepository.save(user);
+        userService.save(user);
         if (LOGGER.isDebugEnabled()) {
             LOGGER.debug(USER_CREATED);
         }

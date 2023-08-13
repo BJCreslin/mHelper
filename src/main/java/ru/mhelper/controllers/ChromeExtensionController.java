@@ -1,6 +1,7 @@
 package ru.mhelper.controllers;
 
 import jakarta.validation.Valid;
+import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
@@ -11,12 +12,10 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import ru.mhelper.cfg.ApiVersion;
-import ru.mhelper.controllers.exeptions.BadRequestException;
 import ru.mhelper.models.dto.Error;
 import ru.mhelper.models.dto.MessageResponse;
 import ru.mhelper.models.dto.ProcurementDto;
-import ru.mhelper.services.chrome.ProcurementDtoService;
-import ru.mhelper.services.exceptions.BadDataParsingException;
+import ru.mhelper.services.chrome.ProcurementService;
 
 import java.util.stream.Collectors;
 
@@ -33,17 +32,15 @@ public class ChromeExtensionController {
 
     private static final String POST_FROM_IP = "Post from, procurement {}";
 
-    private static final String ERROR_FROM_PARSING = "Error parsing";
-
     private static final String PROCUREMENT_IS_INVALID = "Procurement is invalid.";
 
     private static final String PROCUREMENT_WAS_SAVED = "Procurement was saved";
 
     public static final String SUCCESSFUL_CONNECTION = "Successful connection";
 
-    private final ProcurementDtoService service;
+    private final ProcurementService service;
 
-    public ChromeExtensionController(ProcurementDtoService service) {
+    public ChromeExtensionController(ProcurementService service) {
         this.service = service;
     }
 
@@ -63,16 +60,17 @@ public class ChromeExtensionController {
         if (logger.isDebugEnabled()) {
             logger.debug(POST_FROM_IP, procurementDto);
         }
-        try {
             service.save(user, procurementDto);
-            var success = new MessageResponse();
-            success.setMessage(PROCUREMENT_WAS_SAVED);
-            success.setCode(MessageResponse.FINE_CODE);
+            MessageResponse success = getSuccessMessageResponse();
             return new ResponseEntity<>(success, HttpStatus.CREATED);
-        } catch (BadDataParsingException exception) {
-            logger.error(ERROR_FROM_PARSING, exception);
-            throw new BadRequestException(ERROR_FROM_PARSING, exception);
-        }
+    }
+
+    @NotNull
+    private static MessageResponse getSuccessMessageResponse() {
+        var success = new MessageResponse();
+        success.setMessage(PROCUREMENT_WAS_SAVED);
+        success.setCode(MessageResponse.FINE_CODE);
+        return success;
     }
 
     @GetMapping({""})

@@ -2,15 +2,17 @@ package ru.mhelper.models.dto;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
+import lombok.experimental.SuperBuilder;
 
 import java.util.Collection;
 
 @EqualsAndHashCode(callSuper = false)
 @AllArgsConstructor
-@Builder
+@NoArgsConstructor
+@SuperBuilder
 @Data
 public non-sealed class JwtResponse extends AbstractResponse {
 

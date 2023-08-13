@@ -10,10 +10,13 @@ import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 import ru.mhelper.controllers.exeptions.BadRequestException;
 import ru.mhelper.models.dto.Error;
+import ru.mhelper.services.exceptions.BadDataParsingException;
 
 
 @ControllerAdvice
 public class ControllerHandler extends ResponseEntityExceptionHandler {
+
+    private static final String ERROR_FROM_PARSING = "Error parsing";
 
     @ExceptionHandler({PersistenceException.class})
     protected ResponseEntity<Object> handlePersistenceEx(PersistenceException ex, WebRequest request) {
@@ -39,6 +42,15 @@ public class ControllerHandler extends ResponseEntityExceptionHandler {
                 .code(HttpStatus.BAD_REQUEST.value())
                 .cause(ex.getMessage())
                 .message("BadRequestException").build();
+        return new ResponseEntity<>(apiError, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler({BadDataParsingException.class})
+    protected ResponseEntity<Object> handleBadDataParsingException(BadDataParsingException ex, WebRequest request) {
+        var apiError = Error.builder()
+                .code(HttpStatus.INTERNAL_SERVER_ERROR.value())
+                .cause(ex.getMessage())
+                .message(ERROR_FROM_PARSING).build();
         return new ResponseEntity<>(apiError, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 }

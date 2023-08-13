@@ -1,10 +1,14 @@
 package ru.mhelper.services.chrome;
 
+import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.BeanUtils;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import ru.mhelper.models.BaseStatus;
+import ru.mhelper.models.dto.ProcurementAddress;
 import ru.mhelper.models.dto.ProcurementDto;
 import ru.mhelper.models.procurements.ProcedureType;
 import ru.mhelper.models.procurements.Procurement;
@@ -15,6 +19,7 @@ import ru.mhelper.repository.UserProcurementLinksRepository;
 import ru.mhelper.repository.UserRepository;
 import ru.mhelper.services.exceptions.BadDataParsingException;
 import ru.mhelper.services.exceptions.DataManagerException;
+import ru.mhelper.services.parsers_dispatcher.Dispatcher;
 
 import java.math.BigDecimal;
 import java.net.MalformedURLException;
@@ -23,12 +28,14 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.ZonedDateTime;
+import java.util.Optional;
 import java.util.TimeZone;
 
 @Service
-public class ProcurementDtoServiceImpl implements ProcurementDtoService {
+@RequiredArgsConstructor
+public class ProcurementServiceImpl implements ProcurementService {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(ProcurementDtoServiceImpl.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(ProcurementServiceImpl.class);
 
     public static final String REMODEL_DTO_TO_PROCUREMENT = "Remodel Dto to Procurement {}";
 
@@ -54,11 +61,7 @@ public class ProcurementDtoServiceImpl implements ProcurementDtoService {
 
     private final UserProcurementLinksRepository userProcurementLinksRepository;
 
-    public ProcurementDtoServiceImpl(ProcurementRepository procurementRepository, UserRepository userRepository, UserProcurementLinksRepository userProcurementLinksRepository) {
-        this.procurementRepository = procurementRepository;
-        this.userRepository = userRepository;
-        this.userProcurementLinksRepository = userProcurementLinksRepository;
-    }
+    private final Dispatcher dispatcher;
 
     @Override
     public void save(ProcurementDto procurementDto) {
@@ -69,6 +72,7 @@ public class ProcurementDtoServiceImpl implements ProcurementDtoService {
     }
 
     @Override
+    @Transactional
     public void save(UserDetails jwtUser, ProcurementDto procurementDto) {
         Procurement procurement;
         var procurementFromBase = procurementRepository.getByUin(procurementDto.getUin());
@@ -108,6 +112,14 @@ public class ProcurementDtoServiceImpl implements ProcurementDtoService {
             LOGGER.debug(DTO_WAS_REMODELED, procurement);
         }
         return procurement;
+    }
+
+    @Override
+    public void action(ProcurementAddress procurementAddress) {
+        Procurement procurement = dispatcher.getFromUrl(procurementAddress.getAddress());
+        Optional<Procurement> procurementFromDB = procurementRepository.getByUin(procurement.getUin());
+        procurementFromDB.ifPresent(value -> BeanUtils.copyProperties(value, procurement, "id", "uin"));
+        procurementRepository.save(procurement);
     }
 
     //ToDo: В будущем возможно сделать отельный сервис определения часовых поясов

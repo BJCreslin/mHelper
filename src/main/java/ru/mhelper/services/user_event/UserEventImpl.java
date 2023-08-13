@@ -6,7 +6,7 @@ import org.springframework.scheduling.annotation.Scheduled;
 import ru.mhelper.models.objects.UserTextPair;
 import ru.mhelper.models.procurements.Procurement;
 import ru.mhelper.models.users.User;
-import ru.mhelper.services.procurement.ProcurementService;
+import ru.mhelper.services.chrome.ProcurementService;
 import ru.mhelper.services.user_event.create_message.CreateMessage;
 import ru.mhelper.services.user_event.users_list.UsersListGet;
 
@@ -103,6 +103,6 @@ public class UserEventImpl implements UserEvent {
 
     private boolean isEventSoon(ZonedDateTime procurement, ZonedDateTime zdtNow) {
         return procurement.isAfter(zdtNow) &&
-            procurement.isBefore(zdtNow.minusHours(TIME_RANGE));
+                procurement.isBefore(zdtNow.minusHours(TIME_RANGE));
     }
 }

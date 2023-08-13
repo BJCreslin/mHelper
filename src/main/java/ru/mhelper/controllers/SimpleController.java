@@ -10,9 +10,9 @@ import ru.mhelper.controllers.exeptions.BadRequestException;
 import ru.mhelper.models.dto.ProcurementAddress;
 import ru.mhelper.models.procurements.Procurement;
 import ru.mhelper.repository.ProcurementRepository;
+import ru.mhelper.services.chrome.ProcurementService;
 import ru.mhelper.services.exceptions.BadDataParsingException;
 import ru.mhelper.services.ip_service.IpService;
-import ru.mhelper.services.procurement.ProcurementService;
 
 import java.util.List;
 

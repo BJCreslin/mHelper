@@ -1,12 +1,12 @@
 package ru.mhelper.services.geting_code;
 
+import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Service;
-import ru.mhelper.models.users.User;
-import ru.mhelper.repository.UserRepository;
+import ru.mhelper.services.models_sevices.user.UserService;
 import ru.mhelper.telegram.status_service.StatusService;
 
 import java.time.LocalDateTime;
@@ -16,6 +16,7 @@ import static ru.mhelper.services.geting_code.ErrorGettingCode.TOO_MANY_ATTEMPTS
 
 @Service("TelegramCodeService")
 @Primary
+@RequiredArgsConstructor
 public class TelegramCodeServiceImpl implements TelegramCodeService {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(TelegramCodeServiceImpl.class);
@@ -33,19 +34,13 @@ public class TelegramCodeServiceImpl implements TelegramCodeService {
 
     private final StatusService statusService;
 
-    private final UserRepository userRepository;
-
+    private final UserService userService;
 
     @Value("${bot.time}")
     private int lifetime;
 
     @Value("${bot.max_attempts}")
     private int maxAttempts;
-
-    public TelegramCodeServiceImpl(StatusService statusService, UserRepository userRepository) {
-        this.statusService = statusService;
-        this.userRepository = userRepository;
-    }
 
     @Override
     public boolean existByCode(Integer code) {
@@ -89,8 +84,7 @@ public class TelegramCodeServiceImpl implements TelegramCodeService {
             LOGGER.debug(String.format(CREATED_NEW_CODE_D_FOR_USER, code, userTgId));
         }
         storage.put(code, new UserIdTimed(userTgId));
-        var user = userRepository.findByTelegramUserId(userTgId).orElse(User.createNewTelegramUser(userTgId));
-        userRepository.saveAndFlush(user);
+        var user = userService.getOrNewUserByTelegramId(userTgId);
         statusService.setGettingCodeTgStatus(user.getId());
         return code;
     }
@@ -133,7 +127,7 @@ public class TelegramCodeServiceImpl implements TelegramCodeService {
     }
 
     private void removeOldValue() {
-        if (LOGGER.isDebugEnabled()){
+        if (LOGGER.isDebugEnabled()) {
             LOGGER.debug(OLD_VALUES_ARE_DELETING);
         }
         if (!storage.isEmpty()) {

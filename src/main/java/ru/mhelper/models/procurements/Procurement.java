@@ -16,6 +16,7 @@ import java.io.Serializable;
 import java.math.BigDecimal;
 import java.net.URL;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.ZonedDateTime;
 import java.util.HashSet;
 import java.util.LinkedHashSet;
@@ -137,6 +138,7 @@ public class Procurement extends BaseEntity implements Serializable {
     private Set<User> users;
 
     @OneToMany(mappedBy = "procurement", orphanRemoval = true)
+    @Builder.Default
     private Set<UserProcurementLinks> userProcurementLinkses = new LinkedHashSet<>();
 
     public Procurement() {

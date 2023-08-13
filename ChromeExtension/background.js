@@ -1,7 +1,7 @@
 // const SERVER_URL = "https://mhelper.ru/";
 const SERVER_URL = "http://localhost:8080/";
 const POST_PROCUREMENT_URL = SERVER_URL + "v1/chrome/";
-const TEST_SERVER_URL = SERVER_URL + "v1/auth/";
+const TEST_SERVER_URL = SERVER_URL + "v1/auth/test";
 const CHROME_REGISTRATION = SERVER_URL + "v1/auth/code/";
 const JWT_PREFIX = "Bearer ";
 let connected = false;
@@ -10,14 +10,30 @@ let jwtToken = null;
 let accessToken = null;
 let refreshToken = null;
 
-function sendCode(host) {
+// function sendCode(host) {
+//     return fetch(host, {
+//         method: 'GET'
+//     }).then((response) => {
+//         debugger;
+//         return response.json();
+//     }).then((data) => {
+//         debugger;
+//         return data;
+//     })
+//         .catch((rejected) => {
+//             return null;
+//         });
+// }
+
+ function sendCode(host) {
     return fetch(host, {
         method: 'GET'
     }).then((response) => {
-        debugger;
+        if (response.status !== 200) {
+            return Promise.reject();
+        }
         return response.json();
     }).then((data) => {
-        debugger;
         return data;
     })
         .catch((rejected) => {
@@ -25,13 +41,19 @@ function sendCode(host) {
         });
 }
 
+
 function saveTokens(data) {
-    connected = true;
-    debugger;
+
+    // debugger;
     console.log('access ' + data.accessToken);
     accessToken = data.accessToken;
     refreshToken = data.refreshToken;
     saveAccessTokensToLocalStorage();
+}
+
+function setConnectedStatus() {
+    console.log('Set connected status');
+    connected = true;
 }
 
 chrome.runtime.onMessage.addListener(
@@ -43,6 +65,7 @@ chrome.runtime.onMessage.addListener(
                 headers: createHeaders()
             })
                 .then((response) => {
+                    console.log('test_connection ' + response);
                     debugger;
                     sendResponse(response.status);
                 })
@@ -56,13 +79,19 @@ chrome.runtime.onMessage.addListener(
             let registrationCode = request.data;
             let host = CHROME_REGISTRATION + registrationCode;
             let result = sendCode(host);
-            result.then(saveTokens)
-            // if (result != null) {
-            //     console.log(result)
-            //     saveTokens(result);
-            //     sendResponse(200);
-            // }
-            // sendResponse(400);
+            result.then((data) => {
+                setConnectedStatus()
+                saveTokens(data)
+                // sendMessageThenConnected();
+                if (connected) {
+                    console.log('connected and send response to popup');
+                    sendResponse({status: 'ok'});
+                } else {
+                    console.log('not connected and send response to popup');
+                    sendResponse({staus: 'wrong code'})
+                }
+            });
+
         }
 
         if (request.destination === "sender") {
@@ -99,6 +128,7 @@ function testConnection() {
         headers: createHeaders()
     })
         .then((response) => {
+            console.log('get test ' + response);
             if (!response.ok) {
                 return Promise.reject(new Error(
                     'Response failed: ' + response.status + ' (' + response.statusText + ')'
@@ -108,6 +138,7 @@ function testConnection() {
         }).then((data) => {
 
         if (data.accessToken != null) {
+            console.log('get json ' + data);
             accessToken = data.accessToken;
             refreshToken = data.refreshToken;
             saveAccessTokensToLocalStorage();
@@ -123,7 +154,7 @@ function testConnection() {
 }
 
 chrome.runtime.onStartup.addListener(() => {
-    debugger;
+    // debugger;
     restoreAccessTokensFromLocalStorage();
     if (accessToken === null) {
         connected = false;
