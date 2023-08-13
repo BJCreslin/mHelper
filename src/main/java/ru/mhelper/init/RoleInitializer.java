@@ -33,6 +33,7 @@ public class RoleInitializer implements CommandLineRunner {
             if (repository.findByName(x.getName()).isEmpty()) {
                 var role = new Role(x.getName());
                 role.setStatus(BaseStatus.ACTIVE);
+                role.setComment("Created by Application#RoleInitializer");
                 repository.save(role);
             }
         });

@@ -5,9 +5,10 @@ import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
-import lombok.experimental.SuperBuilder;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.NoArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import ru.mhelper.models.BaseEntity;
 import ru.mhelper.models.BaseStatus;
 import ru.mhelper.models.user_procurement.UserProcurementLinks;
@@ -19,10 +20,10 @@ import java.util.Set;
 
 @Entity
 @Table(name = "users")
-@SuperBuilder
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
 public class User extends BaseEntity {
-
-    private static final Logger LOGGER = LoggerFactory.getLogger(User.class);
 
     public static final String POSTFIX_TELEGRAM_EMAIL = "@t.me";
 
@@ -35,6 +36,7 @@ public class User extends BaseEntity {
     public static final String ADDED_TO_USER = "Procurement {} has been added to User {}";
 
     public static final String DELETED_FROM_USER = "Procurement {} has been deleted from User {}";
+    public static final String CREATED_BY_TELEGRAM_MESSAGE = "Created by Telegram";
 
     @NotBlank(message = "Name is mandatory")
     @Size(max = 30)
@@ -69,31 +71,21 @@ public class User extends BaseEntity {
     @JoinTable(name = "user_roles",
             joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "role_id"))
+    @Builder.Default
     private Set<Role> roles = new HashSet<>();
 
     @OneToMany(mappedBy = "user", orphanRemoval = true)
+    @Builder.Default
     private Set<UserProcurementLinks> userProcurementLinkses = new LinkedHashSet<>();
 
-    public Set<UserProcurementLinks> getUserProcurementLinkses() {
-        return userProcurementLinkses;
-    }
-
-    public void setUserProcurementLinkses(Set<UserProcurementLinks> userProcurementLinkses) {
-        this.userProcurementLinkses = userProcurementLinkses;
-    }
-
-    public User() {
-    }
-
-    public User(Long telegramUserId){
-        this.telegramUserId = telegramUserId;
+    public User(long chatId) {
+        this.telegramUserId = chatId;
     }
 
     public User(String userName, String email, String password) {
         this.username = userName;
         this.email = email;
         this.password = password;
-        this.enabled = true;
     }
 
     public User(String username, String email, String password, Long telegramUserId, TelegramStateType telegramStateType, boolean enabled, String comment, Set<Role> roles) {
@@ -107,16 +99,34 @@ public class User extends BaseEntity {
         this.roles = roles;
     }
 
-    public static User createNewTelegramUser(Long telegramId) {
-        return User.builder()
-                .telegramUserId(telegramId)
-                .username(PREFIX_TELEGRAM_NAME + telegramId)
-                .password(TELEGRAM_DB_PASSWORD)
-                .email(telegramId + POSTFIX_TELEGRAM_EMAIL)
-                .enabled(true)
-                .status(BaseStatus.ACTIVE)
-                .build();
+    public User(
+            Long telegramUserId,
+            String username,
+            String password,
+            String email,
+            boolean enabled,
+            BaseStatus status,
+            Set<Role> roles
+    ) {
+        this.username = username;
+        this.email = email;
+        this.password = password;
+        this.telegramUserId = telegramUserId;
+        this.enabled = enabled;
+        this.comment = CREATED_BY_TELEGRAM_MESSAGE;
+        this.setStatus(status);
+        this.roles = roles;
     }
+
+    public Set<UserProcurementLinks> getUserProcurementLinkses() {
+        return userProcurementLinkses;
+    }
+
+    public void setUserProcurementLinkses(Set<UserProcurementLinks> userProcurementLinkses) {
+        this.userProcurementLinkses = userProcurementLinkses;
+    }
+
+
 
     public String getUsername() {
         return username;
@@ -189,14 +199,12 @@ public class User extends BaseEntity {
         if (this == o) {
             return true;
         }
-        if (!(o instanceof User)) {
+        if (!(o instanceof User user)) {
             return false;
         }
         if (!super.equals(o)) {
             return false;
         }
-
-        User user = (User) o;
 
         if (!Objects.equals(username, user.username)) {
             return false;
@@ -215,4 +223,5 @@ public class User extends BaseEntity {
         result = 31 * result + (telegramUserId != null ? telegramUserId.hashCode() : 0);
         return result;
     }
+
 }

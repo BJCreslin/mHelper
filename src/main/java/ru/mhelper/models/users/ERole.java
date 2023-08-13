@@ -5,7 +5,6 @@ public enum ERole {
     ROLE_ADMIN("ADMIN"),
     ROLE_TELEGRAM("TELEGRAM"),
     CHROME_EXTENSION("CHROME_EXTENSION"),
-
     ROLE_EMAIL("EMAIL");
 
     private final String name;

@@ -137,6 +137,7 @@ public class Procurement extends BaseEntity implements Serializable {
     private Set<User> users;
 
     @OneToMany(mappedBy = "procurement", orphanRemoval = true)
+    @Builder.Default
     private Set<UserProcurementLinks> userProcurementLinkses = new LinkedHashSet<>();
 
     public Procurement() {

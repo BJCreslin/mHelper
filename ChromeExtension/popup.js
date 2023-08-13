@@ -5,9 +5,22 @@ const inputFormTgNumber = document.getElementById("form_tg_number");
 let connected = false;
 
 chrome.action.onClicked.addListener(function (tab) {
-    debugger
     console.log("Иконка расширения была нажата.");
 });
+
+function setConnected() {
+    testConnectionButton.removeAttribute("class");
+    testConnectionButton.setAttribute("class", "btn btn-secondary")
+    testConnectionButton.innerText = "Connected";
+    connected = true;
+}
+
+function setNotConnected() {
+    testConnectionButton.removeAttribute("class");
+    testConnectionButton.setAttribute("class", "btn btn-danger")
+    testConnectionButton.innerText = "Not connected";
+    connected = false;
+}
 
 inputTgNumber.addEventListener("change", function () {
     let inputNumber = Number(inputTgNumber.value);
@@ -19,6 +32,22 @@ inputTgNumber.addEventListener("change", function () {
         buttonTgNumber.classList.add("disabled");
     }
 })
+
+function sendCodeToBackend(createConnection, notCreatedConnection) {
+    function handleResponse() {
+        createConnection();
+    }
+
+    function handleError() {
+        notCreatedConnection();
+    }
+    const sending = chrome.runtime.sendMessage(
+        {
+            destination: "send_code",
+            data: inputTgNumber.value});
+
+    sending.then(handleResponse, handleError);
+}
 
 button_tg_number.addEventListener("click", function () {
 
@@ -33,18 +62,7 @@ button_tg_number.addEventListener("click", function () {
         connected = true;
     }
 
-    chrome.runtime.sendMessage(
-        {
-            destination: "send_code",
-            data: inputTgNumber.value
-        },
-        (response) => {
-            if (response >= 200 && response < 300) {
-                createConnection();
-            } else {
-                notCreatedConnection();
-            }
-        });
+    sendCodeToBackend(createConnection, notCreatedConnection);
 });
 
 const isConnected = () => {
@@ -65,19 +83,7 @@ testConnectionButton.addEventListener("click", function () {
             data: this.value
         },
         (response) => {
-            function setConnected() {
-                testConnectionButton.removeAttribute("class");
-                testConnectionButton.setAttribute("class", "btn btn-secondary")
-                testConnectionButton.innerText = "Connected";
-                connected = true;
-            }
-
-            function setNotConnected() {
-                testConnectionButton.removeAttribute("class");
-                testConnectionButton.setAttribute("class", "btn btn-danger")
-                testConnectionButton.innerText = "Not connected";
-                connected = false;
-            }
+            console.log(response);
 
             if (response >= 200 && response < 300) {
                 setConnected();
@@ -85,4 +91,18 @@ testConnectionButton.addEventListener("click", function () {
                 setNotConnected()
             }
         })
+});
+
+/**
+ * get message with destination "popup_connected" and boolean data is meaning connected or not
+ */
+chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
+    if (request.destination === "popup_connected") {
+        connected = (request.data === 1);
+        if (connected) {
+            setConnected()
+        } else {
+            setNotConnected()
+        }
+    }
 });

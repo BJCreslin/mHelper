@@ -1,31 +1,26 @@
 package ru.mhelper.models;
 
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.RequiredArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.Data;
 import lombok.experimental.SuperBuilder;
 import org.hibernate.Hibernate;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
-
+import org.jetbrains.annotations.Contract;
 
 import java.util.Date;
 import java.util.Objects;
 
+
+@Data
 @MappedSuperclass
-@Getter
-@Setter
-@ToString
-@RequiredArgsConstructor
 @SuperBuilder
 public abstract class BaseEntity {
     public static final String STATUS_FIELD = "status";
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(nullable = false)
+    @Column(name = "id")
     private Long id;
 
     @CreationTimestamp
@@ -44,7 +39,11 @@ public abstract class BaseEntity {
     @Column(length = 1000)
     private String comment;
 
+    protected BaseEntity() {
+    }
+
     @Override
+    @Contract(value = "null -> false", pure = true)
     public boolean equals(Object o) {
         if (this == o) {
             return true;

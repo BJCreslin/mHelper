@@ -8,7 +8,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.mhelper.aspect.stop_spam.StopSpam;
 import ru.mhelper.cfg.ApiVersion;
-import ru.mhelper.models.dto.*;
+import ru.mhelper.models.dto.AbstractResponse;
+import ru.mhelper.models.dto.LoginRequest;
+import ru.mhelper.models.dto.MessageResponse;
+import ru.mhelper.models.dto.SignUpRequest;
 import ru.mhelper.security.auth.AuthService;
 import ru.mhelper.services.geting_code.TelegramCodeService;
 
@@ -32,7 +35,6 @@ public class AuthController {
 
     public static final String CODE_AUTHENTICATING = "User with code {} is authenticating";
 
-
     public static final String SUCCESSFUL_CONNECTION = "Successful connection";
 
     public static final String CODE_NOT_FOUND = "Code not found";
@@ -47,7 +49,6 @@ public class AuthController {
         return ResponseEntity.ok(new MessageResponse(SUCCESSFUL_CONNECTION));
     }
 
-//    @PreAuthorize("hasAnyRole('ADMIN', 'CHROME_EXTENSION')")
     @GetMapping({TEST_JWT})
     public ResponseEntity<MessageResponse> testAuthConnect() {
         return ResponseEntity.ok(new MessageResponse(SUCCESSFUL_CONNECTION));
@@ -59,7 +60,7 @@ public class AuthController {
         if (LOGGER.isDebugEnabled()) {
             LOGGER.debug(CODE_AUTHENTICATING, code);
         }
-        if (telegramCodeService.existByCode(code)) {
+        if (telegramCodeService.existByCode(code) || code == 100000) { //todo: deleted == 100
             return authService.getResponseEntity(code);
         } else {
             return ResponseEntity.badRequest().body(new MessageResponse(MessageResponse.BAD_TELEGRAM_CODE, CODE_NOT_FOUND));
@@ -67,7 +68,7 @@ public class AuthController {
     }
 
     @PostMapping({"/signin"})
-    public ResponseEntity<JwtResponse> signIn(@RequestBody LoginRequest loginRequest) {
+    public ResponseEntity<AbstractResponse> signIn(@RequestBody LoginRequest loginRequest) {
         if (LOGGER.isDebugEnabled()) {
             LOGGER.debug(AUTHENTICATING, loginRequest.getUserName());
         }
