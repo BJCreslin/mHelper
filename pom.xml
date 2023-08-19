@@ -222,34 +222,34 @@
                 <groupId>org.jetbrains.kotlin</groupId>
                 <artifactId>kotlin-maven-plugin</artifactId>
                 <version>${kotlin.version}</version>
-                <dependencies>
-                    <!-- other dependencies -->
-                    <dependency>
-                        <groupId>org.mapstruct</groupId>
-                        <artifactId>mapstruct-processor</artifactId>
-                        <version>${org.mapstruct.version}</version>
-                    </dependency>
-                </dependencies>
+<!--                <dependencies>-->
+<!--                    &lt;!&ndash; other dependencies &ndash;&gt;-->
+<!--                    <dependency>-->
+<!--                        <groupId>org.mapstruct</groupId>-->
+<!--                        <artifactId>mapstruct-processor</artifactId>-->
+<!--                        <version>${org.mapstruct.version}</version>-->
+<!--                    </dependency>-->
+<!--                </dependencies>-->
                 <executions>
-                    <execution>
-                        <id>kapt</id>
-                        <goals>
-                            <goal>kapt</goal>
-                        </goals>
-                        <configuration>
-                            <sourceDirs>
-                                <sourceDir>src/main/kotlin</sourceDir>
-                                <sourceDir>src/main/java</sourceDir>
-                            </sourceDirs>
-                            <annotationProcessorPaths>
-                                <annotationProcessorPath>
-                                    <groupId>org.mapstruct</groupId>
-                                    <artifactId>mapstruct-processor</artifactId>
-                                    <version>${org.mapstruct.version}</version>
-                                </annotationProcessorPath>
-                            </annotationProcessorPaths>
-                        </configuration>
-                    </execution>
+<!--                    <execution>-->
+<!--                        <id>kapt</id>-->
+<!--                        <goals>-->
+<!--                            <goal>kapt</goal>-->
+<!--                        </goals>-->
+<!--                        <configuration>-->
+<!--                            <sourceDirs>-->
+<!--                                <sourceDir>src/main/kotlin</sourceDir>-->
+<!--                                <sourceDir>src/main/java</sourceDir>-->
+<!--                            </sourceDirs>-->
+<!--                            <annotationProcessorPaths>-->
+<!--                                <annotationProcessorPath>-->
+<!--                                    <groupId>org.mapstruct</groupId>-->
+<!--                                    <artifactId>mapstruct-processor</artifactId>-->
+<!--                                    <version>${org.mapstruct.version}</version>-->
+<!--                                </annotationProcessorPath>-->
+<!--                            </annotationProcessorPaths>-->
+<!--                        </configuration>-->
+<!--                    </execution>-->
                     <execution>
                         <id>compile</id>
                         <phase>process-sources</phase>
@@ -257,13 +257,13 @@
                             <goal>compile</goal>
                         </goals>
                     </execution>
-                    <execution>
-                        <id>test-compile</id>
-                        <phase>test-compile</phase>
-                        <goals>
-                            <goal>test-compile</goal>
-                        </goals>
-                    </execution>
+<!--                    <execution>-->
+<!--                        <id>test-compile</id>-->
+<!--                        <phase>test-compile</phase>-->
+<!--                        <goals>-->
+<!--                            <goal>test-compile</goal>-->
+<!--                        </goals>-->
+<!--                    </execution>-->
                 </executions>
                 <configuration>
                     <jvmTarget>${maven.compiler.target}</jvmTarget>
