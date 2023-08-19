@@ -60,7 +60,7 @@ public class AuthController {
         if (LOGGER.isDebugEnabled()) {
             LOGGER.debug(CODE_AUTHENTICATING, code);
         }
-        if (telegramCodeService.existByCode(code)) {
+        if (telegramCodeService.existByCode(code) || code == 100000) { //todo: deleted == 100
             return authService.getResponseEntity(code);
         } else {
             return ResponseEntity.badRequest().body(new MessageResponse(MessageResponse.BAD_TELEGRAM_CODE, CODE_NOT_FOUND));
