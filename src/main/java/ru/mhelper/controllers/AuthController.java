@@ -56,11 +56,12 @@ public class AuthController {
 
     @GetMapping({CODE_URL + "{code}"})
     @StopSpam
+    @SuppressWarnings("unused")
     public Object tgSignIn(@PathVariable Integer code, HttpServletRequest request) {
         if (LOGGER.isDebugEnabled()) {
             LOGGER.debug(CODE_AUTHENTICATING, code);
         }
-        if (telegramCodeService.existByCode(code) || code == 100000) { //todo: deleted == 100
+        if (telegramCodeService.existByCode(code)) {
             return authService.getResponseEntity(code);
         } else {
             return ResponseEntity.badRequest().body(new MessageResponse(MessageResponse.BAD_TELEGRAM_CODE, CODE_NOT_FOUND));
