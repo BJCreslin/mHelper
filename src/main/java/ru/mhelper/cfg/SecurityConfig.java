@@ -22,7 +22,6 @@ import ru.mhelper.models.users.ERole;
 import ru.mhelper.security.jwt.JwtTokenFilter;
 import ru.mhelper.security.jwt.JwtTokenProvider;
 
-import static org.springframework.security.config.http.MatcherType.mvc;
 import static ru.mhelper.controllers.AuthController.CODE_URL;
 
 @Profile("!test")
@@ -44,7 +43,7 @@ public class SecurityConfig {
     @Bean
     protected SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
-                .csrf(AbstractHttpConfigurer::disable).authorizeHttpRequests((authorizeHttpRequests) ->
+                .csrf(AbstractHttpConfigurer::disable).authorizeHttpRequests(authorizeHttpRequests ->
                         authorizeHttpRequests
                                 .requestMatchers(
                                         new AntPathRequestMatcher
@@ -59,7 +58,7 @@ public class SecurityConfig {
                                 .requestMatchers(new AntPathRequestMatcher("/v1/chrome/**")).hasAuthority(ERole.CHROME_EXTENSION.getName())
                                 .anyRequest()
                                 .authenticated())
-                .sessionManagement((sessionManagement) ->
+                .sessionManagement(sessionManagement ->
                         sessionManagement.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 )
                 .addFilterBefore(new JwtTokenFilter(jwtTokenProvider), UsernamePasswordAuthenticationFilter.class);
