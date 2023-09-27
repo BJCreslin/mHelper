@@ -20,4 +20,9 @@ interface UserService {
 
     fun save(user: User?): User
 
+    /**
+     * Метод проверки корректности пользователя
+     */
+    fun isUserCorrect(user: User?): CheckUserResult
+
 }

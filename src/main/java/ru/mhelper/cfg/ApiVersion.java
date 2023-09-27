@@ -3,6 +3,9 @@ package ru.mhelper.cfg;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 
+/**
+ * Версии API
+ */
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public final class ApiVersion {
 

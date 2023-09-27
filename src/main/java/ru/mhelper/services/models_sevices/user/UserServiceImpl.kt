@@ -89,7 +89,7 @@ open class UserServiceImpl(private val repository: UserRepository, private val r
             throw BadRequestException(TELEGRAM_ID_IS_NULL)
         }
         val userOptional = repository.findByTelegramUserId(telegramId)
-        return if(userOptional.isPresent) {
+        return if (userOptional.isPresent) {
             userOptional.get()
         } else {
             createNewTelegramUser(telegramId)
@@ -124,6 +124,18 @@ open class UserServiceImpl(private val repository: UserRepository, private val r
             throw BadRequestException(USER_IS_NULL)
         }
         return repository.save(user)
+    }
+
+    override fun isUserCorrect(user: User?): CheckUserResult {
+        return when {
+            user == null || user.id == null || !user.isEnabled || user.status in arrayOf(
+                BaseStatus.BANNED,
+                BaseStatus.DELETED,
+                BaseStatus.NOT_ACTIVE
+            ) -> CheckUserResult.INCORRECTED
+
+            else -> CheckUserResult.CORRECTED
+        }
     }
 
     private fun getNewTelegramUser(telegramId: Long): User {

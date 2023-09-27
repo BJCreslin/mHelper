@@ -4,9 +4,13 @@ import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import ru.mhelper.controllers.exeptions.BadRequestException;
 import ru.mhelper.models.BaseStatus;
 import ru.mhelper.models.dto.ProcurementAddress;
 import ru.mhelper.models.dto.ProcurementDto;
@@ -19,6 +23,9 @@ import ru.mhelper.repository.UserProcurementLinksRepository;
 import ru.mhelper.repository.UserRepository;
 import ru.mhelper.services.exceptions.BadDataParsingException;
 import ru.mhelper.services.exceptions.DataManagerException;
+import ru.mhelper.services.mappers.ProcurementMapper;
+import ru.mhelper.services.models_sevices.user.CheckUserResult;
+import ru.mhelper.services.models_sevices.user.UserService;
 import ru.mhelper.services.parsers_dispatcher.Dispatcher;
 
 import java.math.BigDecimal;
@@ -28,7 +35,9 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.ZonedDateTime;
+import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import java.util.TimeZone;
 
 @Service
@@ -62,6 +71,10 @@ public class ProcurementServiceImpl implements ProcurementService {
     private final UserProcurementLinksRepository userProcurementLinksRepository;
 
     private final Dispatcher dispatcher;
+
+    private final UserService userService;
+
+    private final ProcurementMapper procurementMapper;
 
     @Override
     public void save(ProcurementDto procurementDto) {
@@ -120,6 +133,16 @@ public class ProcurementServiceImpl implements ProcurementService {
         Optional<Procurement> procurementFromDB = procurementRepository.getByUin(procurement.getUin());
         procurementFromDB.ifPresent(value -> BeanUtils.copyProperties(value, procurement, "id", "uin"));
         procurementRepository.save(procurement);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public Page<ProcurementDto> getProcurements(final User user, Pageable pageable) {
+        if (userService.isUserCorrect(user) == CheckUserResult.INCORRECTED) {
+            throw new BadRequestException("User incorrect.");
+        }
+        List<ProcurementDto> result = procurementRepository.getAllByUsersIs(Set.of(user), pageable).stream().map(procurementMapper::dboToDto).toList();
+        return new PageImpl<>(result, pageable, result.size());
     }
 
     //ToDo: В будущем возможно сделать отельный сервис определения часовых поясов

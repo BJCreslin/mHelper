@@ -7,8 +7,8 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
+import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.RequiredArgsConstructor;
 import ru.mhelper.models.BaseEntity;
 import ru.mhelper.models.BaseStatus;
 import ru.mhelper.models.user_procurement.UserProcurementLinks;
@@ -23,6 +23,7 @@ import java.util.Set;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
+@Data
 public class User extends BaseEntity {
 
     public static final String POSTFIX_TELEGRAM_EMAIL = "@t.me";
@@ -118,50 +119,24 @@ public class User extends BaseEntity {
         this.roles = roles;
     }
 
-    public Set<UserProcurementLinks> getUserProcurementLinkses() {
-        return userProcurementLinkses;
-    }
-
     public void setUserProcurementLinkses(Set<UserProcurementLinks> userProcurementLinkses) {
         this.userProcurementLinkses = userProcurementLinkses;
-    }
-
-
-
-    public String getUsername() {
-        return username;
     }
 
     public void setUsername(String username) {
         this.username = username;
     }
 
-    public String getEmail() {
-        return email;
-    }
-
     public void setEmail(String email) {
         this.email = email;
-    }
-
-    public String getPassword() {
-        return password;
     }
 
     public void setPassword(String password) {
         this.password = password;
     }
 
-    public Long getTelegramUserId() {
-        return telegramUserId;
-    }
-
     public void setTelegramUserId(Long telegramUserId) {
         this.telegramUserId = telegramUserId;
-    }
-
-    public TelegramStateType getTelegramStateType() {
-        return telegramStateType;
     }
 
     public void setTelegramStateType(TelegramStateType telegramStateType) {
@@ -184,10 +159,6 @@ public class User extends BaseEntity {
     @Override
     public void setComment(String comment) {
         this.comment = comment;
-    }
-
-    public Set<Role> getRoles() {
-        return roles;
     }
 
     public void setRoles(Set<Role> roles) {
