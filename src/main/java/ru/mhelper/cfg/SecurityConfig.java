@@ -53,10 +53,11 @@ public class SecurityConfig {
                                         new AntPathRequestMatcher(WebController.INDEX_PAGE_NAME),
                                         new AntPathRequestMatcher("index" + "***"),
                                         new AntPathRequestMatcher(CHROME_AUTH),
-                                        new AntPathRequestMatcher(AuthController.URL + CODE_URL + "***")
+                                        new AntPathRequestMatcher(AuthController.URL + CODE_URL + "***"),
+                                        new AntPathRequestMatcher("/actuator/**")
                                 ).permitAll()
 
-                                .requestMatchers(new AntPathRequestMatcher("/actuator/**")).hasAnyRole(ERole.ROLE_ADMIN.getName())
+
                                 .requestMatchers(new AntPathRequestMatcher("/api/v1/management/**")).hasAnyRole(ERole.ROLE_ADMIN.getName(), ERole.CHROME_EXTENSION.getName())
                                 .requestMatchers(new AntPathRequestMatcher("/v1/auth/test/**")).hasRole(ERole.CHROME_EXTENSION.getName())
                                 .requestMatchers(new AntPathRequestMatcher("/v1/chrome/**")).hasAuthority(ERole.CHROME_EXTENSION.getName())
