@@ -22,7 +22,6 @@ import ru.mhelper.models.users.ERole;
 import ru.mhelper.security.jwt.JwtTokenFilter;
 import ru.mhelper.security.jwt.JwtTokenProvider;
 
-import static org.springframework.security.config.http.MatcherType.mvc;
 import static ru.mhelper.controllers.AuthController.CODE_URL;
 
 @Profile("!test")
@@ -44,22 +43,23 @@ public class SecurityConfig {
     @Bean
     protected SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
-                .csrf(AbstractHttpConfigurer::disable).authorizeHttpRequests((authorizeHttpRequests) ->
+                .csrf(AbstractHttpConfigurer::disable).authorizeHttpRequests(authorizeHttpRequests ->
                         authorizeHttpRequests
                                 .requestMatchers(
                                         new AntPathRequestMatcher
                                                 ("/v1/auth/code/**"),
-                                                new AntPathRequestMatcher(CHROME_AUTH),
-                                                new AntPathRequestMatcher(AuthController.URL + CODE_URL + "***"),
-                                                new AntPathRequestMatcher(SimpleController.INDEX_PAGE_NAME)
+                                        new AntPathRequestMatcher(CHROME_AUTH),
+                                        new AntPathRequestMatcher(AuthController.URL + CODE_URL + "***"),
+                                        new AntPathRequestMatcher(SimpleController.INDEX_PAGE_NAME)
                                 ).permitAll()
 
+                                .requestMatchers(new AntPathRequestMatcher("/actuator/**")).hasAnyRole(ERole.ROLE_ADMIN.getName())
                                 .requestMatchers(new AntPathRequestMatcher("/api/v1/management/**")).hasAnyRole(ERole.ROLE_ADMIN.getName(), ERole.CHROME_EXTENSION.getName())
                                 .requestMatchers(new AntPathRequestMatcher("/v1/auth/test/**")).hasRole(ERole.CHROME_EXTENSION.getName())
                                 .requestMatchers(new AntPathRequestMatcher("/v1/chrome/**")).hasAuthority(ERole.CHROME_EXTENSION.getName())
                                 .anyRequest()
                                 .authenticated())
-                .sessionManagement((sessionManagement) ->
+                .sessionManagement(sessionManagement ->
                         sessionManagement.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 )
                 .addFilterBefore(new JwtTokenFilter(jwtTokenProvider), UsernamePasswordAuthenticationFilter.class);
