@@ -2,13 +2,14 @@ package ru.mhelper.telegram
 
 import jakarta.annotation.PostConstruct
 import org.slf4j.LoggerFactory
+import org.springframework.context.ApplicationEventPublisher
 import org.springframework.stereotype.Component
 import org.telegram.telegrambots.bots.TelegramLongPollingBot
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage
 import org.telegram.telegrambots.meta.api.objects.Message
 import org.telegram.telegrambots.meta.api.objects.Update
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException
-import ru.mhelper.models.users.User
+import ru.mhelper.events_application_manager.TelegramEvent
 import ru.mhelper.telegram.cfg.BotConfiguration
 import ru.mhelper.telegram.events.CallbackEvent
 import ru.mhelper.telegram.events.MessageEvent
@@ -19,13 +20,16 @@ import ru.mhelper.telegram.exception.TelegramBotServiceException
  */
 @Component
 class BotMain(
+
     private val botConfiguration: BotConfiguration,
     private val messageEvent: MessageEvent,
-    private val callbackEvent: CallbackEvent
+    private val callbackEvent: CallbackEvent,
+    private val applicationEventPublisher: ApplicationEventPublisher
 ) :
     TelegramLongPollingBot(botConfiguration.token) {
 
     private val logger = LoggerFactory.getLogger(javaClass)
+
     override fun getBotUsername(): String = botConfiguration.name
 
     override fun onUpdateReceived(update: Update?) {
@@ -52,25 +56,9 @@ class BotMain(
         }
     }
 
-    fun sendMessageToUser(user: User, text: String?) {
-        val message = SendMessage()
-        if (user.telegramUserId != null) {
-            message.chatId = user.telegramUserId.toString()
-            message.text = text!!
-            try {
-                execute(message)
-            } catch (ex: TelegramApiException) {
-                val eMessage = String.format(TelegramBotServiceException.ERROR_SEND_MESSAGE, user.telegramUserId, text)
-                throw TelegramBotServiceException(eMessage, ex)
-            }
-        } else {
-            val eMessage = String.format(TelegramBotServiceException.USER_MUST_HAVE_TELEGRAM_ID, user.telegramUserId)
-            throw TelegramBotServiceException(eMessage)
-        }
-    }
-
     @PostConstruct
     fun start() {
-        logger.info("Telegram bot started. botName ${botConfiguration.name}")
+        val telegramEvent = TelegramEvent(this, "Telegram bot started. botName ${botConfiguration.name}")
+        applicationEventPublisher.publishEvent(telegramEvent)
     }
 }

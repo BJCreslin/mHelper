@@ -8,4 +8,6 @@ import ru.mhelper.models.procurements.Procurement;
 public interface ProcurementMapper {
 
     Procurement dtoToEntity(ProcurementDto dto);
+
+    ProcurementDto dboToDto(Procurement dbo);
 }

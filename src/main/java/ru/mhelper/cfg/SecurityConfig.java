@@ -17,10 +17,10 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import ru.mhelper.controllers.AuthController;
-import ru.mhelper.controllers.SimpleController;
 import ru.mhelper.models.users.ERole;
 import ru.mhelper.security.jwt.JwtTokenFilter;
 import ru.mhelper.security.jwt.JwtTokenProvider;
+import ru.mhelper.web.controllers.WebController;
 
 import static ru.mhelper.controllers.AuthController.CODE_URL;
 
@@ -48,6 +48,10 @@ public class SecurityConfig {
                                 .requestMatchers(
                                         new AntPathRequestMatcher
                                                 ("/v1/auth/code/**"),
+                                        new AntPathRequestMatcher(CHROME_AUTH),
+                                        new AntPathRequestMatcher(AuthController.URL + CODE_URL + "***"),
+                                        new AntPathRequestMatcher(WebController.INDEX_PAGE_NAME),
+                                        new AntPathRequestMatcher("index" + "***")
                                         new AntPathRequestMatcher(CHROME_AUTH),
                                         new AntPathRequestMatcher(AuthController.URL + CODE_URL + "***"),
                                         new AntPathRequestMatcher(SimpleController.INDEX_PAGE_NAME)

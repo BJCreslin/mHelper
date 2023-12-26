@@ -13,6 +13,7 @@ class MessageEventImpl(
     private val textActions: Map<String, TelegramTextAnswer>,
     private val adminTgMenu: AdminTgMenu
 ) : MessageEvent {
+
     override fun action(update: Update): SendMessage {
         val message = update.message
         var response = SendMessage()
