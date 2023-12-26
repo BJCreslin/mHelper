@@ -128,7 +128,7 @@ open class UserServiceImpl(private val repository: UserRepository, private val r
 
     override fun isUserCorrect(user: User?): CheckUserResult {
         return when {
-            user == null || user.id == null || !user.isEnabled || user.status in arrayOf(
+            user?.id == null || !user.isEnabled || user.status in arrayOf(
                 BaseStatus.BANNED,
                 BaseStatus.DELETED,
                 BaseStatus.NOT_ACTIVE

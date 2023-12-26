@@ -1,6 +1,7 @@
 package ru.mhelper.controllers;
 
 import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -16,6 +17,7 @@ import ru.mhelper.models.dto.Error;
 import ru.mhelper.models.dto.MessageResponse;
 import ru.mhelper.models.dto.ProcurementDto;
 import ru.mhelper.services.chrome.ProcurementService;
+import ru.mhelper.services.metrics.MetricsService;
 
 import java.util.stream.Collectors;
 
@@ -24,6 +26,7 @@ import static ru.mhelper.controllers.ChromeExtensionController.URL;
 @RestController
 @RequestMapping(URL)
 @CrossOrigin(origins = "*", maxAge = 3600)
+@RequiredArgsConstructor
 public class ChromeExtensionController {
 
     private static final Logger logger = LoggerFactory.getLogger(ChromeExtensionController.class);
@@ -40,13 +43,12 @@ public class ChromeExtensionController {
 
     private final ProcurementService service;
 
-    public ChromeExtensionController(ProcurementService service) {
-        this.service = service;
-    }
+    private final MetricsService metricsService;
 
     @PostMapping(value = {""}, consumes = {"application/json"})
     @Validated
     public ResponseEntity<?> newProcurement(@Valid @RequestBody ProcurementDto procurementDto, @AuthenticationPrincipal UserDetails user, BindingResult bindingResult) {
+        metricsService.incrementApiNewProcurements();
         if (bindingResult.hasErrors()) {
             var errors = bindingResult.getFieldErrors();
             var message = errors.stream().map(error -> "@" + error.getField().toUpperCase() + ": " + error.getDefaultMessage()).collect(Collectors.toList()).toString();
@@ -60,9 +62,9 @@ public class ChromeExtensionController {
         if (logger.isDebugEnabled()) {
             logger.debug(POST_FROM_IP, procurementDto);
         }
-            service.save(user, procurementDto);
-            MessageResponse success = getSuccessMessageResponse();
-            return new ResponseEntity<>(success, HttpStatus.CREATED);
+        service.save(user, procurementDto);
+        MessageResponse success = getSuccessMessageResponse();
+        return new ResponseEntity<>(success, HttpStatus.CREATED);
     }
 
     @NotNull
