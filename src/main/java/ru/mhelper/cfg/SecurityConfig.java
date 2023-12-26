@@ -51,10 +51,9 @@ public class SecurityConfig {
                                         new AntPathRequestMatcher(CHROME_AUTH),
                                         new AntPathRequestMatcher(AuthController.URL + CODE_URL + "***"),
                                         new AntPathRequestMatcher(WebController.INDEX_PAGE_NAME),
-                                        new AntPathRequestMatcher("index" + "***")
+                                        new AntPathRequestMatcher("index" + "***"),
                                         new AntPathRequestMatcher(CHROME_AUTH),
-                                        new AntPathRequestMatcher(AuthController.URL + CODE_URL + "***"),
-                                        new AntPathRequestMatcher(SimpleController.INDEX_PAGE_NAME)
+                                        new AntPathRequestMatcher(AuthController.URL + CODE_URL + "***")
                                 ).permitAll()
 
                                 .requestMatchers(new AntPathRequestMatcher("/actuator/**")).hasAnyRole(ERole.ROLE_ADMIN.getName())

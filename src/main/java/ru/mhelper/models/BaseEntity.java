@@ -1,7 +1,10 @@
 package ru.mhelper.models;
 
 import jakarta.persistence.*;
-import lombok.Data;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import lombok.experimental.SuperBuilder;
 import org.hibernate.Hibernate;
 import org.hibernate.annotations.CreationTimestamp;
@@ -12,35 +15,35 @@ import java.util.Date;
 import java.util.Objects;
 
 
-@Data
 @MappedSuperclass
 @SuperBuilder
+@AllArgsConstructor
+@NoArgsConstructor
+@Getter
+@Setter
 public abstract class BaseEntity {
     public static final String STATUS_FIELD = "status";
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "id")
-    private Long id;
+    public Long id;
 
     @CreationTimestamp
     @Column(name = "created")
-    private Date created;
+    public Date created;
 
     @UpdateTimestamp
     @Column(name = "updated")
-    private Date updated;
+    public Date updated;
 
     @Column(name = STATUS_FIELD, columnDefinition = "varchar(255) default 'ACTIVE'")
     @Enumerated(EnumType.STRING)
-    private BaseStatus status;
+    public BaseStatus status;
 
     @Lob
     @Column(length = 1000)
-    private String comment;
-
-    protected BaseEntity() {
-    }
+    public String comment;
 
     @Override
     @Contract(value = "null -> false", pure = true)

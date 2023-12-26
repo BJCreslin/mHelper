@@ -27,5 +27,7 @@ public interface ProcurementRepository extends JpaRepository<Procurement, Long> 
     @Query("SELECT p FROM Procurement p WHERE p.status = ru.mhelper.models.BaseStatus.ACTIVE AND  p.applicationDeadline > :prevTime AND p.applicationDeadline < :nextTimeEvent")
     List<Procurement> getAllInTimeInterval(ZonedDateTime prevTime, ZonedDateTime nextTimeEvent);
 
-    Page<Procurement> getAllByUsersIs(Set<User> users, Pageable pageable);
+//    Page<Procurement> getAllByUsersIs(Set<User> users, Pageable pageable);
+
+    Page<Procurement> getAllByUsersIsIn(Set<User> users, Pageable pageable);
 }

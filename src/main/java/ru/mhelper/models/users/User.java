@@ -7,7 +7,7 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
-import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 import ru.mhelper.models.BaseEntity;
 import ru.mhelper.models.BaseStatus;
@@ -23,7 +23,7 @@ import java.util.Set;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-@Data
+@Getter
 public class User extends BaseEntity {
 
     public static final String POSTFIX_TELEGRAM_EMAIL = "@t.me";

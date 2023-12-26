@@ -141,7 +141,7 @@ public class ProcurementServiceImpl implements ProcurementService {
         if (userService.isUserCorrect(user) == CheckUserResult.INCORRECTED) {
             throw new BadRequestException("User incorrect.");
         }
-        List<ProcurementDto> result = procurementRepository.getAllByUsersIs(Set.of(user), pageable).stream().map(procurementMapper::dboToDto).toList();
+        List<ProcurementDto> result = procurementRepository.getAllByUsersIsIn(Set.of(user), pageable).stream().map(procurementMapper::dboToDto).toList();
         return new PageImpl<>(result, pageable, result.size());
     }
 
