@@ -17,6 +17,14 @@ public interface AuthenticationService {
     AccessToken generateAccessToken(User user);
 
     /**
+     * Генерация нового access токена для указанного пользователя
+     * с использованием refresh токена
+     * Установка срока действия токена и других необходимых данных
+     * Возвращение созданного access токена
+     */
+    AccessToken generateAccessToken(User user, RefreshToken refreshToken);
+
+    /**
      * Генерация нового refresh токена для указанного пользователя
      * Установка срока действия токена и других необходимых данных
      * Возвращение созданного refresh токена
