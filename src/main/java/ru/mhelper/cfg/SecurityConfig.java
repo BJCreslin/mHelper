@@ -18,8 +18,8 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import ru.mhelper.controllers.AuthController;
 import ru.mhelper.models.users.ERole;
-import ru.mhelper.security.jwt.JwtTokenFilter;
-import ru.mhelper.security.jwt.JwtTokenProvider;
+import ru.mhelper.security.jwt_old.JwtTokenFilter;
+import ru.mhelper.security.jwt_old.JwtTokenProvider;
 import ru.mhelper.web.controllers.WebController;
 
 import static ru.mhelper.controllers.AuthController.CODE_URL;

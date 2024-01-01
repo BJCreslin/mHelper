@@ -17,7 +17,7 @@ import ru.mhelper.models.users.ERole;
 import ru.mhelper.models.users.Role;
 import ru.mhelper.models.users.User;
 import ru.mhelper.repository.RoleRepository;
-import ru.mhelper.security.jwt.JwtTokenProvider;
+import ru.mhelper.security.jwt_old.JwtTokenProvider;
 import ru.mhelper.services.geting_code.TelegramCodeService;
 import ru.mhelper.services.models_sevices.user.UserService;
 

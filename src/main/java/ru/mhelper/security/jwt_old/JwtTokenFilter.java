@@ -1,4 +1,4 @@
-package ru.mhelper.security.jwt;
+package ru.mhelper.security.jwt_old;
 
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;

@@ -1,4 +1,4 @@
-package ru.mhelper.security.jwt;
+package ru.mhelper.security.jwt_old;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.config.annotation.SecurityConfigurerAdapter;

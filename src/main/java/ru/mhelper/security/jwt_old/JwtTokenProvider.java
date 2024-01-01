@@ -1,4 +1,4 @@
-package ru.mhelper.security.jwt;
+package ru.mhelper.security.jwt_old;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jws;
@@ -20,6 +20,7 @@ import org.springframework.stereotype.Component;
 import ru.mhelper.exceptions.JwtAuthenticationException;
 import ru.mhelper.models.dto.JwtResponse;
 import ru.mhelper.models.users.Role;
+import ru.mhelper.security.properties.JwtProperties;
 
 import java.nio.charset.StandardCharsets;
 import java.security.Key;
