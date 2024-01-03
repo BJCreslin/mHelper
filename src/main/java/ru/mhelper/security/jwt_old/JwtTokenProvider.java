@@ -7,6 +7,7 @@ import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
+import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
@@ -18,14 +19,13 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Component;
 import ru.mhelper.exceptions.JwtAuthenticationException;
+import ru.mhelper.helpers.DateTimeHelper;
 import ru.mhelper.models.dto.JwtResponse;
-import ru.mhelper.models.users.Role;
 import ru.mhelper.security.properties.JwtProperties;
 
 import java.nio.charset.StandardCharsets;
 import java.security.Key;
 import java.util.Date;
-import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -36,7 +36,6 @@ public class JwtTokenProvider {
     private static final Logger LOGGER = LoggerFactory.getLogger(JwtTokenProvider.class);
 
     public static final String JWT_FOR_USER_HAVE_BEEN_CREATED = "JWT for user {} have been created.";
-    public static final String BEARER_PREFIX = "Bearer";
     public static final String LOAD_USER_DETAILS_FOR_TOKEN = "Load userDetails {} for token.";
     public static final String RESOLVE_JWT = "Resolve JWT:{}";
     public static final String VALIDATE_JWT = "Validate JWT:{}";
@@ -56,8 +55,8 @@ public class JwtTokenProvider {
     public String createAccessToken(String userName, Set<String> roles) {
         Claims claims = Jwts.claims().setSubject(userName);
         claims.put(ROLES_CLAIMS, roles);
-        Date now = new Date();
-        Date validity = new Date(now.getTime() + jwtProperties.getExpired());
+        Date now = DateTimeHelper.getCurrentDate();
+        Date validity = getAccessTokenExpired(now);
         if (LOGGER.isDebugEnabled()) {
             LOGGER.debug(JWT_FOR_USER_HAVE_BEEN_CREATED, userName);
         }
@@ -67,6 +66,11 @@ public class JwtTokenProvider {
                 .setExpiration(validity)//
                 .signWith(codeSecret)//
                 .compact();
+    }
+
+    @NotNull
+    private Date getAccessTokenExpired(Date now) {
+        return new Date(now.getTime() + jwtProperties.getExpired());
     }
 
     public String createRefreshToken(String userName) {
@@ -117,8 +121,8 @@ public class JwtTokenProvider {
         if (LOGGER.isDebugEnabled()) {
             LOGGER.debug(RESOLVE_JWT, bearerToken);
         }
-        if (bearerToken != null && bearerToken.startsWith(BEARER_PREFIX)) {
-            return bearerToken.substring(7);
+        if (bearerToken != null && bearerToken.startsWith(jwtProperties.getBearerPrefix())) {
+            return bearerToken.substring(jwtProperties.getBearerPrefix().length());
         }
         return null;
     }
@@ -136,9 +140,5 @@ public class JwtTokenProvider {
         } catch (JwtException | IllegalArgumentException e) {
             throw new JwtAuthenticationException(JwtAuthenticationException.JWT_IS_INVALID);
         }
-    }
-
-    private List<String> getRoleNames(Set<Role> userRoles) {
-        return userRoles.stream().map(Role::getName).toList();
     }
 }

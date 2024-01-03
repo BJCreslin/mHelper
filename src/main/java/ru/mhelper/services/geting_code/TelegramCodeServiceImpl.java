@@ -3,10 +3,10 @@ package ru.mhelper.services.geting_code;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Service;
 import ru.mhelper.services.models_sevices.user.UserService;
+import ru.mhelper.telegram.cfg.BotConfiguration;
 import ru.mhelper.telegram.status_service.StatusService;
 
 import java.time.LocalDateTime;
@@ -14,7 +14,7 @@ import java.util.*;
 
 import static ru.mhelper.services.geting_code.ErrorGettingCode.TOO_MANY_ATTEMPTS;
 
-@Service("TelegramCodeService")
+@Service
 @Primary
 @RequiredArgsConstructor
 public class TelegramCodeServiceImpl implements TelegramCodeService {
@@ -36,11 +36,7 @@ public class TelegramCodeServiceImpl implements TelegramCodeService {
 
     private final UserService userService;
 
-    @Value("${bot.time}")
-    private int lifetime;
-
-    @Value("${bot.max_attempts}")
-    private int maxAttempts;
+    private final BotConfiguration botConfiguration;
 
     @Override
     public boolean existByCode(Integer code) {
@@ -119,7 +115,7 @@ public class TelegramCodeServiceImpl implements TelegramCodeService {
                 }
                 break;
             }
-            if (count > maxAttempts) {
+            if (count > botConfiguration.getMaxAttempts()) {
                 throw new ErrorGettingCode(TOO_MANY_ATTEMPTS);
             }
         }
@@ -132,7 +128,7 @@ public class TelegramCodeServiceImpl implements TelegramCodeService {
         }
         if (!storage.isEmpty()) {
             List<Integer> codesForDelete = new ArrayList<>();
-            storage.entrySet().stream().filter(x -> x.getValue().getTimeCreated().plusMinutes(lifetime).isBefore(LocalDateTime.now())).forEach(x -> codesForDelete.add(x.getKey()));
+            storage.entrySet().stream().filter(x -> x.getValue().getTimeCreated().plusMinutes(botConfiguration.getTime()).isBefore(LocalDateTime.now())).forEach(x -> codesForDelete.add(x.getKey()));
             codesForDelete.forEach(storage::remove);
         }
     }

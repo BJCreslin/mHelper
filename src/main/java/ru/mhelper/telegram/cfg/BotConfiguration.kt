@@ -1,6 +1,8 @@
 package ru.mhelper.telegram.cfg
 
+import lombok.Data
 import org.springframework.boot.context.properties.ConfigurationProperties
+import org.springframework.context.annotation.Configuration
 import org.springframework.stereotype.Component
 
 /**
@@ -8,18 +10,26 @@ import org.springframework.stereotype.Component
  */
 @Component
 @ConfigurationProperties("bot")
-class BotConfiguration {
-
+@Configuration
+@Data
+open class BotConfiguration {
     /**
      * Bot`s name
      */
-    lateinit var name: String
+    lateinit var name: String;
 
     /**
      * Bot`s token
      */
     lateinit var token: String
+
+    /**
+     * Bot`s time
+     */
+    var time = 5
+
+    /**
+     * Bot`s max_attempts
+     */
+    var maxAttempts = 100
 }
-
-
-

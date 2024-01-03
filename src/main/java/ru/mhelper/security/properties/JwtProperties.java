@@ -19,4 +19,6 @@ public class JwtProperties {
     private String secret;
 
     private String header;
+
+    private String bearerPrefix;
 }
