@@ -76,7 +76,6 @@ public class ChromeExtensionController {
     }
 
     @GetMapping({""})
-    @ResponseBody
     public ResponseEntity<MessageResponse> testConnect() {
         return ResponseEntity.ok(new MessageResponse(SUCCESSFUL_CONNECTION));
     }

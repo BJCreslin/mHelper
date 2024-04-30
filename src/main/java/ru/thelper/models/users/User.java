@@ -5,10 +5,7 @@ import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import ru.thelper.models.BaseEntity;
 import ru.thelper.models.BaseStatus;
 import ru.thelper.models.user_procurement.UserProcurementLinks;
@@ -24,6 +21,7 @@ import java.util.Set;
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
+@Setter
 public class User extends BaseEntity {
 
     public static final String POSTFIX_TELEGRAM_EMAIL = "@t.me";
@@ -56,7 +54,7 @@ public class User extends BaseEntity {
     @Column(name = "tg_user", unique = true)
     private Long telegramUserId;
 
-    @Column(name = "tg_statement", columnDefinition = "varchar(255) default 'NO STATEMENT'")
+    @Column(name = "tg_statement", columnDefinition = "varchar(255) default 'NO_STATEMENT'")
     @Enumerated(EnumType.STRING)
     private TelegramStateType telegramStateType;
 
@@ -119,38 +117,6 @@ public class User extends BaseEntity {
         this.roles = roles;
     }
 
-    public void setUserProcurementLinkses(Set<UserProcurementLinks> userProcurementLinkses) {
-        this.userProcurementLinkses = userProcurementLinkses;
-    }
-
-    public void setUsername(String username) {
-        this.username = username;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
-    public void setTelegramUserId(Long telegramUserId) {
-        this.telegramUserId = telegramUserId;
-    }
-
-    public void setTelegramStateType(TelegramStateType telegramStateType) {
-        this.telegramStateType = telegramStateType;
-    }
-
-    public boolean isEnabled() {
-        return enabled;
-    }
-
-    public void setEnabled(boolean enabled) {
-        this.enabled = enabled;
-    }
-
     @Override
     public String getComment() {
         return comment;
@@ -161,9 +127,6 @@ public class User extends BaseEntity {
         this.comment = comment;
     }
 
-    public void setRoles(Set<Role> roles) {
-        this.roles = roles;
-    }
 
     @Override
     public boolean equals(Object o) {

@@ -1,5 +1,10 @@
 package ru.thelper.models.users;
 
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+
+@Getter
+@AllArgsConstructor
 public enum TelegramStateType {
 
     NO_STATEMENT("NO_STATEMENT"),
@@ -10,11 +15,4 @@ public enum TelegramStateType {
 
     public final String statement;
 
-    public String getStatement() {
-        return statement;
-    }
-
-    TelegramStateType(String statement) {
-        this.statement = statement;
-    }
 }
