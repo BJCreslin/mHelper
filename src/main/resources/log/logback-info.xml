@@ -13,7 +13,7 @@
         </encoder>
     </appender>
 
-    <logger name="ru.mhelper" level="INFO" additivity="false">
+    <logger name="ru.thelper" level="INFO" additivity="false">
         <appender-ref ref="INFO_ROLLING_FILE_APPENDER" />
     </logger>
 </configuration>

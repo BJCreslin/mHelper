@@ -1,1 +1,0 @@
-package ru.mhelper.services.user_event.create_message;

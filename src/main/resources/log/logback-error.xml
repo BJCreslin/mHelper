@@ -10,7 +10,7 @@
         </encoder>
     </appender>
 
-    <logger name="ru.mhelper" level="ERROR" additivity="false">
+    <logger name="ru.thelper" level="ERROR" additivity="false">
         <appender-ref ref="ERROR_ROLLING_FILE_APPENDER" />
     </logger>
 </configuration>

@@ -1,1 +1,0 @@
-package ru.mhelper.aspect.stop_spam;

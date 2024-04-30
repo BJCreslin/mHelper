@@ -1,0 +1,1 @@
+package ru.thelper.aspect.stop_spam;

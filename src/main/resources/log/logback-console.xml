@@ -6,7 +6,7 @@
         </encoder>
     </appender>
 
-    <logger name="ru.mhelper" level="DEBUG" additivity="false">
+    <logger name="ru.thelper" level="DEBUG" additivity="false">
         <appender-ref ref="CONSOLE_APPENDER" />
     </logger>
 </configuration>

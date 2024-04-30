@@ -12,10 +12,10 @@
         <relativePath/>
     </parent>
 
-    <groupId>ru.mhelper</groupId>
-    <artifactId>mhelper</artifactId>
+    <groupId>ru.thelper</groupId>
+    <artifactId>thelper</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <name>mHelper</name>
+    <name>thelper</name>
     <description>Website automation service zakupki.gov.ru</description>
 
     <properties>
@@ -62,7 +62,7 @@
             </dependencies>
 
             <build>
-                <finalName>mHelper</finalName>
+                <finalName>thelper</finalName>
                 <plugins>
                     <plugin>
                         <groupId>org.apache.maven.plugins</groupId>
@@ -223,7 +223,7 @@
                 <configuration>
                     <archive>
                         <manifest>
-                            <mainClass>ru.mhelper.MHelperApplication</mainClass>
+                            <mainClass>ru.thelper.THelperApplication</mainClass>
                         </manifest>
                     </archive>
                 </configuration>
