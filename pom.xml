@@ -8,7 +8,7 @@
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>3.1.2</version>
+        <version>3.2.5</version>
         <relativePath/>
     </parent>
 
@@ -25,9 +25,9 @@
         <sonar.organization>bjcreslin</sonar.organization>
         <sonar.host.url>https://sonarcloud.io</sonar.host.url>
         <org.mapstruct.version>1.5.5.Final</org.mapstruct.version>
-        <jjwt-version>0.11.5</jjwt-version>
+        <jjwt-version>0.12.5</jjwt-version>
         <defaultProfiles>dev</defaultProfiles>
-        <kotlin.version>1.8.21</kotlin.version>
+        <kotlin.version>1.9.23</kotlin.version>
     </properties>
 
     <profiles>
@@ -50,13 +50,13 @@
                 <dependency>
                     <groupId>org.liquibase</groupId>
                     <artifactId>liquibase-core</artifactId>
-                    <version>4.20.0</version>
+                    <version>4.27.0</version>
                 </dependency>
 
                 <dependency>
                     <groupId>org.postgresql</groupId>
                     <artifactId>postgresql</artifactId>
-                    <version>42.5.4</version>
+                    <version>42.7.3</version>
                 </dependency>
 
             </dependencies>
@@ -141,13 +141,13 @@
         <dependency>
             <groupId>org.jsoup</groupId>
             <artifactId>jsoup</artifactId>
-            <version>1.15.3</version>
+            <version>1.17.2</version>
         </dependency>
 
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
-            <version>1.18.24</version>
+            <version>1.18.32</version>
         </dependency>
 
         <dependency>
