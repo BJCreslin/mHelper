@@ -53,7 +53,7 @@ public class JwtTokenProvider {
     }
 
     public String createAccessToken(String userName, Set<String> roles) {
-        Claims claims = Jwts.claims().setSubject(userName);
+        Claims claims = Jwts.claims().subject(userName).build();
         claims.put(ROLES_CLAIMS, roles);
         Date now = DateTimeHelper.getCurrentDate();
         Date validity = getAccessTokenExpired(now);
@@ -74,7 +74,7 @@ public class JwtTokenProvider {
     }
 
     public String createRefreshToken(String userName) {
-        Claims claims = Jwts.claims().setSubject(userName);
+        Claims claims = Jwts.claims().subject(userName).build();
         Date now = new Date();
         Date validity = new Date(now.getTime() + jwtProperties.getRefresh());
         if (LOGGER.isDebugEnabled()) {
@@ -113,7 +113,7 @@ public class JwtTokenProvider {
     }
 
     public String getUsername(String token) {
-        return Jwts.parserBuilder().setSigningKey(codeSecret).build().parseClaimsJws(token).getBody().getSubject();
+        return Jwts.parser().setSigningKey(codeSecret).build().parseClaimsJws(token).getBody().getSubject();
     }
 
     public String resolveToken(HttpServletRequest req) {
@@ -135,7 +135,7 @@ public class JwtTokenProvider {
             if (LOGGER.isDebugEnabled()) {
                 LOGGER.debug(VALIDATE_JWT, token);
             }
-            Jws<Claims> claims = Jwts.parserBuilder().setSigningKey(codeSecret).build().parseClaimsJws(token);
+            Jws<Claims> claims = Jwts.parser().setSigningKey(codeSecret).build().parseClaimsJws(token);
             return !claims.getBody().getExpiration().before(new Date());
         } catch (JwtException | IllegalArgumentException e) {
             throw new JwtAuthenticationException(JwtAuthenticationException.JWT_IS_INVALID);
