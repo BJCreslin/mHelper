@@ -117,6 +117,10 @@ public class User extends BaseEntity {
         this.roles = roles;
     }
 
+    public boolean isEnabled() {
+        return enabled;
+    }
+
     @Override
     public String getComment() {
         return comment;
