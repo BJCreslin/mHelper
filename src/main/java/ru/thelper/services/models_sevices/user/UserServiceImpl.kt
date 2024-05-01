@@ -3,7 +3,7 @@ package ru.thelper.services.models_sevices.user
 import org.springframework.security.core.userdetails.UsernameNotFoundException
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
-import ru.thelper.controllers.exeptions.BadRequestException
+import ru.thelper.exceptions.BadRequestException
 import ru.thelper.models.BaseStatus
 import ru.thelper.models.users.ERole
 import ru.thelper.models.users.User

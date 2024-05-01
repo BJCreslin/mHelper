@@ -20,7 +20,7 @@ import ru.thelper.controllers.AuthController;
 import ru.thelper.models.users.ERole;
 import ru.thelper.security.jwt_old.JwtTokenFilter;
 import ru.thelper.security.jwt_old.JwtTokenProvider;
-import ru.thelper.web.controllers.WebController;
+import ru.thelper.controllers.web.WebController;
 
 import static ru.thelper.controllers.AuthController.CODE_URL;
 

@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
-import ru.thelper.controllers.exeptions.BadRequestException;
+import ru.thelper.exceptions.BadRequestException;
 import ru.thelper.models.dto.Error;
 import ru.thelper.services.exceptions.BadDataParsingException;
 

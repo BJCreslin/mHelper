@@ -8,7 +8,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
-import ru.thelper.controllers.exeptions.BadRequestException;
+import ru.thelper.exceptions.BadRequestException;
 import ru.thelper.exceptions.SpamCodeException;
 import ru.thelper.services.ip_service.IpService;
 

@@ -1,4 +1,4 @@
-package ru.thelper.web.controllers;
+package ru.thelper.controllers.web;
 
 import jakarta.servlet.http.HttpServletRequest;
 import org.slf4j.Logger;
@@ -9,7 +9,7 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-import ru.thelper.controllers.exeptions.BadRequestException;
+import ru.thelper.exceptions.BadRequestException;
 import ru.thelper.models.dto.ProcurementAddress;
 import ru.thelper.models.dto.ProcurementDto;
 import ru.thelper.models.procurements.Procurement;
@@ -18,11 +18,11 @@ import ru.thelper.repository.ProcurementRepository;
 import ru.thelper.services.chrome.ProcurementService;
 import ru.thelper.services.exceptions.BadDataParsingException;
 import ru.thelper.services.ip_service.IpService;
-import ru.thelper.web.cfg.ProcurementsProps;
+import ru.thelper.cfg.ProcurementsProps;
 
 import java.util.List;
 
-import static ru.thelper.web.controllers.WebController.INDEX_PAGE_NAME;
+import static ru.thelper.controllers.web.WebController.INDEX_PAGE_NAME;
 
 @Controller
 @RequestMapping({"", INDEX_PAGE_NAME})
@@ -31,7 +31,7 @@ public class WebController {
 
     private static final Logger logger = LoggerFactory.getLogger(WebController.class);
 
-    public static final String INDEX_PAGE_NAME = "/mHelper";
+    public static final String INDEX_PAGE_NAME = "/tHelper";
 
     private static final String GET_FROM_IP = "Get from ip {}";
 

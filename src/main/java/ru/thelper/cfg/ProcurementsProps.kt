@@ -1,4 +1,4 @@
-package ru.thelper.web.cfg
+package ru.thelper.cfg
 
 import org.springframework.boot.context.properties.ConfigurationProperties
 import org.springframework.stereotype.Component
